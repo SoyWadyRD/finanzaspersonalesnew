@@ -36,7 +36,9 @@ const enviarCorreo = async (to, subject, html) => {
     // Enviar el correo utilizando la API de Mailjet
     const result = await client.post("send", { data: mailOptions });
 
-    console.log(`✅ Correo de verificación enviado a ${to} con éxito. Info: ${JSON.stringify(result.body)}`);
+    console.log(`✅ Correo de verificación enviado a ${to} con éxito. Info: ${JSON.stringify(result)}`);
+    console.log('Código de estado:', result.statusCode);
+
   } catch (error) {
     console.error("❌ Error al enviar el correo:", error.message);
     console.log("🛑 Detalles del error:", error);
