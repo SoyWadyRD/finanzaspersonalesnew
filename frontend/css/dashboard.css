@@ -1,0 +1,357 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Estilos generales */
+body {
+  background-color: #f4f4f4; /* Fondo blanco hueso */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Header */
+header {
+  width: 100%;
+  background-color: rgb(0, 30, 43);
+  color: #fff;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #00a35c; /* Borde verde */
+}
+
+header h1 {
+  font-size: 1.8rem;
+  color: #fff; /* Verde */
+}
+
+/* Menu hamburguesa */
+.menu-btn {
+  background-color: rgb(0, 30, 43);
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 6px;
+  position: relative;
+  z-index: 2000;
+  transition: transform 0.3s ease;
+}
+
+.menu-btn .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #00a35c;
+  margin: 4px 0;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+  background-color: rgb(0, 30, 43); /* No cambiar color al hacer hover */
+  box-shadow: none; /* Eliminar efecto de sombra */
+}
+
+/* Menu lateral */
+.menu {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #fff;
+  color: #000;
+  padding-top: 20px;
+  z-index: 9999;
+  transition: 0.3s;
+  visibility: hidden;
+  box-shadow: 0px 0px 100px 0px#00a35c;
+}
+
+.menu.active {
+  visibility: visible;
+  left: 0;
+}
+
+.menu ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.menu ul li {
+  padding: 15px;
+  text-align: center;
+}
+
+.menu ul li a {
+  color: black;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.menu-btn.active .bar:nth-child(1) {
+  transform: rotate(45deg);
+  position: absolute;
+  top: 6px;
+}
+
+.menu-btn.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-btn.active .bar:nth-child(3) {
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 6px;
+}
+
+/* Estilos de los formularios */
+main {
+  padding: 40px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+section {
+  background-color: rgb(0, 30, 43);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 163, 92, 0.5); /* Sombra verde suave */
+}
+
+h2 {
+  color: white; /* Verde */
+  margin-bottom: 15px;
+}
+
+input,
+select,
+button {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="number"] {
+  background-color: #222;
+  color: #fff;
+}
+
+button {
+  background-color: #00a35c;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #00c77f;
+}
+
+select {
+  background-color: #222;
+  color: #fff;
+}
+
+#movimientosSection {
+  background-color: rgb(0, 30, 43);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+#listaMovimientos {
+  list-style: none;
+}
+
+#listaMovimientos li {
+  background-color: #444;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+#listaMovimientos li.gasto {
+  border-left: 4px solid #ff4d6d; /* Rojo para los gastos */
+}
+
+#listaMovimientos li.ingreso {
+  border-left: 4px solid #00ff90; /* Verde para los ingresos */
+}
+
+#listaMovimientos .movimiento-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+#listaMovimientos .tipo-movimiento {
+  color: #fff; /* Texto blanco por defecto */
+}
+
+#listaMovimientos .monto {
+  font-weight: bold;
+  color: #fff; /* Inicialmente blanco */
+}
+
+#listaMovimientos .detalle-movimiento {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #ddd;
+}
+
+#listaMovimientos .categoria,
+#listaMovimientos .descripcion {
+  display: block;
+  margin: 5px 0;
+  font-size: 0.95rem;
+}
+
+#listaMovimientos .categoria {
+  color: #ffb84d; /* Color cálido para categoría */
+}
+
+#listaMovimientos .descripcion {
+  font-style: italic;
+}
+
+#listaMovimientos li:hover {
+  background-color: #333;
+  cursor: pointer;
+  transform: scale(1.02); /* Pequeña animación al hacer hover */
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#listaMovimientos li span {
+  font-weight: bold;
+}
+
+/* Estilo para Ingreso */
+#listaMovimientos li.ingreso .tipo-movimiento {
+  color: #00ff90; /* Verde para el tipo de ingreso */
+}
+
+#listaMovimientos li.ingreso .monto {
+  color: #00ff90; /* Verde para el monto de ingreso */
+}
+
+/* Estilo para Gasto */
+#listaMovimientos li.gasto .tipo-movimiento {
+  color: #ff4d6d; /* Rojo para el tipo de gasto */
+}
+
+#listaMovimientos li.gasto .monto {
+  color: #ff4d6d; /* Rojo para el monto de gasto */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  header {
+    padding: 20px;
+    justify-content: space-between;
+  }
+
+  .menu-btn {
+    display: block;
+  }
+
+  main {
+    padding: 20px;
+  }
+
+  section {
+    padding: 15px;
+  }
+
+  input,
+  select,
+  button {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 375px) {
+  main {
+    padding: 10px;
+  }
+
+  section {
+    padding: 10px;
+  }
+
+  input,
+  select,
+  button {
+    padding: 8px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.mensaje-verificacion {
+  background-color: rgba(0, 163, 92, 0.971);
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1.2rem;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+}
+
+
+
+
+
+
+/* Estilo para los mensajes de error */
+.mensaje-error {
+  background-color: rgba(255, 0, 0, 0.971);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+  display: none; /* Inicialmente oculto */
+}

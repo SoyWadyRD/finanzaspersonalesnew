@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Finanzas Personales</title>
+  <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon"> <!-- Sin el / al principio -->
+  <link rel="stylesheet" href="css/estilos.css"> <!-- Sin el / al principio -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <div id="mensajeError" class="mensaje-error" style="display: none;">
+    <p></p>
+  </div>
+
+  <div id="loader" class="loader" style="display: none;"></div>
+
+  <div class="form-container">
+    <!-- Logo de la empresa -->
+    <img src="img/logo.jpeg" alt="Logo de la empresa" class="logo-login"> <!-- Sin el / al principio -->
+    
+    <h2>Iniciar sesión</h2>
+    <form id="formLogin">
+      <input type="email" id="correoLogin" placeholder="Correo electrónico" required>
+      <div class="password-container">
+        <input type="password" id="contraseñaLogin" placeholder="Contraseña" required>
+        <i id="togglePassword" class="fas fa-eye"></i> <!-- Icono de ojo -->
+      </div>
+      <button type="submit">Entrar</button>
+    </form>
+
+    <p>¿No tienes cuenta? <a href="registro.html">Regístrate</a></p>
+    <p><a href="recuperar-password.html">¿Olvidaste tu contraseña?</a></p> <!-- Enlace a la página de recuperación -->
+  </div>
+
+  <script src="js/auth.js"></script> <!-- Sin el / al principio -->
+</body>
+</html>

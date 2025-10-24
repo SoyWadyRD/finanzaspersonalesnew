@@ -1,0 +1,198 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: #1f1f1f;
+  border-bottom: 1px solid #333;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  color: #00fff0;
+}
+
+header button {
+  padding: 8px 16px;
+  background-color: #ff4d6d;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+header button:hover {
+  background-color: #ff1a3c;
+}
+
+/* Main */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+/* Tarjeta de detalle */
+#detalle {
+  background-color: #1f1f1f;
+  padding: 30px 40px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+#detalle p {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+#detalle p strong {
+  color: #00fff0;
+}
+
+#detalle span {
+  color: #fff;
+}
+
+/* Efecto hover en la tarjeta */
+#detalle:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+  transition: 0.3s;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  #detalle {
+    padding: 20px;
+  }
+
+  header {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+.mensaje-verificacion {
+  background-color: rgba(0, 163, 92, 0.971);
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1.2rem;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+}
+
+
+
+
+
+
+/* Estilo para los mensajes de error */
+.mensaje-error {
+  background-color: rgba(255, 0, 0, 0.971);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+  display: none; /* Inicialmente oculto */
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Estilo para el div de confirmación */
+.confirmacion-eliminacion {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  color: #fff !important;
+  padding: 20px !important;
+  border-radius: 8px !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  text-align: center !important;
+  z-index: 9999 !important; /* Alta prioridad para que se muestre encima de otros elementos */
+  width: 300px !important;
+  display: none !important; /* Inicialmente oculto */
+}
+
+.confirmacion-eliminacion button {
+  background-color: #00a35c !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 10px !important;
+  margin: 10px !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+}
+
+.confirmacion-eliminacion button:hover {
+  background-color: #00c77f !important;
+}
+
+.confirmacion-eliminacion button#cancelarEliminarBtn {
+  background-color: #ff4d4d !important;
+}
+
+.confirmacion-eliminacion button#cancelarEliminarBtn:hover {
+  background-color: #ff6666 !important;
+}
+
+
+.confirmacion-eliminacion button#cancelarEliminarBtn:hover {
+  background-color: #ff6666 !important;
+}

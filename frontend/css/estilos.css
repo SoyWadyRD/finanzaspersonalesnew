@@ -1,0 +1,258 @@
+/* Reset general */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Estilo general del body */
+body {
+  background-color: #f4f4f4;  /* Fondo blanco hueso */
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Estilos del contenedor del formulario */
+.form-container {
+  background: rgb(0, 30, 43); /* Color oscuro */
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 163, 92, 0.5); /* Sombra verde */
+  width: 100%;
+  max-width: 400px;  /* Ancho máximo para que no sea tan grande en pantallas grandes */
+  text-align: center;
+}
+
+/* Estilo para el título */
+h2 {
+  color: #00a35c; /* Verde claro */
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Estilo de los inputs */
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #00a35c;  /* Borde verde */
+  outline: none;
+  background-color: #151a23;  /* Fondo oscuro para los inputs */
+  color: white;
+}
+
+input:focus {
+  border-color: #00fff0;  /* Bordes de color cyan al enfocar */
+}
+
+/* Estilo del botón */
+button {
+  background: #00a35c; /* Verde */
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background: #00c77f; /* Verde más claro en hover */
+}
+
+/* Estilo para los enlaces */
+a {
+  color: #00a35c; /* Verde */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #00c77f; /* Verde más claro en hover */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+
+  .form-container {
+    width: 100%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 375px) {
+  .form-container {
+    width: 90%;
+    padding: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem; /* Ajustar tamaño de título */
+  }
+
+  input {
+    padding: 10px;
+  }
+
+  button {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 320px) {
+  .form-container {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  h2 {
+    font-size: 1.4rem; /* Ajuste adicional para pantallas muy pequeñas */
+  }
+}
+
+
+
+
+/* Estilo general de los inputs */
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #00a35c;  /* Borde verde */
+  outline: none;
+  background-color: #151a23;  /* Fondo oscuro para los inputs */
+  color: white;
+}
+
+/* Contenedor de la contraseña */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Estilo para el icono de ojo */
+.password-container i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #00a35c;
+  cursor: pointer;
+}
+
+.password-container i:hover {
+  color: #00c77f;
+}
+
+
+
+
+
+
+
+
+
+
+/* Estilo del loader */
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  z-index: 9999; /* Asegúrate de que el z-index sea alto */
+}
+
+/* Añadir animación de carga (opcional) */
+.loader:before {
+  content: "";
+  width: 50px;
+  height: 50px;
+  border: 5px solid #fff;
+  border-top: 5px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+
+
+
+
+
+
+
+.mensaje-verificacion {
+  background-color: rgba(0, 163, 92, 0.971);
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1.2rem;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+}
+
+
+
+
+
+
+/* Estilo para los mensajes de error */
+.mensaje-error {
+  background-color: rgba(255, 0, 0, 0.971);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+  display: none; /* Inicialmente oculto */
+}
+
+
+
+
+.logo-login {
+  display: block;
+  margin: 0 auto 20px;
+  max-width: 150px; /* Ajusta el tamaño del logo según sea necesario */
+  height: auto;
+  border-radius:50%;
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <title>Dashboard - Finanzas Personales</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <header>
+    <h1>Bienvenido, <span id="nombreUsuario"></span></h1>
+    <button id="menuBtn" class="menu-btn">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </header>
+
+
+
+  <!-- Div para mensajes de error -->
+<div id="mensajeError" class="mensaje-error" style="display: none;">
+  <p></p>
+</div>
+
+<!-- Div para mensaje de éxito -->
+<div id="mensajeExito" class="mensaje-verificacion" style="display: none;">
+  <!-- El mensaje de éxito se agregará aquí dinámicamente -->
+</div>
+
+  <nav id="menu" class="menu">
+    <ul>
+      <li><a href="metas.html">Metas</a></li>
+      <li><a href="#" id="logoutBtn">Cerrar sesión</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="balanceSection">
+      <h2>Balance actual</h2>
+      <p>Total Ingresos: $<span id="totalIngresos">0</span></p>
+      <p>Total Gastos: $<span id="totalGastos">0</span></p>
+      <p>Balance: $<span id="balance">0</span></p>
+    </section>
+
+    <section id="registroSection">
+      <h2>Registrar movimiento</h2>
+      <form id="formGastoIngreso">
+        <!-- Dentro del formulario de registrar movimiento -->
+<select id="tipoMovimiento">
+  <option value="gasto">Gasto</option>
+  <option value="ingreso">Ingreso</option>
+</select>
+
+<input type="number" id="monto" placeholder="Monto" required>
+
+<select id="categoriaSelect" required>
+  <option value="">Selecciona categoría</option>
+  <option value="Comida">Comida</option>
+  <option value="Deporte">Deporte</option>
+  <option value="Entretenimiento">Entretenimiento</option>
+  <option value="Gasolina">Gasolina</option>
+  <option value="Ropa">Ropa</option>
+  <option value="Salud">Salud</option>
+  <option value="Tecnología">Tecnología</option>
+  <option value="Transporte">Transporte</option>
+  <option value="Otro">Otro</option>
+</select>
+
+<input type="text" id="categoriaOtro" placeholder="Escribe la categoría" style="display:none;">
+
+<input type="text" id="descripcion" placeholder="Descripción">
+<button type="submit">Registrar</button>
+
+      </form>
+    </section>
+
+    <section id="movimientosSection">
+      <h2>Movimientos recientes</h2>
+      <ul id="listaMovimientos"></ul>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script src="js/finanzas.js"></script>
+</body>
+</html>

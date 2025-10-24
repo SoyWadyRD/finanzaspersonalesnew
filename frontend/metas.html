@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <title>Mis Metas</title>
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: white;
+
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 20px;
+      background: rgb(0, 30, 43);
+      border-bottom: 1px solid #333;
+      gap: 20px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: white;
+      margin-left: 10px;
+    }
+
+    li{
+      list-style: none;
+    }
+
+    /* Botón de Volver */
+    .volver {
+      background-color: #00a35c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .volver:hover {
+      background-color: #00c9a7;
+      transform: translateY(-2px);
+    }
+
+    .volver:active {
+      background-color: #009b8f;
+      transform: translateY(2px);
+    }
+
+    /* Main */
+    main {
+      padding: 15px;
+    }
+
+    /* Estilos de los formularios y botones */
+    input, textarea, button {
+      padding: 10px;
+      margin: 12px 0;
+      border-radius: 4px;
+      border: 1px solid #555;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    input{
+      background-color: rgb(0, 30, 43);
+      color: white;
+      border: 1px solid #00a35c;
+    }
+
+    input[type="number"] {
+      width: 200px;
+    }
+
+    button {
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 12px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    .crear {
+      background-color: #45a049;
+    }
+
+    .crear:hover {
+      background-color: #3e8e41;
+    }
+
+    .crear:active {
+      background-color: #3e8e41;
+    }
+
+    /* Sección de metas */
+    #metasSection {
+      margin-top: 40px;
+    }
+
+    .meta-item {
+      border: 1px solid #333;
+      background-color: rgb(0, 30, 43);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      color: #e0e0e0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .meta-item h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .meta-item .meta-details {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .meta-item .meta-details div {
+      flex: 1;
+      text-align: center;
+    }
+
+    /* Barra de progreso */
+    .bar-container {
+      position: relative;
+      width: 100%;
+      height: 20px;
+      background-color: #444;
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+
+    .progress-bar {
+      position: absolute;
+      height: 100%;
+      background-color: #4CAF50;
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      z-index: 1;
+    }
+
+    /* Botones de agregar/quitar dinero */
+    button.add-remove {
+      background-color: #52f321;
+      width: auto;
+      margin-top: 10px;
+    }
+
+    button.add-remove:hover {
+      background-color: #52f321;
+    }
+
+    button.add-remove:active {
+      background-color: #52f321;
+    }
+
+    button.remove {
+      background-color: #368ff4;
+    }
+
+    button.remove:hover {
+      background-color: #368ff4;
+    }
+
+    button.remove:active {
+      background-color: #368ff4;
+    }
+
+    /* Flex para los botones de agregar y quitar monto lado a lado */
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .button-container button {
+      width: 48%;
+    }
+
+    /* Estilos para el botón de eliminar */
+    button.delete {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 12px;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button.delete:hover {
+      background-color: #da190b;
+    }
+
+    button.delete:active {
+      background-color: #b71c1c;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    .mensaje-verificacion {
+  background-color: rgba(0, 163, 92, 0.971);
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1.2rem;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+}
+
+.mensaje-error {
+  background-color: rgba(255, 0, 0, 0.971);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+  display: none; /* Inicialmente oculto */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+.modal input {
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 100%;
+}
+
+.modal button {
+  padding: 10px;
+  width: 100%;
+  margin: 5px 0;
+  cursor: pointer;
+}
+
+
+
+    /* Responsividad */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      .meta-item {
+        padding: 15px;
+      }
+
+      .meta-item h3 {
+        font-size: 1.3rem;
+      }
+
+      .meta-item .meta-details {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .meta-item .meta-details div {
+        text-align: left;
+      }
+
+      
+
+      
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+
+      .meta-item {
+        padding: 10px;
+      }
+
+      .meta-item h3 {
+        font-size: 1.2rem;
+      }
+
+      .meta-item .meta-details div {
+        text-align: left;
+      }
+
+
+      button, .volver {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="volver" onclick="window.location.href = '/dashboard.html';">Volver</button>
+
+
+    <h1>Mis Metas</h1>
+  </header>
+
+  <main>
+    <section id="crearMetaSection">
+      <h2>Crear Meta</h2>
+      <form id="formMeta">
+        <input type="text" id="nombreMeta" placeholder="Nombre de la meta" required>
+        <input type="number" id="cantidadMeta" placeholder="Cantidad total de la meta" required>
+        <input type="date" id="fechaMeta" required>
+        <textarea id="descripcionMeta" placeholder="Descripción" required></textarea>
+        <button type="submit" class="crear">Crear Meta</button>
+      </form>
+    </section>
+
+    <section id="metasSection">
+      <h2>Mis Metas</h2><br>
+      <ul id="listaMetas"></ul>
+    </section>
+  </main>
+
+
+
+
+
+
+
+
+
+
+   <!-- Mensajes de verificación y error -->
+  <!-- El mensaje de éxito o error será insertado aquí dinámicamente -->
+  
+  <!-- Mensaje de verificación (Éxito) -->
+  <div id="mensajeVerificacion" class="mensaje-verificacion" style="display: none;"></div>
+
+  <!-- Mensaje de error -->
+  <div id="mensajeError" class="mensaje-error"></div>
+
+
+
+
+
+
+
+  <!-- Modal para agregar monto -->
+<div id="modalAgregarMonto" class="modal">
+  <div class="modal-content">
+    <h3>Agregar Monto</h3>
+    <input type="number" id="montoAgregar" placeholder="Monto a agregar" required>
+    <button id="confirmarAgregarMonto" style="background-color: rgb(103, 255, 38);">Confirmar</button>
+    <button id="cancelarAgregarMonto"  style="background-color: rgb(255, 25, 25);">Cancelar</button>
+  </div>
+</div>
+
+<!-- Modal para quitar monto -->
+<div id="modalQuitarMonto" class="modal">
+  <div class="modal-content">
+    <h3>Quitar Monto</h3>
+    <input type="number" id="montoQuitar" placeholder="Monto a quitar" required>
+    <button id="confirmarQuitarMonto" style="background-color: rgb(103, 255, 38);">Confirmar</button>
+    <button id="cancelarQuitarMonto"  style="background-color: rgb(255, 25, 25);">Cancelar</button>
+  </div>
+</div>
+
+<!-- Modal para eliminar meta -->
+<div id="modalEliminarMeta" class="modal">
+  <div class="modal-content">
+    <h3>Eliminar Meta</h3>
+    <p>¿Estás seguro de que deseas eliminar esta meta?</p>
+    <button id="confirmarEliminarMeta" style="background-color: rgb(103, 255, 38);">Confirmar</button>
+    <button id="cancelarEliminarMeta"  style="background-color: rgb(255, 25, 25);">Cancelar</button>
+  </div>
+</div>
+
+  <script src="js/metas.js"></script>
+</body>
+</html>

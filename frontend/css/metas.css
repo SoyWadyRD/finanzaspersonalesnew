@@ -1,0 +1,234 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+/* Estilo del header */
+header {
+  display: flex;
+  justify-content: flex-start;  /* Alineamos todo a la izquierda */
+  align-items: center;
+  padding: 20px 40px;
+  background: #1f1f1f;
+  border-bottom: 1px solid #333;
+  gap: 20px; /* Espacio entre el botón y el título */
+}
+
+header h1 {
+  font-size: 1.8rem;
+  color: #00fff0;
+  margin-left: 10px; /* Espacio entre el título y el botón */
+}
+
+main {
+  padding: 15px;
+}
+
+ul, li {
+  list-style-type: none; /* Elimina la decoración de lista */
+}
+
+li {
+  text-decoration: none;
+}
+
+/* Estilos generales para los formularios y botones */
+input, textarea, button {
+  padding: 10px;
+  margin: 12px 0;
+  border-radius: 4px;
+  border: 1px solid #555;
+  width: 100%;
+  font-size: 14px;
+}
+
+input[type="number"] {
+  width: 200px;
+}
+
+button {
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 12px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Estilo para el botón de Volver */
+.volver {
+  background-color: #00fff0; /* Color brillante que coincide con el estilo del h1 */
+  color: black;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;  /* Añadir un poco de espacio al botón */
+  border-radius: 5px;   /* Bordes redondeados */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.volver:hover {
+  background-color: #00c9a7; /* Cambio de color al pasar el mouse */
+  transform: translateY(-2px); /* Efecto sutil de elevación */
+}
+
+.volver:active {
+  background-color: #009b8f; /* Color más oscuro cuando se hace clic */
+  transform: translateY(2px); /* Efecto de presionar el botón */
+}
+
+.crear{
+      background-color: #45a049;
+}
+
+.crear:hover {
+  background-color: #45a049;
+}
+
+.crear:active {
+  background-color: #3e8e41;
+}
+
+/* Estilos para las metas */
+#metasSection {
+  margin-top: 40px;
+}
+
+.meta-item {
+  border: 1px solid #333;
+  background-color: #2e2e2e;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: #e0e0e0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.meta-item h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.meta-item .meta-details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.meta-item .meta-details div {
+  flex: 1;
+  text-align: center;
+}
+
+/* Barra de progreso */
+.bar-container {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  background-color: #444;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+.progress-bar {
+  position: absolute;
+  height: 100%;
+  background-color: #4CAF50;
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 1; /* Asegura que el texto de porcentaje esté encima de la barra */
+}
+
+/* Botones de agregar/quitar dinero */
+button.add-remove {
+  background-color: #52f321;
+  width: auto;
+  margin-top: 10px;
+}
+
+
+button.add-remove:hover {
+  background-color: #52f321;
+}
+
+button.add-remove:active {
+  background-color: #52f321;
+}
+
+/* Botón de quitar monto en rojo */
+button.remove {
+  background-color: #368ff4;
+}
+
+button.remove:hover {
+  background-color: #368ff4;
+}
+
+button.remove:active {
+  background-color: #368ff4;
+}
+
+/* Flex para los botones de agregar y quitar monto lado a lado */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-container button {
+  width: 48%; /* Ambos botones ocupan el 48% del ancho */
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Estilos para el botón de eliminar */
+button.delete {
+  background-color: #f44336; /* Rojo */
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 12px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+button.delete:hover {
+  background-color: #da190b;
+}
+
+button.delete:active {
+  background-color: #b71c1c;
+}
+

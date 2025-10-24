@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <title>Detalle de Transacción</title>
+
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: white;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgb(0, 30, 43);
+      border-bottom: 1px solid #333;
+      width: 100%;
+      box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2);
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: #ffffff; /* Verde */
+    }
+
+    header button {
+      padding: 8px 16px;
+      background-color: #00a35c;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    header button:hover {
+      background-color: #ff1a3c;
+    }
+
+    /* Main */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      width: 100%;
+    }
+
+    /* Tarjeta de detalle */
+    #detalle {
+      background-color: rgb(0, 30, 43);
+      padding: 30px 40px;
+      border-radius: 12px;
+      border: 1px solid #333;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+      transition: 0.3s;
+    }
+
+    #detalle p {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    #detalle p strong {
+      color: #00a35c; /* Verde */
+    }
+
+    #detalle span {
+      color: #fff;
+    }
+
+    /* Efecto hover en la tarjeta */
+    #detalle:hover {
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+
+    /* Estilo del botón eliminar */
+    #eliminarBtn {
+      margin-top: 20px;
+      background-color: #ff4d6d;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      width: 100%;
+    }
+
+    #eliminarBtn:hover {
+      background-color: #ff1a3c;
+    }
+
+    /* Responsividad */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+
+      #detalle {
+        padding: 20px;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      header button {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+
+      header button {
+        width: 100%;
+        font-size: 1rem;
+      }
+
+      #detalle {
+        padding: 15px;
+      }
+
+      #detalle p {
+        font-size: 1rem;
+      }
+
+      #eliminarBtn {
+        width: 100%;
+        padding: 10px;
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+    .mensaje-verificacion {
+  background-color: rgba(0, 163, 92, 0.971);
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1.2rem;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+}
+
+
+
+
+
+
+/* Estilo para los mensajes de error */
+.mensaje-error {
+  background-color: rgba(255, 0, 0, 0.971);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+  display: none; /* Inicialmente oculto */
+}
+
+
+
+
+
+
+
+
+
+
+
+.confirmacion-eliminacion {
+  background-color: rgb(0, 0, 0);
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 9999;
+  width: 300px;
+  display: none; /* Inicialmente oculto */
+}
+
+.confirmacion-eliminacion button {
+  background-color: #00a35c !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 10px !important;
+  margin: 10px !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+}
+
+.confirmacion-eliminacion button:hover {
+  background-color: #00c77f !important;
+}
+
+.confirmacion-eliminacion button#cancelarEliminarBtn {
+  background-color: #ff4d4d !important;
+}
+
+.confirmacion-eliminacion button#cancelarEliminarBtn:hover {
+  background-color: #ff6666 !important;
+}
+
+
+.confirmacion-eliminacion button#cancelarEliminarBtn:hover {
+  background-color: #ff6666 !important;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Detalle de la Transacción</h1>
+    <button onclick="window.history.back()">Volver</button>
+  </header>
+
+
+ <!-- HTML -->
+<div id="confirmacionEliminacion" class="confirmacion-eliminacion" style="display: none;">
+  <p>¿Seguro que deseas eliminar este movimiento?</p>
+  <button id="confirmarEliminarBtn">Aceptar</button>
+  <button id="cancelarEliminarBtn">Cancelar</button>
+</div>
+
+  <!-- Div para mensajes de error -->
+  <div id="mensajeError" class="mensaje-error" style="display: none;">
+    <p></p>
+  </div>
+
+  <!-- Div para mensaje de éxito -->
+  <div id="mensajeExito" class="mensaje-verificacion" style="display: none;">
+    <!-- El mensaje de éxito se agregará aquí dinámicamente -->
+  </div>
+
+  <main>
+    <div id="detalle">
+      <p><strong>Tipo de transacción:</strong> <span id="tipo"></span></p>
+      <p><strong>Monto:</strong> $<span id="monto"></span></p>
+      <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+      <p><strong>Categoría:</strong> <span id="categoria"></span></p>
+      <p><strong>Descripción:</strong> <span id="descripcion"></span></p>
+      <button id="eliminarBtn">Eliminar</button>
+    </div>
+  </main>
+
+  <script src="js/detalle.js"></script>
+</body>
+</html>
