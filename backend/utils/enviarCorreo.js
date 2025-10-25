@@ -7,7 +7,7 @@ const enviarCorreo = async (to, subject, html) => {
 
   try {
     const result = await resend.emails.send({
-      from: 'Finanzas Personales <onboarding@resend.dev>',
+      from: 'Finanzas Personales <hola@finanzaspersonales.icu>',
       to,
       subject,
       html
