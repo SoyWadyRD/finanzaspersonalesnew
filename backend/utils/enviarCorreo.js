@@ -14,7 +14,7 @@ const enviarCorreo = async (to, subject, html) => {
     });
 
     console.log(`✅ Correo enviado a ${to} con éxito.`);
-    console.log("📬 Respuesta:", result);
+    console.log(`📬 ID del correo enviado: ${result.data.id}`);
   } catch (error) {
     console.error("❌ Error al enviar el correo:", error);
     throw new Error("No se pudo enviar el correo de verificación con Resend.");
