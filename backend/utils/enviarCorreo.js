@@ -14,7 +14,13 @@ const enviarCorreo = async (to, subject, html) => {
     });
 
     console.log(`✅ Correo enviado a ${to} con éxito.`);
-    console.log(`📬 ID del correo enviado: ${result.data.id}`);
+
+    // Verificación segura
+    if (result.data && result.data.id) {
+      console.log(`📬 ID del correo enviado: ${result.data.id}`);
+    } else {
+      console.log("📬 No se devolvió un ID, pero el correo se envió correctamente.");
+    }
   } catch (error) {
     console.error("❌ Error al enviar el correo:", error);
     throw new Error("No se pudo enviar el correo de verificación con Resend.");
