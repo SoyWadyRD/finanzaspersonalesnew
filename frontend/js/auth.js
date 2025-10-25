@@ -30,23 +30,19 @@ const validarContraseña = (contraseña) => {
 
 // Función para validar el nombre
 const validarNombre = (nombre) => {
-  // Verifica si contiene caracteres inválidos (solo permite a-z, A-Z, espacios y ñ/Ñ)
-  const contieneCaracteresInvalidos = /[^a-zA-ZñÑ\s]/.test(nombre);
-  if (contieneCaracteresInvalidos) {
-    mostrarMensajeError("El nombre no puede contener acentos, guiones ni caracteres especiales.");
-    return false;
+  // Permite letras A-Z, a-z, espacios y Ñ/ñ; bloquea acentos, guiones y demás caracteres especiales
+  if (/[^a-zA-ZñÑ\s]/.test(nombre)) {
+    return { valido: false, mensaje: "El nombre no puede contener acentos, guiones ni caracteres especiales." };
   }
 
   // Separa el nombre en partes y valida que tenga al menos nombre y apellido
   const nombreSplit = nombre.trim().split(/\s+/);
   if (nombreSplit.length < 2) {
-    mostrarMensajeError("El nombre debe contener al menos un nombre y un apellido.");
-    return false;
+    return { valido: false, mensaje: "El nombre debe contener al menos un nombre y un apellido." };
   }
 
-  return true;
+  return { valido: true };
 };
-
 
 // Registro
 const formRegistro = document.getElementById("formRegistro");
@@ -58,12 +54,14 @@ if (formRegistro) {
     const correo = document.getElementById("correo").value.trim();
     const contraseña = document.getElementById("contraseña").value.trim();
 
-    // Validar nombre y contraseña
-    if (!validarNombre(nombre)) {
-      mostrarMensajeError("El nombre debe contener al menos un nombre y un apellido.");
+    // Validar nombre
+    const resultadoNombre = validarNombre(nombre);
+    if (!resultadoNombre.valido) {
+      mostrarMensajeError(resultadoNombre.mensaje);
       return;
     }
 
+    // Validar contraseña
     if (!validarContraseña(contraseña)) {
       mostrarMensajeError("La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.");
       return;
@@ -83,11 +81,9 @@ if (formRegistro) {
       ocultarLoader();
 
       if (res.ok) {
-        // Mostrar mensaje de verificación de correo
         const mensajeVerificacion = document.getElementById("mensajeVerificacion");
         mensajeVerificacion.style.display = "block";
 
-        // Ocultar el mensaje después de 3 segundos
         setTimeout(() => {
           mensajeVerificacion.style.display = "none";
           window.location.href = "login.html";
@@ -101,6 +97,7 @@ if (formRegistro) {
     }
   });
 }
+
 
 
 
