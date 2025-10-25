@@ -30,9 +30,23 @@ const validarContraseña = (contraseña) => {
 
 // Función para validar el nombre
 const validarNombre = (nombre) => {
-  const nombreSplit = nombre.trim().split(" ");
-  return nombreSplit.length >= 2 && /^[a-zA-Z\s]+$/.test(nombre);
+  // Verifica si contiene caracteres inválidos (solo permite a-z, A-Z, espacios y ñ/Ñ)
+  const contieneCaracteresInvalidos = /[^a-zA-ZñÑ\s]/.test(nombre);
+  if (contieneCaracteresInvalidos) {
+    mostrarMensajeError("El nombre no puede contener acentos, guiones ni caracteres especiales.");
+    return false;
+  }
+
+  // Separa el nombre en partes y valida que tenga al menos nombre y apellido
+  const nombreSplit = nombre.trim().split(/\s+/);
+  if (nombreSplit.length < 2) {
+    mostrarMensajeError("El nombre debe contener al menos un nombre y un apellido.");
+    return false;
+  }
+
+  return true;
 };
+
 
 // Registro
 const formRegistro = document.getElementById("formRegistro");
