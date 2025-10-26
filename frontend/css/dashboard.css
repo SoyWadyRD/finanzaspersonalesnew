@@ -44,7 +44,7 @@ header h1 {
   cursor: pointer;
   border-radius: 6px;
   position: relative;
-  z-index: 2000;
+  z-index: 2;
   transition: transform 0.3s ease;
 }
 
@@ -419,6 +419,7 @@ select {
   color: #fff;
   position: relative;
   animation: fadeInZoom 0.3s forwards;
+  z-index: 3;
 }
 
 /* Botón cerrar arriba */
