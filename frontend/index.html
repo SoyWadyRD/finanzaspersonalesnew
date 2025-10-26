@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finanzas Personales</title>
+  <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif;}
+    body {background-color:#f4f4f4; color:#000; display:flex; flex-direction:column; align-items:center; min-height:100vh;}
+    
+    header {
+      width:100%; padding:20px 40px; display:flex; justify-content:space-between; align-items:center;
+      background-color:rgb(0,30,43); position:fixed; top:0; z-index:100; box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    }
+    header h1 {font-size:1.8rem; color:#00a35c;}
+
+    img {
+        width: 100px;
+  height: 100px; /* Ajusta el tamaño */
+  border-radius: 50%;
+
+  object-fit: contain; /* Asegura que la imagen no se deforme */
+}
+
+    
+    .header-buttons {display:flex; gap:10px;}
+    .btn-header {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+  border: 2px solid #00a35c;
+}
+    .btn-register {background-color:#00a35c; color:#fff;}
+    
+    .btn-login {background-color:rgb(0,30,43); color:#fff;}
+
+
+    .btn-register:hover, .btn-login:hover {
+  background-color: #00c77f;
+  box-shadow: 0 0 10px #00c77f, 0 0 20px #00c77f;
+  transform: scale(1.05);
+  animation: bounce 0.5s ease-out;
+}
+
+
+
+@keyframes bounce {
+  0% { transform: scale(1); }
+  20% { transform: scale(1.1); }
+  50% { transform: scale(1); }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+    
+    
+    main {width:100%; max-width:1200px; padding:150px 20px 40px 20px; display:flex; flex-direction:column; align-items:center;}
+    
+   .hero {
+  text-align: center;
+  margin-bottom: 80px;
+  animation: fadeInUp 1s ease forwards;
+}
+
+
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+    .hero h2 {font-size:2.5rem; color:rgb(0,30,43); margin-bottom:15px;}
+    .hero p {font-size:1.2rem; color:#333; margin-bottom:25px;}
+    .hero .btn-hero {padding:12px 25px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; background-color:#00a35c; color:#fff; margin:0 10px; transition:0.3s;}
+    .hero .btn-hero:hover {background-color:#00c77f; box-shadow:0 0 10px #00c77f,0 0 20px #00c77f; transform:scale(1.05);}
+    
+    .features {display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:30px; width:100%; animation:fadeIn 1.5s ease forwards; margin-bottom:50px;}
+    .feature-card {background-color:rgb(0,30,43); padding:25px; border-radius:12px; text-align:center; color:#fff; box-shadow:0 0 15px rgba(0,163,92,0.5); transition:transform 0.3s, box-shadow 0.3s;}
+    .feature-card:hover {transform:translateY(-5px); box-shadow:0 0 20px #00c77f,0 0 30px #00c77f;}
+    .feature-card i {font-size:2rem; color:#00a35c; margin-bottom:15px;}
+    .feature-card h3 {font-size:1.3rem; margin-bottom:10px;}
+    .feature-card p {font-size:0.95rem; color:#ddd;}
+    
+    .info-section {width:100%; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:30px; justify-items:center; margin-bottom:50px;}
+    .info-card {
+  background-color: rgb(0,30,43); /* fondo consistente */
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,163,92,0.5);
+  text-align: center;
+  padding: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  color: #fff; /* texto blanco para contraste */
+}
+    .info-card:hover {transform:translateY(-5px);}
+    .info-card i {
+  font-size: 3rem;
+  color: #00a35c;
+  margin-bottom: 15px;
+}
+    .info-card h4 {margin-bottom:10px;}
+.info-card p {color:#ddd; font-size:0.95rem;}
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px #00c77f, 0 0 30px #00c77f;
+}
+    
+    footer {width:100%; padding:20px; text-align:center; background-color:rgb(0,30,43); color:#fff; margin-top:40px;}
+    
+    @keyframes fadeIn {from{opacity:0; transform:translateY(20px);}to{opacity:1; transform:translateY(0);}}
+    
+
+
+
+
+/* Animación para las cards de las secciones */
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feature-card, .info-card {
+  opacity: 0; /* Inicialmente invisibles */
+  transform: translateY(50px); /* Desplazamiento desde abajo */
+}
+
+.feature-card.visible, .info-card.visible {
+  opacity: 1;
+  animation: fadeInCard 1s ease-out forwards;
+}
+
+
+.feature-card, .info-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:active, .info-card:active {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00c77f, 0 0 30px #00c77f;
+}
+
+
+
+
+
+    /* ===== Responsivo ===== */
+    @media(max-width:768px){
+      .hero h2{font-size:2rem;}
+      .hero p{font-size:1rem;}
+      header{padding:15px 20px;}
+      header h1{font-size:1.5rem;}
+      .btn-header{padding:7px 12px; font-size:0.9rem;}
+      .hero .btn-hero{padding:10px 20px; font-size:0.9rem;}
+    }
+    @media(max-width:480px){
+      .hero h2{font-size:1.6rem;}
+      .hero p{font-size:0.95rem;}
+      header h1{font-size:1.3rem;}
+      .btn-header{padding:6px 10px; font-size:0.85rem;}
+      .features{gap:20px;}
+      .info-section{gap:20px;}
+    }
+    @media(max-width:320px){
+      .hero h2{font-size:1.4rem;}
+      .hero p{font-size:0.9rem;}
+      header h1{font-size:1.1rem;}
+      .btn-header{padding:5px 8px; font-size:0.8rem;}
+      .features{gap:15px;}
+      .feature-card{padding:15px;}
+      .info-card{padding:15px;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Finanzas Personales</h1>
+    <div class="header-buttons">
+      <button class="btn-header btn-register" onclick="location.href='registro.html'">Registrarme</button>
+      <button class="btn-header btn-login" onclick="location.href='login.html'">Iniciar sesión</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+         <!-- Logo -->
+  <img src="img/logo.jpeg" alt="Logo Finanzas Personales">
+      <h2>Gestiona tus Finanzas de Forma Fácil</h2>
+      <p>Registra tus ingresos y gastos, alcanza tus metas de ahorro y controla tus finanzas en un solo lugar.</p>
+    </section>
+
+    <section class="features">
+      <div class="feature-card">
+        <i class="fa-solid fa-wallet"></i>
+        <h3>Registrar Movimientos</h3>
+        <p>Agrega ingresos y gastos de forma rápida y sencilla.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fa-solid fa-bullseye"></i>
+        <h3>Metas de Ahorro</h3>
+        <p>Crea metas y lleva un seguimiento para lograr tus objetivos.</p>
+      </div>
+    </section>
+
+    <section class="info-section">
+      <div class="info-card">
+        <i class="fa-solid fa-shield-halved"></i>
+        <h4>Seguridad</h4>
+        <p>Tus datos están protegidos y solo tú puedes acceder a tu información financiera.</p>
+      </div>
+      <div class="info-card">
+        <i class="fa-solid fa-chart-line"></i>
+        <h4>Control Total</h4>
+        <p>Lleva un registro completo de tus ingresos y gastos y mantente al día con tus finanzas.</p>
+      </div>
+      <div class="info-card">
+  <i class="fa-solid fa-bullseye"></i> <!-- Cambié el ícono a 'fa-target' -->
+  <h4>Alcanza tus Metas</h4>
+  <p>Establece objetivos de ahorro y monitorea tu progreso de manera clara y sencilla.</p>
+</div>
+      <div class="info-card">
+        <i class="fa-solid fa-users"></i>
+        <h4>Sobre Nosotros</h4>
+        <p>Somos un equipo dedicado a crear herramientas simples y seguras para que manejes tus finanzas sin complicaciones.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Finanzas Personales. Todos los derechos reservados.</p>
+  </footer>
+
+<script>
+  // Seleccionamos todas las tarjetas
+  const featureCards = document.querySelectorAll('.feature-card');
+  const infoCards = document.querySelectorAll('.info-card');
+
+  // Función para agregar la animación cuando la tarjeta entra en la vista
+  const handleIntersection = (entries, observer) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        // Si la tarjeta entra en la vista, le agregamos la clase para animar
+        entry.target.classList.add('visible');
+
+        // Agregar un retraso dinámico a la animación basado en el índice
+        entry.target.style.animationDelay = `${index * 0.3}s`; // Retraso de 0.3s por cada tarjeta
+      }
+    });
+  };
+
+  // Creamos el IntersectionObserver para que detecte cuando una tarjeta entra en la vista
+  const observer = new IntersectionObserver(handleIntersection, {
+    threshold: 0.5,  // El 50% de la tarjeta debe estar en la vista para activar la animación
+  });
+
+  // Observamos todas las tarjetas
+  featureCards.forEach(card => {
+    observer.observe(card);
+  });
+
+  infoCards.forEach(card => {
+    observer.observe(card);
+  });
+</script>
+
+
+</body>
+</html>

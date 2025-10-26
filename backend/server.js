@@ -38,10 +38,10 @@ app.use("/api/finanzas", finanzasRoutes);
 
 // Ruta raíz que sirve login.html
 app.get('/', (req, res) => {
-  const filePath = path.join(__dirnameBase, 'frontend', 'login.html');
+  const filePath = path.join(__dirnameBase, 'frontend', 'index.html');
   res.sendFile(filePath, (err) => {
     if (err) {
-      res.status(500).send('Error al servir el archivo login.html');
+      res.status(500).send('Error al servir el archivo index.html');
     }
   });
 });
