@@ -355,3 +355,107 @@ select {
   z-index: 1001;
   display: none; /* Inicialmente oculto */
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.filtro-btn i, #cerrarModal i {
+  font-size: 1rem;
+}
+
+
+
+/* Botón de filtro junto al título */
+#movimientosSection h2 {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filtro-btn {
+  background: #00a35c;
+  border: 2px solid #00a35c;
+  color: #fff;
+}
+
+.filtro-btn:hover {
+  background: #00c77f;
+  box-shadow: 0 0 10px #00c77f, 0 0 20px #00c77f;
+  transform: scale(1.1);
+}
+
+/* Modal */
+.modal-filtro {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+}
+
+.modal-content {
+  background: rgb(0, 30, 43);
+  border: 2px solid #00a35c;
+  border-radius: 12px;
+  padding: 20px;
+  width: 360px;
+  max-width: 90%;
+  margin: 60px auto;
+  color: #fff;
+  position: relative;
+  animation: fadeInZoom 0.3s forwards;
+}
+
+/* Botón cerrar arriba */
+#cerrarModal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+#cerrarModal:hover {
+  color: #00c77f;
+}
+
+/* Animación */
+@keyframes fadeInZoom {
+  from {opacity:0; transform: scale(0.8);}
+  to {opacity:1; transform: scale(1);}
+}
+
+@keyframes fadeOutZoom {
+  from {opacity:1; transform: scale(1);}
+  to {opacity:0; transform: scale(0.8);}
+}
+
+/* Inputs y selects */
+.modal-content input, .modal-content select {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #00a35c;
+  background: #222;
+  color: #fff;
+}
+

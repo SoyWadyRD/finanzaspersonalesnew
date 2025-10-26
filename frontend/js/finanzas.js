@@ -44,6 +44,9 @@ const mostrarMovimientos = () => {
       li.classList.add(m.tipo); // Añadir clase 'ingreso' o 'gasto'
       li.dataset.id = m._id;
 
+        // ✅ Agregar data-fecha
+  li.dataset.fecha = new Date(m.fecha).toISOString().split('T')[0]; // formato yyyy-mm-dd
+
       // Crear una estructura más ordenada para mostrar los movimientos
       const tipoMovimiento = m.tipo.toUpperCase();
       const monto = `$${m.monto.toFixed(2)}`;
