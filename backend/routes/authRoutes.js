@@ -10,7 +10,7 @@ router.get('/reset-password/:token', (req, res) => {
 
   try {
     // Verificar la ruta del archivo
-    const filePath = path.join(__dirname, '..', 'frontend', 'reset-password.html');
+    const filePath = path.join(__dirname, '..', '..', 'frontend', 'reset-password.html');
     console.log("Ruta del archivo de restablecimiento:", filePath);  // Log de la ruta del archivo
     
     res.sendFile(filePath, (err) => {

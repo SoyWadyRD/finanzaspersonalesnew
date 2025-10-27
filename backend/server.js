@@ -22,7 +22,7 @@ conectarDB();
 
 // Directorio para servir archivos estáticos
 const __dirnameBase = path.resolve(); // Define __dirnameBase
-app.use(express.static(path.join(__dirnameBase, "frontend"))); // Sirve todos los archivos estáticos desde el directorio frontend
+app.use(express.static(path.join(__dirname, '..', 'frontend'))); // Sirve todos los archivos estáticos desde el directorio frontend
 
 app.use(express.static(path.join(__dirnameBase, 'frontend', 'css')));
 app.use(express.static(path.join(__dirnameBase, 'frontend', 'js')));
