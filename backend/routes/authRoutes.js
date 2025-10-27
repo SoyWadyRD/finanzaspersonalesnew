@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { registro, login, perfil, verificarCorreo, recuperarContraseña, restablecerContraseña } = require("../controllers/authController");
+const { registro, login, perfil, verificarCorreo, recuperarContraseña, restablecerContraseña, actualizarNombre } = require("../controllers/authController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 
@@ -31,6 +31,11 @@ router.post("/recuperar-password", recuperarContraseña); // Endpoint para solic
 // Ruta para restablecer contraseña
 router.post("/restablecer-password/:token", restablecerContraseña); // Cambiar contraseña
  // Cambiar contraseña
+
+
+
+ router.put('/actualizar-nombre', authMiddleware, actualizarNombre);
+
 
 
 

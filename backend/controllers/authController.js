@@ -204,3 +204,20 @@ exports.restablecerContraseña = async (req, res) => {
   }
 };
 
+
+
+
+
+
+// authController.js
+exports.actualizarNombre = async (req, res) => {
+  try {
+    const { nombre } = req.body;
+    if (!nombre) return res.status(400).json({ mensaje: "El nombre es obligatorio" });
+
+    const usuario = await Usuario.findByIdAndUpdate(req.usuarioId, { nombre }, { new: true });
+    res.json({ mensaje: "Nombre actualizado", nombre: usuario.nombre });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al actualizar nombre", error: error.message });
+  }
+};

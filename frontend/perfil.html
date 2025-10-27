@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <title>Perfil - Finanzas Personales</title>
+  <link rel="stylesheet" href="css/perfil.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+
+
+
+  <header>
+    <button id="volverBtn" class="header-btn"><i class="fas fa-arrow-left"></i> Volver</button>
+    <h1>Finanzas Personales</h1>
+  </header>
+
+
+
+
+  <main>
+  <section>
+    <h2>Mi Perfil</h2>
+    <p><strong>Nombre:</strong> <span id="nombreUsuario">Cargando...</span></p>
+    <p><strong>Correo:</strong> <span id="correoUsuario">Cargando...</span></p>
+    <p><strong>Fecha de registro:</strong> <span id="fechaRegistro">Cargando...</span></p>
+
+    <!-- Balance total -->
+    <p><strong>Balance:</strong> $<span id="balance">0</span></p>
+
+    <!-- Botón editar -->
+    <button id="editarBtn" class="perfil-btn"><i class="fas fa-edit"></i> Editar Perfil</button>
+  </section>
+</main>
+
+
+  <script>
+    // Cargar perfil
+    async function cargarPerfil() {
+      try {
+        const res = await fetch('/api/auth/perfil', {
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }
+        });
+        if (!res.ok) throw new Error('No se pudo cargar el perfil');
+        const usuario = await res.json();
+        document.getElementById('nombreUsuario').textContent = usuario.nombre;
+        document.getElementById('correoUsuario').textContent = usuario.correo;
+        document.getElementById('fechaRegistro').textContent = new Date(usuario.createdAt).toLocaleDateString();
+      } catch (err) {
+        console.error(err);
+        alert('Error al cargar el perfil');
+      }
+    }
+
+    cargarPerfil();
+
+
+
+
+
+
+
+
+
+
+    // Botón volver
+    document.getElementById("volverBtn").addEventListener("click", () => {
+      window.location.href = "dashboard.html";
+    });
+
+ document.getElementById("editarBtn").addEventListener("click", () => {
+  window.location.href = "configuracion.html?origen=perfil";
+});
+
+
+
+
+
+
+
+
+
+
+    // Cargar balance
+async function cargarBalance() {
+  try {
+    const res = await fetch('/api/finanzas/balance', {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    });
+    if (!res.ok) throw new Error('No se pudo cargar el balance');
+    const data = await res.json();
+
+    // Mostrar solo balance, sin decimales
+    document.getElementById('balance').textContent = Math.round(data.balance);
+  } catch (err) {
+    console.error(err);
+    alert('Error al cargar el balance');
+  }
+}
+
+cargarBalance();
+  </script>
+</body>
+</html>

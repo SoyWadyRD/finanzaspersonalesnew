@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <title>Configuración - Finanzas Personales</title>
+  <link rel="stylesheet" href="css/configuracion.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <header>
+    <button id="volverBtn" class="header-btn"><i class="fas fa-arrow-left"></i> Volver</button>
+    <h1>Configuración</h1>
+  </header>
+
+  <!-- Divs para mensajes -->
+  <div id="mensajeError" class="mensaje-error" style="display: none;">
+    <p></p>
+  </div>
+
+  <div id="mensajeExito" class="mensaje-verificacion" style="display: none;"></div>
+
+  <main>
+  <section>
+    <h2>Editar Nombre</h2>
+    <div class="campo-nombre">
+      <label for="nombreInput"><strong>Nombre completo</strong></label>
+      <input type="text" id="nombreInput" placeholder="Escribe tu nuevo nombre" />
+    </div>
+
+    <button id="guardarBtn" class="perfil-btn"><i class="fas fa-save"></i> Guardar Cambios</button>
+
+    <div class="cambiar-pass">
+      <p>¿Deseas cambiar tu contraseña?</p>
+      <a href="recuperar-password-logueado.html" class="btn-pass">Cambiar contraseña</a>
+    </div>
+  </section>
+</main>
+
+<script>
+  // Guardar la página anterior al entrar en configuración
+  if (!sessionStorage.getItem("paginaAnterior")) {
+    sessionStorage.setItem("paginaAnterior", document.referrer || "dashboard.html");
+  }
+
+  // Función para mostrar mensajes de éxito
+  const mostrarMensajeExito = (mensaje) => {
+    const mensajeExito = document.getElementById("mensajeExito");
+    if (mensajeExito) {
+      mensajeExito.textContent = mensaje;
+      mensajeExito.style.display = "block";
+      setTimeout(() => { mensajeExito.style.display = "none"; }, 3000);
+    }
+  };
+
+  // Función para mostrar mensajes de error
+  const mostrarMensajeError = (mensaje) => {
+    const mensajeError = document.getElementById("mensajeError");
+    if (mensajeError) {
+      mensajeError.querySelector('p').textContent = mensaje;
+      mensajeError.style.display = "block";
+      setTimeout(() => { mensajeError.style.display = "none"; }, 3000);
+    }
+  };
+
+  // Función para validar el nombre
+  const validarNombre = (nombre) => {
+    if (/[^a-zA-ZñÑ\s]/.test(nombre)) {
+      return { valido: false, mensaje: "El nombre no puede contener acentos, guiones ni caracteres especiales." };
+    }
+    const nombreSplit = nombre.trim().split(/\s+/);
+    if (nombreSplit.length < 2) {
+      return { valido: false, mensaje: "El nombre debe contener al menos un nombre y un apellido." };
+    }
+    return { valido: true };
+  };
+
+
+
+
+
+
+
+
+ let nombreOriginal = ""; // variable para almacenar el nombre inicial
+
+// Cargar nombre actual
+async function cargarNombre() {
+  try {
+    const res = await fetch('/api/auth/perfil', {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+    });
+    if (!res.ok) throw new Error('No se pudo cargar el perfil');
+    const usuario = await res.json();
+    document.getElementById('nombreInput').value = usuario.nombre;
+    nombreOriginal = usuario.nombre; // guardar el nombre original
+  } catch (err) {
+    console.error(err);
+    mostrarMensajeError('Error al cargar el nombre');
+  }
+}
+cargarNombre();
+
+
+
+
+
+
+
+  // Obtener origen desde query string
+const params = new URLSearchParams(window.location.search);
+const origen = params.get("origen"); // "perfil" o "dashboard"
+
+// Botón volver
+document.getElementById("volverBtn").addEventListener("click", () => {
+  if (origen === "perfil") {
+    window.location.href = "perfil.html";
+  } else {
+    window.location.href = "dashboard.html"; // default
+  }
+});
+
+
+
+
+
+
+
+
+  // Guardar cambios
+document.getElementById("guardarBtn").addEventListener("click", async () => {
+  const nuevoNombre = document.getElementById('nombreInput').value.trim();
+  const validacion = validarNombre(nuevoNombre);
+
+  if (!validacion.valido) return mostrarMensajeError(validacion.mensaje);
+
+  if (nuevoNombre === nombreOriginal) {
+    return mostrarMensajeError('Debes cambiar el nombre para guardar los cambios');
+  }
+
+  try {
+    const res = await fetch('/api/auth/actualizar-nombre', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+      body: JSON.stringify({ nombre: nuevoNombre })
+    });
+    if (!res.ok) throw new Error('Error al actualizar el nombre');
+
+    mostrarMensajeExito('Nombre actualizado correctamente');
+
+    // actualizar nombreOriginal para que no muestre error si vuelve a dar click
+    nombreOriginal = nuevoNombre;
+
+    setTimeout(() => {
+      const anterior = sessionStorage.getItem("paginaAnterior") || "dashboard.html";
+      window.location.href = anterior;
+    }, 1500);
+
+  } catch (err) {
+    console.error(err);
+    mostrarMensajeError('Error al guardar cambios');
+  }
+});
+</script>
+</body>
+</html>
