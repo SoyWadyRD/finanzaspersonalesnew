@@ -4,14 +4,13 @@ const router = express.Router();
 const { registro, login, perfil, verificarCorreo, recuperarContraseña, restablecerContraseña, actualizarNombre } = require("../controllers/authController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
-/// Ruta para servir la página de restablecimiento de contraseña
 router.get('/reset-password/:token', (req, res) => {
   const token = req.params.token;
   console.log("Token recibido en la ruta /reset-password/:token:", token);  // Verificar que el token se recibe correctamente
 
   try {
     // Verificar la ruta del archivo
-    const filePath = path.join(__dirname, 'frontend', 'reset-password.html');
+    const filePath = path.join(__dirname, '..', 'frontend', 'reset-password.html');
     console.log("Ruta del archivo de restablecimiento:", filePath);  // Log de la ruta del archivo
     
     res.sendFile(filePath, (err) => {
@@ -27,6 +26,7 @@ router.get('/reset-password/:token', (req, res) => {
     res.status(500).send("Error al cargar la página de restablecimiento.");
   }
 });
+
 
 
 router.post("/registro", registro);
