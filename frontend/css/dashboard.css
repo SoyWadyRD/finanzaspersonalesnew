@@ -36,6 +36,44 @@ header h1 {
   color: #fff; /* Verde */
 }
 
+
+/* Sección del balance principal (arriba) */
+#balancePrincipal {
+  background-color: rgb(0, 30, 43);
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 163, 92, 0.6);
+}
+
+.balance-titulo {
+  font-size: 1.3rem;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Cuadro grande del balance */
+.cuadro-balance {
+  display: inline-block;
+  background: #00a35c;
+  padding: 12px 25px;
+  border-radius: 10px;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(0, 255, 144, 0.4);
+}
+
+
+
+
+
+
+
 /* Menu hamburguesa */
 .menu-btn {
   background-color: rgb(0, 30, 43);

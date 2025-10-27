@@ -41,111 +41,105 @@
   </nav>
 
   <main>
-    <section id="balanceSection">
-      <h2>Balance actual</h2>
-      <p>Total Ingresos: $<span id="totalIngresos">0</span></p>
-      <p>Total Gastos: $<span id="totalGastos">0</span></p>
-      <p>Balance: $<span id="balance">0</span></p>
-    </section>
+  <!-- Cuadro grande solo para el balance -->
+  <section id="balancePrincipal">
+    <p class="balance-titulo">Balance Actual</p>
+    <p class="cuadro-balance">$<span id="balance">0</span></p>
+  </section>
 
-    <section id="registroSection">
-      <h2>Registrar movimiento</h2>
-      <form id="formGastoIngreso">
-        <!-- Dentro del formulario de registrar movimiento -->
-<select id="tipoMovimiento">
-  <option value="gasto">Gasto</option>
-  <option value="ingreso">Ingreso</option>
-</select>
+  <!-- Sección de totales -->
+  <section id="balanceSection">
+    <h2>Resumen general</h2>
+    <p>Total Ingresos: $<span id="totalIngresos">0</span></p>
+    <p>Total Gastos: $<span id="totalGastos">0</span></p>
+  </section>
 
-<input type="number" id="monto" placeholder="Monto" required>
+  <section id="registroSection">
+    <h2>Registrar movimiento</h2>
+    <form id="formGastoIngreso">
+      <select id="tipoMovimiento">
+        <option value="gasto">Gasto</option>
+        <option value="ingreso">Ingreso</option>
+      </select>
 
-<select id="categoriaSelect" required>
-  <option value="">Selecciona categoría</option>
-  <option value="Comida">Comida</option>
-  <option value="Deporte">Deporte</option>
-  <option value="Entretenimiento">Entretenimiento</option>
-  <option value="Gasolina">Gasolina</option>
-  <option value="Ropa">Ropa</option>
-  <option value="Salud">Salud</option>
-  <option value="Tecnología">Tecnología</option>
-  <option value="Transporte">Transporte</option>
-  <option value="Otro">Otro</option>
-</select>
+      <input type="number" id="monto" placeholder="Monto" required>
 
-<input type="text" id="categoriaOtro" placeholder="Escribe la categoría" style="display:none;">
+      <select id="categoriaSelect" required>
+        <option value="">Selecciona categoría</option>
+        <option value="Comida">Comida</option>
+        <option value="Deporte">Deporte</option>
+        <option value="Entretenimiento">Entretenimiento</option>
+        <option value="Gasolina">Gasolina</option>
+        <option value="Ropa">Ropa</option>
+        <option value="Salud">Salud</option>
+        <option value="Tecnología">Tecnología</option>
+        <option value="Transporte">Transporte</option>
+        <option value="Otro">Otro</option>
+      </select>
 
-<input type="text" id="descripcion" placeholder="Descripción">
-<button type="submit">Registrar</button>
+      <input type="text" id="categoriaOtro" placeholder="Escribe la categoría" style="display:none;">
+      <input type="text" id="descripcion" placeholder="Descripción">
+      <button type="submit">Registrar</button>
+    </form>
+  </section>
 
-      </form>
-    </section>
+  <section id="movimientosSection">
+    <h2>
+      Movimientos recientes
+      <button id="btnFiltro" class="filtro-btn" title="Filtrar movimientos">
+        <i class="fas fa-filter"></i>
+      </button>
+    </h2>
 
-    <section id="movimientosSection">
-      
+    <div id="modalFiltro" class="modal-filtro">
+      <div class="modal-content">
+        <h3>Filtrar movimientos</h3>
 
-      <h2>
-  Movimientos recientes
-  <!-- Botón de filtrar -->
-<button id="btnFiltro" class="filtro-btn" title="Filtrar movimientos">
-  <i class="fas fa-filter"></i>
-</button>
-</h2>
+        <label>Tipo:</label>
+        <select id="filtroTipo">
+          <option value="">Todos</option>
+          <option value="gasto">Gasto</option>
+          <option value="ingreso">Ingreso</option>
+        </select>
 
-<!-- Modal de filtros -->
-<div id="modalFiltro" class="modal-filtro">
-  <div class="modal-content">
-    <h3>Filtrar movimientos</h3>
+        <label>Categoría:</label>
+        <select id="filtroCategoria">
+          <option value="">Todas</option>
+        </select>
 
-    <label>Tipo:</label>
-    <select id="filtroTipo">
-      <option value="">Todos</option>
-      <option value="gasto">Gasto</option>
-      <option value="ingreso">Ingreso</option>
-    </select>
+        <label>Fecha:</label>
+        <select id="filtroFecha">
+          <option value="">Todas</option>
+          <option value="hoy">Hoy</option>
+          <option value="7dias">Últimos 7 días</option>
+          <option value="mes">Este mes</option>
+          <option value="personalizado">Rango personalizado</option>
+        </select>
 
-    <label>Categoría:</label>
-    <select id="filtroCategoria">
-      <option value="">Todas</option>
-      <!-- Opciones dinámicas desde JS -->
-    </select>
+        <input type="date" id="fechaInicio" style="display:none;">
+        <input type="date" id="fechaFin" style="display:none;">
 
-    <label>Fecha:</label>
-    <select id="filtroFecha">
-      <option value="">Todas</option>
-      <option value="hoy">Hoy</option>
-      <option value="7dias">Últimos 7 días</option>
-      <option value="mes">Este mes</option>
-      <option value="personalizado">Rango personalizado</option>
-    </select>
-    <input type="date" id="fechaInicio" style="display:none;">
-    <input type="date" id="fechaFin" style="display:none;">
+        <label>Monto:</label>
+        <input type="number" id="montoMin" placeholder="Mínimo">
+        <input type="number" id="montoMax" placeholder="Máximo">
 
-    <label>Monto:</label>
-    <input type="number" id="montoMin" placeholder="Mínimo">
-    <input type="number" id="montoMax" placeholder="Máximo">
+        <label>Descripción:</label>
+        <input type="text" id="filtroDescripcion" placeholder="Buscar descripción">
 
-    <label>Descripción:</label>
-    <input type="text" id="filtroDescripcion" placeholder="Buscar descripción">
-
-    <div class="modal-buttons">
-      <button id="aplicarFiltro">Aplicar filtros</button>
-      <button id="limpiarFiltro">Limpiar filtros</button>
-      <!-- Botón cerrar modal -->
-<button id="cerrarModal"><i class="fas fa-times"></i></button>
+        <div class="modal-buttons">
+          <button id="aplicarFiltro">Aplicar filtros</button>
+          <button id="limpiarFiltro">Limpiar filtros</button>
+          <button id="cerrarModal"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<!-- Resumen de filtros -->
-<div id="resumenFiltros" class="resumen-filtros"></div>
-<br>
+    <div id="resumenFiltros" class="resumen-filtros"></div>
+    <br>
+    <ul id="listaMovimientos"></ul>
+  </section>
+</main>
 
-
-
-
-      <ul id="listaMovimientos"></ul>
-    </section>
-  </main>
 
   <script src="js/main.js"></script>
   <script src="js/finanzas.js"></script>
