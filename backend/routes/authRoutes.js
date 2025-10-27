@@ -11,7 +11,7 @@ router.get('/reset-password/:token', (req, res) => {
   const token = req.params.token;
   console.log("Token recibido en la ruta /reset-password/:token:", token);  // Esto debería mostrar el token
   try {
-    const filePath = path.join(__dirnameBase, 'frontend', 'reset-password.html');
+    const filePath = path.join(__dirname, 'frontend', 'reset-password.html');
     res.sendFile(filePath);
   } catch (error) {
     console.error("Error al cargar la página de restablecimiento:", error);
