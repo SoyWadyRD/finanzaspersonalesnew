@@ -33,12 +33,13 @@ app.use(
         "'unsafe-inline'", // Permitir estilos en línea
       ],
       fontSrc: [
-        "'self'", 
+        "'self'",
         "https://fonts.gstatic.com", // Permitir fuentes de Google Fonts
         "https://cdnjs.cloudflare.com", // Si estás usando otro CDN para fuentes
       ],
       connectSrc: ["'self'"],
       imgSrc: ["'self'", "data:"],
+      scriptSrcAttr: ["'unsafe-inline'"], // Permitir atributos de script en línea
     },
   })
 );
