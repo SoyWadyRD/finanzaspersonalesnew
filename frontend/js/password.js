@@ -110,6 +110,11 @@ if (togglePasswordLogin && contraseñaInputLogin) {
 
 
 
+
+
+
+
+
 // Formulario de restablecer contraseña
 const formRestablecer = document.getElementById("formRestablecer");
 if (formRestablecer) {
@@ -119,7 +124,7 @@ if (formRestablecer) {
     const contraseña = document.getElementById("nuevaContraseña").value.trim();
     const token = window.location.pathname.split("/").pop();  // Asegúrate de que esto esté funcionando correctamente
 
-    console.log("Token extraído de la URL:", token);  // Verificar que el token se extrae correctamente
+
 
     // Validar la contraseña
     if (!validarContraseña(contraseña)) {

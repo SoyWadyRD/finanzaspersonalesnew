@@ -4,28 +4,35 @@ const router = express.Router();
 const { registro, login, perfil, verificarCorreo, recuperarContraseña, restablecerContraseña, actualizarNombre } = require("../controllers/authController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
-router.get('/reset-password/:token', (req, res) => {
-  const token = req.params.token;
-  console.log("Token recibido en la ruta /reset-password/:token:", token);  // Verificar que el token se recibe correctamente
+// backend/routes/authRoutes.js
+// backend/routes/authRoutes.js
 
-  try {
-    // Verificar la ruta del archivo
-    const filePath = path.join(__dirname, '..', '..', 'frontend', 'reset-password.html');
-    console.log("Ruta del archivo de restablecimiento:", filePath);  // Log de la ruta del archivo
-    
-    res.sendFile(filePath, (err) => {
-      if (err) {
-        console.error("Error al enviar el archivo:", err);  // Mostrar cualquier error al enviar el archivo
-        res.status(500).send("Error al cargar la página de restablecimiento.");
-      } else {
-        console.log("Archivo enviado correctamente.");  // Confirmar si el archivo se envía
-      }
-    });
-  } catch (error) {
-    console.error("Error al cargar la página de restablecimiento:", error);  // Ver si hay algún error en el flujo
-    res.status(500).send("Error al cargar la página de restablecimiento.");
-  }
+router.get('/reset-password/:token', (req, res) => {
+  // Log para verificar que el token llega correctamente
+  const token = req.params.token;
+
+
+  // Ruta del archivo que se va a servir
+  const filePath = path.join(__dirname, '..', 'frontend', 'reset-password.html');
+
+
+  // Verifica si la ruta del archivo está correcta
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error("Error al enviar el archivo:", err);  // Ver error
+      res.status(500).send("Error al cargar la página de restablecimiento.");
+    } else {
+      console.log("Archivo enviado correctamente.");  // Confirmación
+    }
+  });
 });
+
+
+
+
+
+
+
 
 
 
