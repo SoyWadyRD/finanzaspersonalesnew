@@ -4,29 +4,30 @@ const router = express.Router();
 const { registro, login, perfil, verificarCorreo, recuperarContraseña, restablecerContraseña, actualizarNombre } = require("../controllers/authController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
-// Ruta para servir la página de restablecimiento de contraseña
+/// Ruta para servir la página de restablecimiento de contraseña
 router.get('/reset-password/:token', (req, res) => {
   const token = req.params.token;
-  console.log("Token recibido en la ruta /reset-password/:token:", token);  // Esto debería mostrar el token
-  
+  console.log("Token recibido en la ruta /reset-password/:token:", token);  // Verificar que el token se recibe correctamente
+
   try {
-    // Verifica la ruta absoluta del archivo que estás sirviendo
+    // Verificar la ruta del archivo
     const filePath = path.join(__dirname, 'frontend', 'reset-password.html');
-    console.log("Ruta del archivo de restablecimiento:", filePath);  // Imprime la ruta del archivo
+    console.log("Ruta del archivo de restablecimiento:", filePath);  // Log de la ruta del archivo
     
     res.sendFile(filePath, (err) => {
       if (err) {
-        console.error("Error al enviar el archivo:", err);  // Registra si hubo un error al enviar el archivo
+        console.error("Error al enviar el archivo:", err);  // Mostrar cualquier error al enviar el archivo
         res.status(500).send("Error al cargar la página de restablecimiento.");
       } else {
-        console.log("Archivo enviado correctamente.");
+        console.log("Archivo enviado correctamente.");  // Confirmar si el archivo se envía
       }
     });
   } catch (error) {
-    console.error("Error al cargar la página de restablecimiento:", error);
+    console.error("Error al cargar la página de restablecimiento:", error);  // Ver si hay algún error en el flujo
     res.status(500).send("Error al cargar la página de restablecimiento.");
   }
 });
+
 
 router.post("/registro", registro);
 router.get("/verificar/:token", verificarCorreo);

@@ -19,14 +19,21 @@ app.use(cors()); // Usamos CORS antes de configurar las rutas y archivos estáti
 // Conectar a la base de datos
 conectarDB();
 
+
 // Directorio para servir archivos estáticos
 const __dirnameBase = path.resolve(); // Define __dirnameBase
 app.use(express.static(path.join(__dirnameBase, "frontend"))); // Sirve todos los archivos estáticos desde el directorio frontend
 
-// Sirve CSS y JS específicos si están en carpetas dentro de frontend
 app.use(express.static(path.join(__dirnameBase, 'frontend', 'css')));
 app.use(express.static(path.join(__dirnameBase, 'frontend', 'js')));
 app.use(express.static(path.join(__dirnameBase, 'frontend', 'img')));
+
+// Verifica que los archivos estáticos sean accesibles
+app.use((req, res, next) => {
+  console.log("Solicitud entrante:", req.method, req.originalUrl);  // Ver qué solicitudes llegan
+  next();
+});
+
 
 // Middlewares
 app.use(express.json());
