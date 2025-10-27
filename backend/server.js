@@ -19,30 +19,35 @@ const app = express();
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'"],
+      defaultSrc: ["'self'"], // Solo permite cargar contenido del mismo dominio
       scriptSrc: [
-        "'self'",
-        "https://cdnjs.cloudflare.com",
-        "https://fonts.googleapis.com",
-        "'unsafe-inline'", // Permitir scripts en línea
+        "'self'", // Solo scripts desde el mismo dominio
+        "https://cdnjs.cloudflare.com", // Permitir scripts desde CDN de Cloudflare
+        "https://fonts.googleapis.com", // Permitir Google Fonts
+        "'unsafe-inline'", // Permitir inline scripts (es necesario para algunos casos)
       ],
       styleSrc: [
-        "'self'",
-        "https://fonts.googleapis.com",
-        "https://cdnjs.cloudflare.com",
-        "'unsafe-inline'", // Permitir estilos en línea
+        "'self'", // Solo estilos desde el mismo dominio
+        "https://fonts.googleapis.com", // Permitir estilos de Google Fonts
+        "https://cdnjs.cloudflare.com", // Permitir estilos desde CDN de Cloudflare
+        "'unsafe-inline'", // Permitir estilos inline (es necesario para algunos casos)
       ],
       fontSrc: [
-        "'self'",
-        "https://fonts.gstatic.com", // Permitir fuentes de Google Fonts
-        "https://cdnjs.cloudflare.com", // Si estás usando otro CDN para fuentes
+        "'self'", // Solo fuentes desde el mismo dominio
+        "https://fonts.gstatic.com", // Permitir fuentes de Google
       ],
-      connectSrc: ["'self'"],
-      imgSrc: ["'self'", "data:"],
-      scriptSrcAttr: ["'unsafe-inline'"], // Permitir atributos de script en línea
+      connectSrc: ["'self'"], // Solo permite conexiones desde el mismo dominio
+      imgSrc: ["'self'", "data:"], // Permitir imágenes del mismo dominio y de tipo `data:`
+      objectSrc: ["'none'"], // Desactivar objetos embebidos (como Flash)
+      mediaSrc: ["'self'"], // Permitir medios del mismo dominio
+      frameSrc: ["'none'"], // Desactivar iframes (si no los usas)
+      scriptSrcAttr: ["'unsafe-inline'"], // Permitir inline en atributos de script (onclick, etc.)
+      baseUri: ["'self'"], // Solo permite base URI desde el mismo dominio
+      formAction: ["'self'"], // Permitir que los formularios solo apunten a tu propio dominio
     },
   })
 );
+
 
 // Habilitar CORS
 app.use(cors()); // Usamos CORS antes de configurar las rutas y archivos estáticos
