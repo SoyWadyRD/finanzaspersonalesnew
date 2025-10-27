@@ -35,6 +35,7 @@ app.use(
       fontSrc: [
         "'self'", // Solo fuentes desde el mismo dominio
         "https://fonts.gstatic.com", // Permitir fuentes de Google
+        "https://cdnjs.cloudflare.com", // Permitir fuentes desde CDN de Font Awesome
       ],
       connectSrc: ["'self'"], // Solo permite conexiones desde el mismo dominio
       imgSrc: ["'self'", "data:"], // Permitir imágenes del mismo dominio y de tipo `data:`
@@ -47,6 +48,7 @@ app.use(
     },
   })
 );
+
 
 
 // Habilitar CORS
