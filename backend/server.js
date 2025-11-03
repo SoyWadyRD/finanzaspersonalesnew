@@ -19,33 +19,34 @@ const app = express();
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'"], // Solo permite cargar contenido del mismo dominio
+      defaultSrc: ["'self'"],
       scriptSrc: [
-        "'self'", // Solo scripts desde el mismo dominio
-        "https://cdnjs.cloudflare.com", // Permitir scripts desde CDN de Cloudflare
-        "https://fonts.googleapis.com", // Permitir Google Fonts
-        "'unsafe-inline'", // Permitir inline scripts (es necesario para algunos casos)
+        "'self'",
+        "https://cdnjs.cloudflare.com",
+        "https://fonts.googleapis.com",
+        "https://cdn.jsdelivr.net", // <- agregar esta línea
+        "'unsafe-inline'"
       ],
       styleSrc: [
-        "'self'", // Solo estilos desde el mismo dominio
-        "https://fonts.googleapis.com", // Permitir estilos de Google Fonts
-        "https://cdnjs.cloudflare.com", // Permitir estilos desde CDN de Cloudflare
-        "'unsafe-inline'", // Permitir estilos inline (es necesario para algunos casos)
+        "'self'",
+        "https://fonts.googleapis.com",
+        "https://cdnjs.cloudflare.com",
+        "'unsafe-inline'"
       ],
       fontSrc: [
-        "'self'", // Solo fuentes desde el mismo dominio
-        "https://fonts.gstatic.com", // Permitir fuentes de Google
-        "https://cdnjs.cloudflare.com", // Permitir fuentes desde CDN de Font Awesome
+        "'self'",
+        "https://fonts.gstatic.com",
+        "https://cdnjs.cloudflare.com"
       ],
-      connectSrc: ["'self'"], // Solo permite conexiones desde el mismo dominio
-      imgSrc: ["'self'", "data:"], // Permitir imágenes del mismo dominio y de tipo `data:`
-      objectSrc: ["'none'"], // Desactivar objetos embebidos (como Flash)
-      mediaSrc: ["'self'"], // Permitir medios del mismo dominio
-      frameSrc: ["'none'"], // Desactivar iframes (si no los usas)
-      scriptSrcAttr: ["'unsafe-inline'"], // Permitir inline en atributos de script (onclick, etc.)
-      baseUri: ["'self'"], // Solo permite base URI desde el mismo dominio
-      formAction: ["'self'"], // Permitir que los formularios solo apunten a tu propio dominio
-    },
+      connectSrc: ["'self'"],
+      imgSrc: ["'self'", "data:"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+      scriptSrcAttr: ["'unsafe-inline'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"]
+    }
   })
 );
 
