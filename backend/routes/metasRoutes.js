@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { crearMeta, obtenerMetas, actualizarMeta, eliminarMeta, agregarMonto, quitarMonto } = require("../controllers/metasController");
+const { crearMeta, obtenerMetas, actualizarMeta, eliminarMeta, agregarMonto, quitarMonto, editarMeta } = require("../controllers/metasController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 // Rutas de metas
@@ -14,6 +14,9 @@ router.put("/meta/agregar/:id", authMiddleware, agregarMonto); // Agregar monto 
 router.put("/meta/quitar/:id", authMiddleware, quitarMonto); // Quitar monto de la meta
 // Ruta para eliminar una meta
 router.delete("/meta/:id", authMiddleware, eliminarMeta);  // Usamos DELETE para eliminar
+
+router.put("/meta/editar/:id", authMiddleware, editarMeta);
+
 
 
 

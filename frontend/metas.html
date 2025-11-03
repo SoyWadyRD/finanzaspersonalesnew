@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
-  <title>Mis Metas</title>
+  <title>Metas | Finanzas Personales</title>
   <style>
     /* Reset básico */
     * {
@@ -175,17 +175,17 @@
 
     /* Botones de agregar/quitar dinero */
     button.add-remove {
-      background-color: #52f321;
+      background-color: #00a35c;
       width: auto;
       margin-top: 10px;
     }
 
     button.add-remove:hover {
-      background-color: #52f321;
+      background-color: #00a35c;
     }
 
     button.add-remove:active {
-      background-color: #52f321;
+      background-color: #00a35c;
     }
 
     button.remove {
@@ -229,6 +229,27 @@
     button.delete:active {
       background-color: #b71c1c;
     }
+
+
+
+
+
+
+
+
+
+    button.edit {
+  background-color: #ff9800;
+  margin-top: 10px;
+}
+
+button.edit:hover {
+  background-color: #e68a00;
+}
+
+button.edit:active {
+  background-color: #cc7700;
+}
 
 
 
@@ -323,6 +344,44 @@
 
 
 
+
+
+
+/* Estilo del loader */
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  z-index: 9999; /* Asegúrate de que el z-index sea alto */
+}
+
+/* Añadir animación de carga (opcional) */
+.loader:before {
+  content: "";
+  width: 50px;
+  height: 50px;
+  border: 5px solid #fff;
+  border-top: 5px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
     /* Responsividad */
     @media (max-width: 768px) {
       header {
@@ -411,7 +470,8 @@
 
 
 
-
+  <!-- Loader -->
+<div id="loader" class="loader" style="display: none;"></div>
 
 
 
@@ -460,6 +520,38 @@
     <button id="cancelarEliminarMeta"  style="background-color: rgb(255, 25, 25);">Cancelar</button>
   </div>
 </div>
+
+
+
+
+
+
+<div id="modalEditarMeta" class="modal">
+  <div class="modal-content" style="background-color: rgb(0, 30, 43); color: white;">
+    <h3 style="margin-bottom: 15px; text-align: center;">Editar Meta</h3>
+
+    <label for="editarNombreMeta" style="display:block; margin-top:10px; font-weight:bold;">Nombre de la Meta:</label>
+    <input type="text" id="editarNombreMeta" placeholder="Nombre de la meta" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);">
+
+    <label for="editarCantidadMeta" style="display:block; margin-top:10px; font-weight:bold;">Cantidad Total:</label>
+    <input type="number" id="editarCantidadMeta" placeholder="Cantidad total" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);">
+
+    <label for="editarFechaMeta" style="display:block; margin-top:10px; font-weight:bold;">Fecha Límite:</label>
+    <input type="date" id="editarFechaMeta" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);">
+
+    <label for="editarDescripcionMeta" style="display:block; margin-top:10px; font-weight:bold;">Descripción:</label>
+    <textarea id="editarDescripcionMeta" placeholder="Descripción" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);"></textarea>
+
+    <button id="confirmarEditarMeta" style="background-color: #ff9800; margin-top:15px;">Guardar Cambios</button>
+    <button id="cancelarEditarMeta" style="background-color: #f44336; margin-top:5px;">Cancelar</button>
+  </div>
+</div>
+
+
 
   <script src="js/metas.js"></script>
 </body>

@@ -158,3 +158,31 @@ exports.quitarMonto = async (req, res) => {
 
 
 
+// Actualizar meta
+// Actualizar meta existente completamente
+exports.editarMeta = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nombre, cantidad, fechaMeta, descripcion } = req.body;
+
+    if (!nombre || !cantidad || !fechaMeta || !descripcion) {
+      return res.status(400).json({ mensaje: "Todos los campos son obligatorios" });
+    }
+
+    const metaActualizada = await Meta.findOneAndUpdate(
+      { _id: id, usuarioId: req.usuarioId },
+      { nombre, cantidad, fechaMeta, descripcion },
+      { new: true }
+    );
+
+    if (!metaActualizada) {
+      return res.status(404).json({ mensaje: "Meta no encontrada" });
+    }
+
+    res.json({ mensaje: "Meta actualizada correctamente", meta: metaActualizada });
+  } catch (error) {
+    console.error("Error al actualizar meta:", error);
+    res.status(500).json({ mensaje: "Error interno del servidor" });
+  }
+};
+
