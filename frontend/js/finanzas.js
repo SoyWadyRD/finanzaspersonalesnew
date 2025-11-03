@@ -44,14 +44,15 @@ const mostrarMovimientos = () => {
       li.classList.add(m.tipo); // Añadir clase 'ingreso' o 'gasto'
       li.dataset.id = m._id;
 
-        // ✅ Agregar data-fecha
-  li.dataset.fecha = new Date(m.fecha).toISOString().split('T')[0]; // formato yyyy-mm-dd
+      // ✅ Agregar data-fecha
+      li.dataset.fecha = new Date(m.fecha).toISOString().split('T')[0]; // formato yyyy-mm-dd
 
       // Crear una estructura más ordenada para mostrar los movimientos
       const tipoMovimiento = m.tipo.toUpperCase();
       const monto = `$${m.monto.toFixed(2)}`;
       const categoria = m.categoria ? m.categoria : "Sin categoría";
       const descripcion = m.descripcion ? m.descripcion : "Sin descripción";
+      const fecha = new Date(m.fecha).toLocaleDateString(); // fecha legible
 
       li.innerHTML = `
         <div class="movimiento-info">
@@ -59,6 +60,7 @@ const mostrarMovimientos = () => {
           <span class="monto">${monto}</span>
         </div>
         <div class="detalle-movimiento">
+          <span class="fecha">Fecha: ${fecha}</span>
           <span class="categoria">Categoría: ${categoria}</span>
           <span class="descripcion">Descripción: ${descripcion}</span>
         </div>
@@ -67,12 +69,15 @@ const mostrarMovimientos = () => {
       li.addEventListener("click", () => {
         window.location.href = `detalle.html?id=${m._id}`;
       });
+
       listaMovimientos.appendChild(li);
     });
   })
   .catch(err => console.error("Error al cargar movimientos:", err));
 };
+
 mostrarMovimientos();
+
 
 
 
