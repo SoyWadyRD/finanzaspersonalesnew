@@ -11,13 +11,40 @@ document.addEventListener('DOMContentLoaded', async () => {
   const descripcionEl = document.getElementById("descripcion");
   const tipoEl = document.getElementById("tipo");
 
-  // const editarBtn = document.getElementById("editarBtn");
-  const cancelarBtn = document.getElementById("cancelarEdicionBtn");
   const eliminarBtn = document.getElementById("eliminarBtn");
-
+  const confirmacionEliminacion = document.getElementById("confirmacionEliminacion");
   const mensajeError = document.getElementById("mensajeError");
   const mensajeExito = document.getElementById("mensajeExito");
-  const confirmacionEliminacion = document.getElementById("confirmacionEliminacion");
+
+  // ===================== ELIMINAR =====================
+  document.getElementById("cancelarEliminarBtn").addEventListener("click", () => {
+    confirmacionEliminacion.style.display = "none";
+  });
+
+  eliminarBtn.addEventListener("click", () => {
+    confirmacionEliminacion.style.display = "block";
+  });
+
+  document.getElementById("confirmarEliminarBtn").addEventListener("click", async () => {
+    try {
+      const res = await fetch(`/api/finanzas/movimiento/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const data = await res.json().catch(() => ({}));
+      
+
+      if (!res.ok) return mostrarError(data.mensaje || "Error al eliminar");
+
+      mostrarExito("Movimiento eliminado");
+      setTimeout(() => (window.location.href = "dashboard.html"), 2000);
+    } catch (error) {
+      console.error("Error al eliminar:", error);
+      mostrarError("Error de conexión");
+    }
+    confirmacionEliminacion.style.display = "none";
+  });
 
   let editando = false;
   let movimiento = {};
@@ -270,29 +297,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     setTimeout(() => (mensajeExito.style.display = "none"), 3000);
   }
 
-  // ===================== ELIMINAR =====================
-  document.getElementById("cancelarEliminarBtn").addEventListener("click", () => {
-    confirmacionEliminacion.style.display = "none";
-  });
 
-  eliminarBtn.addEventListener("click", () => {
-    confirmacionEliminacion.style.display = "block";
-  });
 
-  document.getElementById("confirmarEliminarBtn").addEventListener("click", async () => {
-    try {
-      const res = await fetch(`/api/finanzas/movimiento/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) return mostrarError("Error al eliminar");
-      mostrarExito("Movimiento eliminado");
-      setTimeout(() => (window.location.href = "dashboard.html"), 2000);
-    } catch {
-      mostrarError("Error de conexión");
-    }
-    confirmacionEliminacion.style.display = "none";
-  });
+
+
+
+
+
+
 
 
 
