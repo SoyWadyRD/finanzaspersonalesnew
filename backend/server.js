@@ -5,6 +5,7 @@ const conectarDB = require("./config/db");
 const metasRoutes = require("./routes/metasRoutes");
 const authRoutes = require("./routes/authRoutes");
 const finanzasRoutes = require("./routes/finanzasRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const helmet = require('helmet');
 const cors = require('cors'); // Asegúrate de importar cors
 
@@ -79,6 +80,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/finanzas", metasRoutes);
 app.use("/api/finanzas", finanzasRoutes);
+
+app.use("/api/admin", adminRoutes);
 
 // Ruta raíz que sirve login.html
 app.get('/', (req, res) => {

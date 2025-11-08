@@ -88,25 +88,26 @@ exports.listarMovimientos = async (req, res) => {
 exports.actualizarMovimiento = async (req, res) => {
   try {
     const { id } = req.params;
-    const { monto, categoria, descripcion } = req.body;
+    const { monto, categoria, descripcion, fecha } = req.body; // ✅ ahora incluye fecha
 
-    // Buscar si es ingreso o gasto
     let movimiento = await Ingreso.findById(id);
     if (movimiento) {
-      movimiento.monto = monto ?? movimiento.monto;
-      movimiento.categoria = categoria ?? movimiento.categoria;
-      movimiento.descripcion = descripcion ?? movimiento.descripcion;
+      if (monto !== undefined) movimiento.monto = monto;
+      if (categoria) movimiento.categoria = categoria;
+      if (descripcion !== undefined) movimiento.descripcion = descripcion;
+      if (fecha) movimiento.fecha = new Date(fecha); // ✅ actualiza la fecha
       await movimiento.save();
-      return res.json({ mensaje: "Ingreso actualizado correctamente" });
+      return res.json({ mensaje: "Ingreso actualizado correctamente", movimiento });
     }
 
     movimiento = await Gasto.findById(id);
     if (movimiento) {
-      movimiento.monto = monto ?? movimiento.monto;
-      movimiento.categoria = categoria ?? movimiento.categoria;
-      movimiento.descripcion = descripcion ?? movimiento.descripcion;
+      if (monto !== undefined) movimiento.monto = monto;
+      if (categoria) movimiento.categoria = categoria;
+      if (descripcion !== undefined) movimiento.descripcion = descripcion;
+      if (fecha) movimiento.fecha = new Date(fecha); // ✅ actualiza la fecha
       await movimiento.save();
-      return res.json({ mensaje: "Gasto actualizado correctamente" });
+      return res.json({ mensaje: "Gasto actualizado correctamente", movimiento });
     }
 
     res.status(404).json({ mensaje: "Movimiento no encontrado" });

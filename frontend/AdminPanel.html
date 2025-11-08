@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <title>Panel Admin - Finanzas Personales</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fff;
+      color: rgb(0, 30, 43);
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: rgb(0, 30, 43);
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 3px solid #00a35c;
+      margin-bottom: 30px;
+      box-shadow: 0 0 15px rgba(0,163,92,0.5);
+    }
+
+    h1 {
+      color: #00a35c;
+      font-size: 26px;
+      letter-spacing: 1px;
+    }
+
+    .card {
+  background-color: rgb(0, 30, 43);
+  color: #f4f4f4;
+  padding: 30px;
+  border-radius: 20px;
+  width: 90%;         /* ← ancho reducido para dejar margen lateral */
+  max-width: 600px;
+  box-shadow: 0 0 20px rgba(0, 163, 92, 0.3);
+  transition: 0.3s;
+  margin: 40px auto;  /* ← centra horizontal y agrega margen superior */
+}
+
+
+
+    label {
+      display: block;
+      margin-top: 20px;
+      color: #00a35c;
+      font-weight: 600;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input, textarea {
+      background: #f4f4f4;
+      color: rgb(0,30,43);
+      border: 1px solid #00a35c60;
+    }
+
+   
+
+    button {
+      background: #00a35c;
+      color: #fff;
+      cursor: pointer;
+      margin-top: 25px;
+      font-weight: 600;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #00a35c80;
+    }
+
+    button:hover {
+      background: #029d56;
+      transform: scale(1.02);
+    }
+
+    .radio-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #f4f4f4;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    input[type="radio"] {
+      accent-color: #00a35c;
+    }
+
+    .search-section {
+      display: none;
+      margin-top: 20px;
+      border-top: 1px solid #00a35c60;
+      padding-top: 15px;
+    }
+
+    .suggestions {
+      background: #f4f4f4;
+      color: rgb(0,30,43);
+      border-radius: 10px;
+      margin-top: 5px;
+      max-height: 150px;
+      overflow-y: auto;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .suggestion {
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .suggestion:hover {
+      background: #00a35c20;
+    }
+
+/* ---- Rediseño de recipients ---- */
+.recipients {
+  margin-top: 15px;
+  background: #f4f4f4; /* fondo sólido */
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 40px;
+}
+
+
+.recipient {
+  background: #00a35c;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;           /* flex en lugar de inline-flex */
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  max-width: 100%;         /* para que no exceda del contenedor */
+}
+
+.recipient span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  max-width: calc(100% - 24px); /* deja espacio para el botón */
+}
+
+.recipient:hover {
+  transform: scale(1.05);
+}
+
+.recipient button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  transition: background 0.3s, color 0.3s;
+}
+
+.recipient button:hover {
+  background: #ff4444;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .recipient {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .recipient button {
+    width: 16px;
+    height: 16px;
+    font-size: 11px;
+  }
+}
+
+
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Panel de Administración  Finanzas Personales</h1>
+  </header>
+
+  <div class="card">
+    <label for="asunto">Asunto del correo</label>
+    <input type="text" id="asunto" placeholder="Escribe el asunto...">
+
+    <label for="mensaje">Mensaje</label>
+    <textarea id="mensaje" rows="5" placeholder="Escribe el mensaje..."></textarea>
+
+    <label for="fecha">Fecha de envío</label>
+    <input type="datetime-local" id="fecha">
+
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="modoEnvio" value="todos" checked> Enviar a todos
+      </label>
+      <label>
+        <input type="radio" name="modoEnvio" value="personalizado"> Seleccionar correos
+      </label>
+    </div>
+
+    <div class="search-section" id="searchSection">
+      <label for="buscarCorreo">Buscar correos</label>
+      <input type="text" id="buscarCorreo" placeholder="Escribe para buscar usuarios...">
+      <div id="sugerencias" class="suggestions"></div>
+      <div id="destinatarios" class="recipients"></div>
+    </div>
+
+    <button id="enviarCorreo">Enviar correo</button>
+
+
+    <button id="verHistorial" style="background-color: #ffcd44;">Ver historial</button>
+
+<div id="historialContainer" style="display:none; margin-top:20px;">
+  <h3 style="color:#00a35c; margin-bottom:10px;">Historial de envíos</h3>
+  <div id="listaHistorial" style="max-height:300px; overflow-y:auto;"></div>
+</div>
+
+    <div id="mensajeEstado" class="mensaje"></div>
+  </div>
+
+
+  
+
+  <script>
+    const buscarCorreo = document.getElementById("buscarCorreo");
+    const sugerencias = document.getElementById("sugerencias");
+    const destinatariosDiv = document.getElementById("destinatarios");
+    const enviarBtn = document.getElementById("enviarCorreo");
+    const searchSection = document.getElementById("searchSection");
+    const modoRadios = document.getElementsByName("modoEnvio");
+    const mensajeEstado = document.getElementById("mensajeEstado");
+
+    let destinatarios = [];
+    let todosLosUsuarios = [];
+
+    async function cargarUsuarios() {
+      try {
+        const res = await fetch("/api/admin/usuarios", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        });
+        todosLosUsuarios = await res.json();
+      } catch (err) {
+        mostrarMensaje("Error cargando usuarios.", "error");
+      }
+    }
+
+    function mostrarMensaje(texto, tipo) {
+  mensajeEstado.textContent = texto;
+  mensajeEstado.className = "mensaje " + tipo;
+  mensajeEstado.style.display = "block";
+
+  // Hacer que aparezca como cuadro centrado si es éxito
+  if(tipo === "exito") {
+    mensajeEstado.style.position = "fixed";
+    mensajeEstado.style.top = "100px";
+    mensajeEstado.style.left = "50%";
+    mensajeEstado.style.transform = "translateX(-50%)";
+    mensajeEstado.style.zIndex = "1000";
+    mensajeEstado.style.width = "auto";
+    mensajeEstado.style.padding = "15px 25px";
+    mensajeEstado.style.fontSize = "16px";
+    mensajeEstado.style.borderRadius = "12px";
+    mensajeEstado.style.boxShadow = "0 0 15px rgba(0,163,92,0.5)";
+    mensajeEstado.style.backgroundColor = "rgb(0,30,43)"
+  } else {
+    mensajeEstado.style.position = "static";
+  }
+
+  setTimeout(() => mensajeEstado.style.display = "none", 4000);
+}
+
+
+    modoRadios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        if (radio.value === "personalizado" && radio.checked) {
+          searchSection.style.display = "block";
+        } else {
+          searchSection.style.display = "none";
+          destinatarios = [];
+          renderDestinatarios();
+        }
+      });
+    });
+
+    buscarCorreo.addEventListener("input", () => {
+      const texto = buscarCorreo.value.toLowerCase();
+      sugerencias.innerHTML = "";
+      if (!texto) return;
+
+      const filtrados = todosLosUsuarios.filter(u => u.correo.toLowerCase().includes(texto));
+      filtrados.forEach(u => {
+        const div = document.createElement("div");
+        div.classList.add("suggestion");
+        div.textContent = u.correo;
+        div.onclick = () => agregarDestinatario(u.correo);
+        sugerencias.appendChild(div);
+      });
+    });
+
+    function agregarDestinatario(correo) {
+      if (destinatarios.includes(correo)) return;
+      destinatarios.push(correo);
+      renderDestinatarios();
+      buscarCorreo.value = "";
+      sugerencias.innerHTML = "";
+    }
+
+    function renderDestinatarios() {
+  destinatariosDiv.innerHTML = "";
+  destinatarios.forEach(correo => {
+    const div = document.createElement("div");
+    div.classList.add("recipient");
+
+    const span = document.createElement("span");
+    span.textContent = correo;
+
+    const btn = document.createElement("button");
+    btn.textContent = "x";
+    btn.addEventListener("click", () => quitarDestinatario(correo));
+
+    div.appendChild(span);
+    div.appendChild(btn);
+    destinatariosDiv.appendChild(div);
+  });
+}
+
+
+    window.quitarDestinatario = (correo) => {
+      destinatarios = destinatarios.filter(c => c !== correo);
+      renderDestinatarios();
+    };
+
+    enviarBtn.addEventListener("click", async () => {
+  const modo = document.querySelector('input[name="modoEnvio"]:checked').value;
+  const data = {
+    asunto: document.getElementById("asunto").value.trim(),
+    mensaje: document.getElementById("mensaje").value.trim(),
+    fechaEnvio: document.getElementById("fecha").value,
+    destinatarios: modo === "todos" ? [] : destinatarios
+  };
+
+  if (!data.asunto || !data.mensaje)
+    return mostrarMensaje("Asunto y mensaje son obligatorios.", "error");
+
+  try {
+    const res = await fetch("/api/admin/enviar-actualizacion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({
+        asunto: data.asunto,
+        contenidoHtml: data.mensaje,
+        destinatarios: data.destinatarios,
+        all: data.destinatarios.length === 0
+      })
+    });
+
+    const respuesta = await res.json();
+
+    if (!res.ok) throw new Error(respuesta.mensaje || "Error al enviar correos.");
+
+    mostrarMensaje(respuesta.mensaje || "Correos enviados correctamente", "exito");
+
+    // 🔹 Reiniciar formulario
+    if (res.ok) {
+      document.getElementById("asunto").value = "";
+      document.getElementById("mensaje").value = "";
+      document.getElementById("fecha").value = "";
+      destinatarios = [];
+      renderDestinatarios();
+      buscarCorreo.value = "";
+      sugerencias.innerHTML = "";
+      document.querySelector('input[name="modoEnvio"][value="todos"]').checked = true;
+      searchSection.style.display = "none";
+    }
+
+  } catch (err) {
+    mostrarMensaje(err.message, "error");
+  }
+});
+
+
+
+    cargarUsuarios();
+
+
+
+
+
+
+
+    const verHistorialBtn = document.getElementById("verHistorial");
+const historialContainer = document.getElementById("historialContainer");
+const listaHistorial = document.getElementById("listaHistorial");
+
+verHistorialBtn.addEventListener("click", async () => {
+  if (historialContainer.style.display === "none") {
+    try {
+      const res = await fetch("/api/admin/historial", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      const historial = await res.json();
+
+      listaHistorial.innerHTML = "";
+
+      if (!historial.length) {
+        listaHistorial.innerHTML = "<p>No hay envíos registrados.</p>";
+      } else {
+        historial.forEach(item => {
+          const div = document.createElement("div");
+          div.style.background = "#f4f4f4";
+          div.style.color = "rgb(0,30,43)";
+          div.style.padding = "10px";
+          div.style.borderRadius = "10px";
+          div.style.marginBottom = "10px";
+          div.innerHTML = `
+            <strong>Asunto:</strong> ${item.asunto}<br>
+            <strong>Fecha de envío:</strong> ${new Date(item.fechaEnvio).toLocaleString()}<br>
+            <strong>Destinatarios:</strong> ${item.destinatarios && item.destinatarios.length > 0 ? item.destinatarios.join(", ") : "Todos"}
+          `;
+          listaHistorial.appendChild(div);
+        });
+      }
+
+      historialContainer.style.display = "block";
+      verHistorialBtn.textContent = "Ocultar historial";
+    } catch (err) {
+      mostrarMensaje("Error cargando historial", "error");
+    }
+  } else {
+    historialContainer.style.display = "none";
+    verHistorialBtn.textContent = "Ver historial";
+  }
+});
+  </script>
+</body>
+</html>
