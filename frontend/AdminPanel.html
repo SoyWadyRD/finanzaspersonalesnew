@@ -386,7 +386,8 @@
   if (!asunto || !mensaje) return mostrarMensaje("Asunto y mensaje son obligatorios.", "error");
 
   // Convertir a ISO para backend/Agenda
-  const fechaEnvioISO = fechaInput ? new Date(fechaInput).toISOString() : null;
+  const fechaEnvioISO = fechaInput ? new Date(fechaInput).toLocaleString('en-US', { timeZone: 'America/Santo_Domingo' }) : null;
+
 
   const data = {
     asunto,
