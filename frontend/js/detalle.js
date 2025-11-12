@@ -192,7 +192,7 @@ async function guardarCambios(monto, fechaInputLocal, categoria, descripcion) {
 function actualizarCategorias(tipo, categoriaSelect, categoriaOtro, categoriaActual = "") {
   const opciones = tipo && tipo !== "gasto"
     ? ["Trabajo", "Emprendimiento", "Regalo", "Otro"] // 👉 Ingresos
-    : ["Comida", "Deporte", "Entretenimiento", "Gasolina", "Ropa", "Salud", "Tecnología", "Transporte", "Otro"]; // 👉 Gastos
+    : ["Comida", "Bebida", "Deporte", "Entretenimiento", "Gasolina", "Servicios","Agua", "Luz", "Alquiler","Internet", "Ropa", "Salud", "Tecnología", "Transporte", "Otro"]; // 👉 Gastos
 
   categoriaSelect.innerHTML = "";
   opciones.forEach(op => {

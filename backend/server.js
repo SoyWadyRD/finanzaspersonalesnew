@@ -6,12 +6,30 @@ const metasRoutes = require("./routes/metasRoutes");
 const authRoutes = require("./routes/authRoutes");
 const finanzasRoutes = require("./routes/finanzasRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const servicesRoutes = require('./routes/servicesRoutes');
+const deudaRoutes = require("./routes/deudaRoutes");
 const helmet = require('helmet');
 const cors = require('cors'); // Asegúrate de importar cors
+const agenda = require("./jobs/enviarCorreoJob");
+require('./jobs/enviarCorreoJob');  // Esto asegura que el cron job se ejecute
+require('./jobs/enviarCorreoRecordatorio'); // ✅ Esto ejecuta la tarea de recordatorios
+
+
+
+
+
+
 
 dotenv.config();
 
-
+(async function() {
+  try {
+    await agenda.start();
+    console.log("Agenda iniciada y lista para enviar correos programados.");
+  } catch (err) {
+    console.error("Error al iniciar Agenda:", err);
+  }
+})();
 
 // Crear instancia de Express
 const app = express();
@@ -82,6 +100,12 @@ app.use("/api/finanzas", metasRoutes);
 app.use("/api/finanzas", finanzasRoutes);
 
 app.use("/api/admin", adminRoutes);
+
+
+
+app.use('/api/servicios', servicesRoutes);
+app.use("/api", deudaRoutes);  
+
 
 // Ruta raíz que sirve login.html
 app.get('/', (req, res) => {

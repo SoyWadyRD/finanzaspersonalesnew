@@ -272,6 +272,8 @@
     const searchSection = document.getElementById("searchSection");
     const modoRadios = document.getElementsByName("modoEnvio");
     const mensajeEstado = document.getElementById("mensajeEstado");
+    const contenidoHtml = document.getElementById("mensaje").value.trim().replace(/\n/g, "<br>");
+
 
     let destinatarios = [];
     let todosLosUsuarios = [];
@@ -375,15 +377,24 @@
 
     enviarBtn.addEventListener("click", async () => {
   const modo = document.querySelector('input[name="modoEnvio"]:checked').value;
-  const data = {
-    asunto: document.getElementById("asunto").value.trim(),
-    mensaje: document.getElementById("mensaje").value.trim(),
-    fechaEnvio: document.getElementById("fecha").value,
-    destinatarios: modo === "todos" ? [] : destinatarios
-  };
 
-  if (!data.asunto || !data.mensaje)
-    return mostrarMensaje("Asunto y mensaje son obligatorios.", "error");
+  // Obtener valores del formulario
+  const asunto = document.getElementById("asunto").value.trim();
+  const mensaje = document.getElementById("mensaje").value.trim();
+  const fechaInput = document.getElementById("fecha").value; // "YYYY-MM-DDTHH:MM"
+
+  if (!asunto || !mensaje) return mostrarMensaje("Asunto y mensaje son obligatorios.", "error");
+
+  // Convertir a ISO para backend/Agenda
+  const fechaEnvioISO = fechaInput ? new Date(fechaInput).toISOString() : null;
+
+  const data = {
+    asunto,
+    contenidoHtml: mensaje.replace(/\n/g, "<br>"),
+    destinatarios: modo === "todos" ? [] : destinatarios,
+    all: modo === "todos",
+    fechaEnvio: fechaEnvioISO
+  };
 
   try {
     const res = await fetch("/api/admin/enviar-actualizacion", {
@@ -392,32 +403,24 @@
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`
       },
-      body: JSON.stringify({
-        asunto: data.asunto,
-        contenidoHtml: data.mensaje,
-        destinatarios: data.destinatarios,
-        all: data.destinatarios.length === 0
-      })
+      body: JSON.stringify(data)
     });
 
     const respuesta = await res.json();
-
     if (!res.ok) throw new Error(respuesta.mensaje || "Error al enviar correos.");
 
-    mostrarMensaje(respuesta.mensaje || "Correos enviados correctamente", "exito");
+    mostrarMensaje(respuesta.mensaje || "Correo programado correctamente", "exito");
 
     // 🔹 Reiniciar formulario
-    if (res.ok) {
-      document.getElementById("asunto").value = "";
-      document.getElementById("mensaje").value = "";
-      document.getElementById("fecha").value = "";
-      destinatarios = [];
-      renderDestinatarios();
-      buscarCorreo.value = "";
-      sugerencias.innerHTML = "";
-      document.querySelector('input[name="modoEnvio"][value="todos"]').checked = true;
-      searchSection.style.display = "none";
-    }
+    document.getElementById("asunto").value = "";
+    document.getElementById("mensaje").value = "";
+    document.getElementById("fecha").value = "";
+    destinatarios = [];
+    renderDestinatarios();
+    buscarCorreo.value = "";
+    sugerencias.innerHTML = "";
+    document.querySelector('input[name="modoEnvio"][value="todos"]').checked = true;
+    searchSection.style.display = "none";
 
   } catch (err) {
     mostrarMensaje(err.message, "error");

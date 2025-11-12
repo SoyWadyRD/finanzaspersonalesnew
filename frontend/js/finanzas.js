@@ -223,9 +223,15 @@ const actualizarCategorias = (tipo) => {
     categoriaSelect.innerHTML = `
       <option value="">Selecciona categoría</option>
       <option value="Comida">Comida</option>
+      <option value="Bebida">Bebida</option>
       <option value="Deporte">Deporte</option>
       <option value="Entretenimiento">Entretenimiento</option>
       <option value="Gasolina">Gasolina</option>
+      <option value="Servicios">Servicios</option>
+      <option value="Agua">Agua</option>
+      <option value="Luz">Luz</option>
+      <option value="Alquiler">Alquiler</option>
+      <option value="Internet">Internet</option>
       <option value="Ropa">Ropa</option>
       <option value="Salud">Salud</option>
       <option value="Tecnología">Tecnología</option>
