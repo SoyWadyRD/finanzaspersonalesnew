@@ -302,6 +302,14 @@ select {
   color: #ff4d6d; /* Rojo para el monto de gasto */
 }
 
+.fecha-larga {
+  display: block;
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 3px;
+}
+
+
 /* Responsividad */
 @media (max-width: 768px) {
   header {

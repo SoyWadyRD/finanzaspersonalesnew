@@ -58,7 +58,17 @@ const mostrarMovimientos = () => {
       const categoria = m.categoria ? m.categoria : "Sin categoría";
       const descripcion = m.descripcion ? m.descripcion : "Sin descripción";
       const d = new Date(m.fecha);
-const fecha = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+
+// Días y meses en español
+const diasSemana = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+// Formato corto (el que ya usas: 01/11/2025)
+const fechaCorta = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+
+// Formato largo nuevo
+const fechaLarga = `${diasSemana[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} del ${d.getFullYear()}`;
+
 
 
       li.innerHTML = `
@@ -67,7 +77,8 @@ const fecha = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).p
           <span class="monto">${monto}</span>
         </div>
         <div class="detalle-movimiento">
-          <span class="fecha">Fecha: ${fecha}</span>
+          <span class="fecha">Fecha: ${fechaCorta}</span>
+          <span class="fecha-larga">${fechaLarga}</span>
           <span class="categoria">Categoría: ${categoria}</span>
           <span class="descripcion">Descripción: ${descripcion}</span>
         </div>
