@@ -27,7 +27,7 @@ agenda.define("enviar correo", async (job) => {
               </tr>
               <tr>
                 <td style="padding:20px;background:#fff;color:#111;">
-                  ${contenido}
+                  ${contenidoHtml}
                 </td>
               </tr>
               <tr>

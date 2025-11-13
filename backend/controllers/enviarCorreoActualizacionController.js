@@ -45,18 +45,17 @@ exports.enviarActualizacion = async (req, res) => {
 
     // Si la fecha es futura, programar envío
     if (fecha > new Date()) {
-      await agenda.schedule(fecha, "enviar correo", {
-        asunto,
-        contenidoHtml,
-        destinatarios: listaFinal,
-        actualizacionId: nuevaActualizacion._id,
-      });
+  await agenda.schedule(fecha, "enviar correo", {
+    asunto,
+    contenidoHtml,
+    destinatarios: listaFinal,
+    actualizacionId: nuevaActualizacion._id,
+  });
 
-      return res.json({
-        mensaje: `Correo programado para ${fecha.toLocaleString()}`,
-        programado: true,
-      });
-    }
+  return res.json({
+    mensaje: `Correo programado para ${fecha.toLocaleString()}`,
+  });
+}
 
     // Si es envío inmediato
     const { exitosos, fallidos } = await enviarCorreosMasivos(listaFinal, asunto, contenidoHtml);
