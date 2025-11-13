@@ -463,10 +463,10 @@ verHistorialBtn.addEventListener("click", async () => {
           div.style.borderRadius = "10px";
           div.style.marginBottom = "10px";
           div.innerHTML = `
-            <strong>Asunto:</strong> ${item.asunto}<br>
-            <strong>Fecha de envío:</strong> ${new Date(item.fechaEnvio).toLocaleString()}<br>
-            <strong>Destinatarios:</strong> ${item.destinatarios && item.destinatarios.length > 0 ? item.destinatarios.join(", ") : "Todos"}
-          `;
+  <strong>Asunto:</strong> ${item.asunto}<br>
+  <strong>Fecha de envío:</strong> ${new Date(item.fechaEnvio).toLocaleString('es-DO', { timeZone: 'America/Santo_Domingo' })}<br>
+  <strong>Destinatarios:</strong> ${item.destinatarios && item.destinatarios.length > 0 ? item.destinatarios.join(", ") : "Todos"}
+`;
           listaHistorial.appendChild(div);
         });
       }
