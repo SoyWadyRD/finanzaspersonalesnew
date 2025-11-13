@@ -61,7 +61,10 @@ try {
   movimiento = await res.json();
 
   montoEl.textContent = movimiento.monto;
-  fechaEl.textContent = new Date(movimiento.fecha).toLocaleString();
+  const d = new Date(movimiento.fecha);
+const fechaFija = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+fechaEl.textContent = fechaFija;
+
   categoriaEl.textContent = movimiento.categoria || "-";
   descripcionEl.textContent = movimiento.descripcion || "-";
   tipoEl.textContent = movimiento.tipo && movimiento.tipo !== "gasto" ? "Ingreso" : "Gasto";
@@ -170,7 +173,10 @@ async function guardarCambios(monto, fechaInputLocal, categoria, descripcion) {
     // ✅ Mostrar en hora local real
     montoEl.textContent = movimiento.monto;
     descripcionEl.textContent = movimiento.descripcion || "-";
-    fechaEl.textContent = new Date(movimiento.fecha).toLocaleString();
+    const d2 = new Date(movimiento.fecha);
+const fechaFija2 = `${String(d2.getDate()).padStart(2,'0')}/${String(d2.getMonth()+1).padStart(2,'0')}/${d2.getFullYear()} ${String(d2.getHours()).padStart(2,'0')}:${String(d2.getMinutes()).padStart(2,'0')}`;
+fechaEl.textContent = fechaFija2;
+
     categoriaEl.textContent = movimiento.categoria || "-";
     tipoEl.textContent = movimiento.tipo && movimiento.tipo !== "gasto" ? "Ingreso" : "Gasto";
 
