@@ -57,7 +57,9 @@ const mostrarMovimientos = () => {
       const monto = `$${formatearMonto(m.monto)}`;
       const categoria = m.categoria ? m.categoria : "Sin categoría";
       const descripcion = m.descripcion ? m.descripcion : "Sin descripción";
-      const fecha = new Date(m.fecha).toLocaleDateString(); // fecha legible
+      const d = new Date(m.fecha);
+const fecha = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+
 
       li.innerHTML = `
         <div class="movimiento-info">
