@@ -33,11 +33,15 @@ const mostrarMetas = () => {
 
         const cantidadTotal = parseFloat(meta.cantidad);
         const montoActual = parseFloat(meta.montoActual || 0); // Si no existe, lo asignamos a 0
-        const fechaMeta = new Date(meta.fechaMeta);  // Convertimos la fecha de la meta
+        const [year, month, day] = meta.fechaMeta.split("T")[0].split("-");
+const fechaMeta = { year, month, day };  // objeto simple sin fecha js
+  // Convertimos la fecha de la meta
         const fechaHoy = new Date();  // Fecha actual
 
         // Verificar si la meta ya pasó
-        const metaCompletada = fechaMeta < fechaHoy; // Si la fecha es anterior a hoy
+        const fechaJS = new Date(`${fechaMeta.year}-${fechaMeta.month}-${fechaMeta.day}T23:59:59`);
+const metaCompletada = fechaJS < new Date();
+ // Si la fecha es anterior a hoy
         const porcentaje = (montoActual / cantidadTotal) * 100;
 
         // Asegurarnos de que el porcentaje no exceda el 100%
@@ -62,7 +66,7 @@ const mostrarMetas = () => {
           <div class="meta-details">
             <div><strong>Meta: </strong>$${cantidadTotal}</div>
             <div><strong>Logrado: </strong>$${montoActual}</div>
-            <div><strong>Fecha: </strong>${fechaMeta.toLocaleDateString()}</div>
+            <div><strong>Fecha: </strong>${fechaMeta.day}/${fechaMeta.month}/${fechaMeta.year}</div>
             <div><strong>Descripción: </strong>${meta.descripcion}</div>
             <div><strong>Estado: </strong>${estadoMeta}</div>
           </div>
