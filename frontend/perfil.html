@@ -50,7 +50,10 @@
         const usuario = await res.json();
         document.getElementById('nombreUsuario').textContent = usuario.nombre;
         document.getElementById('correoUsuario').textContent = usuario.correo;
-        document.getElementById('fechaRegistro').textContent = new Date(usuario.createdAt).toLocaleDateString();
+        const d = new Date(usuario.createdAt);
+const fechaFija = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+document.getElementById('fechaRegistro').textContent = fechaFija;
+
       } catch (err) {
         console.error(err);
         alert('Error al cargar el perfil');
