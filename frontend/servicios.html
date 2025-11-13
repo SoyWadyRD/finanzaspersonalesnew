@@ -20,7 +20,7 @@
 
     <div id="camposServicioEdicion">
       <input type="text" id="nombreEdicion" name="nombreEdicion" placeholder="Nombre" required />
-      <input type="number" id="montoEdicion" name="montoEdicion" placeholder="Monto" required />
+      <input type="number" id="montoEdicion" name="montoEdicion" placeholder="Monto" step="0.01" required />
       <select id="categoriaEdicion" name="categoriaEdicion" required>
         <option value="">Selecciona categoría</option>
         <option value="Comida">Comida</option>
@@ -72,7 +72,7 @@
     <form id="formAgregarServicio">
       <div id="camposServicio">
         <input type="text" id="nombre" name="nombre" placeholder="Nombre del servicio" required />
-        <input type="number" id="monto" name="monto" placeholder="Monto" required />
+        <input type="number" id="monto" name="monto" placeholder="Monto" step="0.01" required />
         <select id="categoria" name="categoria" required>
           <option value="">Selecciona categoría</option>
           <option value="Comida">Comida</option>

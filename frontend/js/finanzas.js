@@ -1,3 +1,7 @@
+    const formatearMonto = (num) => {
+  return new Intl.NumberFormat('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+};
+
 const nombreUsuario = document.getElementById("nombreUsuario");
 const totalIngresosEl = document.getElementById("totalIngresos");
 const totalGastosEl = document.getElementById("totalGastos");
@@ -21,9 +25,10 @@ const actualizarBalance = () => {
   })
   .then(res => res.json())
   .then(data => {
-    totalIngresosEl.textContent = data.totalIngresos;
-    totalGastosEl.textContent = data.totalGastos;
-    balanceEl.textContent = data.balance;
+balanceEl.textContent = formatearMonto(data.balance);
+totalIngresosEl.textContent = formatearMonto(data.totalIngresos);
+totalGastosEl.textContent = formatearMonto(data.totalGastos);
+
   });
 };
 actualizarBalance();
@@ -49,7 +54,7 @@ const mostrarMovimientos = () => {
 
       // Crear una estructura más ordenada para mostrar los movimientos
       const tipoMovimiento = m.tipo.toUpperCase();
-      const monto = `$${m.monto.toFixed(2)}`;
+      const monto = `$${formatearMonto(m.monto)}`;
       const categoria = m.categoria ? m.categoria : "Sin categoría";
       const descripcion = m.descripcion ? m.descripcion : "Sin descripción";
       const fecha = new Date(m.fecha).toLocaleDateString(); // fecha legible
