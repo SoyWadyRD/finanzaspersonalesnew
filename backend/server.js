@@ -11,6 +11,7 @@ const deudaRoutes = require("./routes/deudaRoutes");
 const helmet = require('helmet');
 const cors = require('cors'); // Asegúrate de importar cors
 const agenda = require("./jobs/enviarCorreoJob");
+const reintentarFallidos = require('./jobs/reintentarFallidos');
 require('./jobs/enviarCorreoJob');  // Esto asegura que el cron job se ejecute
 require('./jobs/enviarCorreoRecordatorio'); // ✅ Esto ejecuta la tarea de recordatorios
 
@@ -29,6 +30,17 @@ dotenv.config();
   } catch (err) {
     console.error("Error al iniciar Agenda:", err);
   }
+})();
+
+
+agenda.define('reintentar correos fallidos', async () => {
+  await reintentarFallidos();
+});
+
+// Ejecutar cada 10 minutos
+(async function() {
+  await agenda.start();
+  await agenda.every('10 minutes', 'reintentar correos fallidos');
 })();
 
 // Crear instancia de Express

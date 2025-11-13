@@ -1,6 +1,7 @@
+const { enviarCorreosMasivos } = require('../utils/enviarCorreosMasivos');
 const Usuario = require("../models/usuario");
 const Actualizacion = require("../models/actualizacion");
-const agenda = require("../jobs/enviarCorreoJob"); // nuestro job con agenda
+const agenda = require("../jobs/enviarCorreoJob");
 
 exports.enviarActualizacion = async (req, res) => {
   try {
@@ -10,6 +11,7 @@ exports.enviarActualizacion = async (req, res) => {
       return res.status(400).json({ mensaje: "Asunto y contenido son obligatorios" });
     }
 
+    // Crear lista de destinatarios
     let listaFinal = [];
     if (all) {
       const usuarios = await Usuario.find({}, "correo").lean();
@@ -18,12 +20,17 @@ exports.enviarActualizacion = async (req, res) => {
       listaFinal = Array.from(new Set(destinatarios.filter(Boolean)));
     }
 
-    if (!listaFinal.length) return res.status(400).json({ mensaje: "No hay destinatarios" });
+    if (!listaFinal.length) {
+      return res.status(400).json({ mensaje: "No hay destinatarios válidos" });
+    }
 
+    // Fecha del envío
     const fecha = fechaEnvio ? new Date(fechaEnvio) : new Date();
-    if (isNaN(fecha.getTime())) return res.status(400).json({ mensaje: "Fecha inválida" });
+    if (isNaN(fecha.getTime())) {
+      return res.status(400).json({ mensaje: "Fecha inválida" });
+    }
 
-    // Guardar historial
+    // Guardar la actualización
     const nuevaActualizacion = new Actualizacion({
       asunto,
       contenidoHtml,
@@ -36,18 +43,40 @@ exports.enviarActualizacion = async (req, res) => {
     });
     await nuevaActualizacion.save();
 
-    // Programar envío
-    await agenda.schedule(fecha, "enviar correo", {
-      asunto,
-      contenidoHtml,
-      destinatarios: listaFinal,
-      actualizacionId: nuevaActualizacion._id
+    // Si la fecha es futura, programar envío
+    if (fecha > new Date()) {
+      await agenda.schedule(fecha, "enviar correo", {
+        asunto,
+        contenidoHtml,
+        destinatarios: listaFinal,
+        actualizacionId: nuevaActualizacion._id,
+      });
+
+      return res.json({
+        mensaje: `Correo programado para ${fecha.toLocaleString()}`,
+        programado: true,
+      });
+    }
+
+    // Si es envío inmediato
+    const { exitosos, fallidos } = await enviarCorreosMasivos(listaFinal, asunto, contenidoHtml);
+
+    nuevaActualizacion.enviadosExitosos = exitosos.length;
+    nuevaActualizacion.enviadosFallidos = fallidos.length;
+    nuevaActualizacion.detallesFallos = fallidos;
+    await nuevaActualizacion.save();
+
+    res.json({
+      mensaje: `Envío completado: ${exitosos.length} exitosos, ${fallidos.length} fallidos`,
+      exitosos,
+      fallidos
     });
 
-    res.json({ mensaje: `Correo programado para ${fecha.toLocaleString()}` });
-
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ mensaje: "Error al programar correo", error: err.message });
+    console.error("Error al enviar actualización:", err);
+    res.status(500).json({
+      mensaje: "Error al enviar la actualización",
+      error: err.message,
+    });
   }
 };
