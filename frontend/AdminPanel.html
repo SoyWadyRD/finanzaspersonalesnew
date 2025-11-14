@@ -272,7 +272,7 @@
     const searchSection = document.getElementById("searchSection");
     const modoRadios = document.getElementsByName("modoEnvio");
     const mensajeEstado = document.getElementById("mensajeEstado");
-    const contenidoHtml = document.getElementById("mensaje").value.trim().replace(/\n/g, "<br>");
+    
 
 
     let destinatarios = [];
@@ -391,7 +391,12 @@
 
   const data = {
     asunto,
-    contenidoHtml: mensaje.replace(/\n/g, "<br>"),
+    contenidoHtml: `
+  <div style="font-size:16px; color:#111; line-height:1.6;">
+      ${mensaje.replace(/\n/g, "<br>")}
+  </div>
+`,
+
     destinatarios: modo === "todos" ? [] : destinatarios,
     all: modo === "todos",
     fechaEnvio: fechaEnvioISO

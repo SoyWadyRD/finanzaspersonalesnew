@@ -5,56 +5,64 @@ const Actualizacion = require("../models/actualizacion");
 agenda.define("enviar correo", async (job) => {
   const { asunto, contenidoHtml, destinatarios, actualizacionId } = job.attrs.data;
 
-  // Plantilla HTML del correo
+  // Plantilla HTML compatible con bandeja principal
   const plantillaHtml = (contenido) => `
-    <!doctype html>
-    <html>
-    <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>${asunto}</title>
-    </head>
-    <body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;color:#0a0a0a;">
-      <table role="presentation" width="100%" style="background:#f4f4f4;padding:30px 0;">
-        <tr>
-          <td align="center">
-            <table role="presentation" width="600" style="background:rgb(0,30,43);border-radius:8px;overflow:hidden;">
-              <tr>
-                <td style="padding:20px;background:linear-gradient(90deg,#001e2b,#002a36);text-align:center;">
-                  <img src="https://finanzaspersonales.icu/img/logo.jpeg" alt="Logo" width="80" style="border-radius:50%;display:block;margin:0 auto 10px;">
-                  <h1 style="color:#00a35c;margin:0;font-size:20px">${asunto}</h1>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:20px;background:#fff;color:#111;">
-                  ${contenidoHtml}
-                </td>
-              </tr>
-              <tr>
-                <td style="padding:20px;background:#001e2b;color:#fff;text-align:center;font-size:14px;">
-                  <div style="color:#00a35c;font-weight:bold;font-size:16px;margin-bottom:8px;">
-                    Finanzas Personales
-                  </div>
-                  <a href="https://finanzaspersonales.icu/login.html"
-                     style="display:inline-block;
-                            background:#00a35c;
-                            color:#fff;
-                            text-decoration:none;
-                            padding:10px 18px;
-                            border-radius:8px;
-                            font-weight:bold;
-                            margin-top:6px;
-                            transition:background 0.3s;">
-                     Ir
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </body>
-    </html>
+  <!doctype html>
+  <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>${asunto}</title>
+  </head>
+
+  <body style="margin:0; padding:0; background:#ffffff; font-family:Arial, Helvetica, sans-serif; color:#222;">
+
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff; padding:20px;">
+      <tr>
+        <td align="center">
+
+          <!-- Contenedor principal -->
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; background:#ffffff; border-radius:8px;">
+
+            <!-- LOGO -->
+            <tr>
+              <td align="center" style="padding-bottom:15px;">
+                <img 
+                  src="https://finanzaspersonales.icu/img/logo.jpeg"
+                  width="70"
+                  alt="Finanzas Personales"
+                  style="border-radius:50%; display:block;">
+              </td>
+            </tr>
+
+            <!-- TITULO -->
+            <tr>
+              <td align="center" style="font-size:20px; font-weight:bold; color:#00a35c; padding-bottom:20px;">
+                ${asunto}
+              </td>
+            </tr>
+
+            <!-- CONTENIDO -->
+            <tr>
+              <td style="font-size:15px; line-height:1.6; color:#222; padding:10px 10px 20px 10px;">
+                ${contenido}
+              </td>
+            </tr>
+
+            <!-- FOOTER -->
+            <tr>
+              <td align="center" style="font-size:13px; color:#555; padding-top:20px;">
+                Finanzas Personales · Este correo es informativo.
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+  </html>
   `;
 
   try {
@@ -75,11 +83,13 @@ agenda.define("enviar correo", async (job) => {
       }));
 
     // Actualizar la base de datos con resultados
-    await Actualizacion.findByIdAndUpdate(actualizacionId, {
-      enviadosExitosos: exitos.length,
-      enviadosFallidos: fallidos.length,
-      detallesFallos: fallidos,
-    });
+    const fallidosLimpios = fallidos.filter(f => typeof f === 'object');
+await Actualizacion.findByIdAndUpdate(actualizacionId, {
+  enviadosExitosos: exitos.length,
+  enviadosFallidos: fallidosLimpios.length,
+  detallesFallos: fallidosLimpios,
+});
+
 
     console.log(`📧 Job completado: ${exitos.length} enviados, ${fallidos.length} fallidos.`);
   } catch (err) {
