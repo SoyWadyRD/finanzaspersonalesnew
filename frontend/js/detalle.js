@@ -2,11 +2,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem("token");
   if (!token) return window.location.href = "login.html";
 
+  // === Fechas globales ===
+  const diasSemana = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get("id");
 
   const montoEl = document.getElementById("monto");
   const fechaEl = document.getElementById("fecha");
+  const fechaLargaEl = document.getElementById("fechaLarga");
   const categoriaEl = document.getElementById("categoria");
   const descripcionEl = document.getElementById("descripcion");
   const tipoEl = document.getElementById("tipo");
@@ -65,6 +70,12 @@ try {
 const fechaFija = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
 fechaEl.textContent = fechaFija;
 
+
+
+const fechaLarga = `${diasSemana[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} del ${d.getFullYear()}`;
+document.getElementById("fechaLarga").textContent = fechaLarga;
+
+
   categoriaEl.textContent = movimiento.categoria || "-";
   descripcionEl.textContent = movimiento.descripcion || "-";
   tipoEl.textContent = movimiento.tipo && movimiento.tipo !== "gasto" ? "Ingreso" : "Gasto";
@@ -81,6 +92,7 @@ const cancelarBtn = document.getElementById("cancelarEdicionBtn");
 editarBtn.addEventListener("click", async () => {
   if (!editando) {
     convertirAEditable();
+    fechaLargaEl.style.display = "none";
     editarBtn.innerHTML = '<i class="fas fa-save"></i> Guardar';
     cancelarBtn.style.display = "block";
     editando = true;
@@ -177,9 +189,15 @@ async function guardarCambios(monto, fechaInputLocal, categoria, descripcion) {
 const fechaFija2 = `${String(d2.getDate()).padStart(2,'0')}/${String(d2.getMonth()+1).padStart(2,'0')}/${d2.getFullYear()} ${String(d2.getHours()).padStart(2,'0')}:${String(d2.getMinutes()).padStart(2,'0')}`;
 fechaEl.textContent = fechaFija2;
 
+const d3 = new Date(movimiento.fecha);
+const fechaLarga2 = `${diasSemana[d3.getDay()]} ${d3.getDate()} de ${meses[d3.getMonth()]} del ${d3.getFullYear()}`;
+document.getElementById("fechaLarga").textContent = fechaLarga2;
+
+
     categoriaEl.textContent = movimiento.categoria || "-";
     tipoEl.textContent = movimiento.tipo && movimiento.tipo !== "gasto" ? "Ingreso" : "Gasto";
 
+    fechaLargaEl.style.display = "block";
 
     editarBtn.innerHTML = '<i class="fas fa-edit"></i> Editar';
     cancelarBtn.style.display = "none";
