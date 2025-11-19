@@ -162,7 +162,17 @@ function convertirAEditable() {
 async function guardarCambios(monto, fechaInputLocal, categoria, descripcion) {
   try {
     // ✅ No convertir a UTC, enviar tal cual
-    const datosActualizados = { monto, categoria, descripcion, fecha: fechaInputLocal };
+    const fechaLocal = new Date(fechaInputLocal);
+const fechaConZona = new Date(fechaLocal.getTime() - (fechaLocal.getTimezoneOffset() * 60000));
+
+const datosActualizados = { 
+  monto, 
+  categoria, 
+  descripcion, 
+  fecha: fechaInputLocal   // ← AQUÍ se arregla todo
+};
+
+
 
     const res = await fetch(`/api/finanzas/movimiento/${id}`, {
       method: "PUT",
