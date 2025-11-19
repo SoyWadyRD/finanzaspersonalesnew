@@ -171,12 +171,24 @@ async function guardarCambios(monto, fechaInputLocal, categoria, descripcion) {
 
 
     // Ajusta para que Node la entienda igual en producción
-    const datosActualizados = { 
-  monto, 
-  categoria, 
-  descripcion, 
-  fecha: fechaInputLocal  // ← ESTA ES LA FECHA CORRECTA
+   // Añadir zona horaria local a la fecha del input
+function agregarZonaHoraria(fechaLocal) {
+  const tzOffset = -new Date().getTimezoneOffset(); // en minutos
+  const sign = tzOffset >= 0 ? "+" : "-";
+  const horas = String(Math.abs(Math.floor(tzOffset / 60))).padStart(2, "0");
+  const minutos = String(Math.abs(tzOffset % 60)).padStart(2, "0");
+  return `${fechaLocal}${sign}${horas}:${minutos}`;
+}
+
+
+
+const datosActualizados = {
+  monto,
+  categoria,
+  descripcion,
+  fecha: agregarZonaHoraria(fechaInputLocal)
 };
+
     const res = await fetch(`/api/finanzas/movimiento/${id}`, {
       method: "PUT",
       headers: {
