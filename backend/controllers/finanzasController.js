@@ -95,7 +95,7 @@ exports.actualizarMovimiento = async (req, res) => {
       if (monto !== undefined) movimiento.monto = monto;
       if (categoria) movimiento.categoria = categoria;
       if (descripcion !== undefined) movimiento.descripcion = descripcion;
-      if (fecha) movimiento.fecha = new Date(fecha); // ✅ actualiza la fecha
+      if (fecha) movimiento.fecha = fecha; // ✅ actualiza la fecha
       await movimiento.save();
       return res.json({ mensaje: "Ingreso actualizado correctamente", movimiento });
     }
@@ -105,7 +105,7 @@ exports.actualizarMovimiento = async (req, res) => {
       if (monto !== undefined) movimiento.monto = monto;
       if (categoria) movimiento.categoria = categoria;
       if (descripcion !== undefined) movimiento.descripcion = descripcion;
-      if (fecha) movimiento.fecha = new Date(fecha); // ✅ actualiza la fecha
+      if (fecha) movimiento.fecha = fecha; // ✅ actualiza la fecha
       await movimiento.save();
       return res.json({ mensaje: "Gasto actualizado correctamente", movimiento });
     }

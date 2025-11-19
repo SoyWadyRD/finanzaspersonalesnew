@@ -161,19 +161,15 @@ function convertirAEditable() {
 
 async function guardarCambios(monto, fechaInputLocal, categoria, descripcion) {
   try {
-    // ✅ No convertir a UTC, enviar tal cual
-    const fechaLocal = new Date(fechaInputLocal);
-const fechaConZona = new Date(fechaLocal.getTime() - (fechaLocal.getTimezoneOffset() * 60000));
 
-const datosActualizados = { 
+
+    // Ajusta para que Node la entienda igual en producción
+    const datosActualizados = { 
   monto, 
   categoria, 
   descripcion, 
-  fecha: fechaInputLocal   // ← AQUÍ se arregla todo
+  fecha: fechaInputLocal  // ← ESTA ES LA FECHA CORRECTA
 };
-
-
-
     const res = await fetch(`/api/finanzas/movimiento/${id}`, {
       method: "PUT",
       headers: {
@@ -182,6 +178,7 @@ const datosActualizados = {
       },
       body: JSON.stringify(datosActualizados)
     });
+
 
     const data = await res.json().catch(() => ({}));
     if (!res.ok) return mostrarError(data.mensaje || "Error al actualizar");
