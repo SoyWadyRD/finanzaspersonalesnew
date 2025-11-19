@@ -24,8 +24,9 @@
 
     /* Header */
     header {
+        position: relative;
       display: flex;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
       padding: 20px;
       background: rgb(0, 30, 43);
@@ -37,6 +38,7 @@
       font-size: 1.8rem;
       color: white;
       margin-left: 10px;
+      text-align: center;
     }
 
     li{
@@ -53,6 +55,9 @@
       padding: 10px 20px;
       border-radius: 5px;
       transition: background-color 0.3s ease, transform 0.3s ease;
+      position: absolute;
+      left: 20px;
+      width: 75px;
     }
 
     .volver:hover {
@@ -68,6 +73,8 @@
     /* Main */
     main {
       padding: 15px;
+        max-width: 425px;   /* espacio máximo del contenido */
+  margin: 0 auto;     /* centra el main */
     }
 
     /* Estilos de los formularios y botones */
@@ -117,6 +124,15 @@
       margin-top: 40px;
     }
 
+    /* Centrar las tarjetas dentro del ul */
+#listaMetas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* centra las tarjetas */
+  gap: 20px;
+  padding: 0;
+}
+
     .meta-item {
       border: 1px solid #333;
       background-color: rgb(0, 30, 43);
@@ -125,6 +141,8 @@
       margin-bottom: 20px;
       color: #e0e0e0;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        width: 100%;
+  max-width: 425px;   /* lo que pediste */
     }
 
     .meta-item h3 {
@@ -135,11 +153,12 @@
     .meta-item .meta-details {
       display: flex;
       justify-content: space-between;
+       flex-direction: column;
     }
 
     .meta-item .meta-details div {
       flex: 1;
-      text-align: center;
+      text-align: left;
     }
 
     /* Barra de progreso */
@@ -434,9 +453,7 @@ button.edit:active {
       }
 
 
-      button, .volver {
-        width: 100%;
-      }
+      
     }
   </style>
 </head>
