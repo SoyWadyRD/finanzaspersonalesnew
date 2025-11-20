@@ -45,23 +45,33 @@ const mostrarMensajeError = (mensaje, esVerificacion = false) => {
   const textoError = document.getElementById("textoError");
   const bloqueVerificacion = document.getElementById("bloqueVerificacion");
 
+  // 🛑 Si no existen, no hacer nada (evita el error en login o recuperar)
+  if (!mensajeError || !textoError) {
+    console.warn("⚠️ Elementos de mensaje no existen en esta página");
+    return;
+  }
+
   textoError.textContent = mensaje;
   mensajeError.style.display = "block";
 
   if (esVerificacion) {
-    bloqueVerificacion.style.display = "block";
-    iniciarContadorVerificacionError();
+    if (bloqueVerificacion) {
+      bloqueVerificacion.style.display = "block";
+      iniciarContadorVerificacionError();
+    }
   } else {
-    bloqueVerificacion.style.display = "none";
+    if (bloqueVerificacion) {
+      bloqueVerificacion.style.display = "none";
+    }
   }
 
-  // Ocultar solo si no es error de verificación
   if (!esVerificacion) {
     setTimeout(() => {
       mensajeError.style.display = "none";
     }, 3000);
   }
 };
+
 
 function iniciarContadorVerificacionError() {
   const contador = document.getElementById("contadorError");
