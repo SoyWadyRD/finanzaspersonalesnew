@@ -21,8 +21,24 @@
 
 <!-- Mensaje de verificación del correo -->
 <div id="mensajeVerificacion" class="mensaje-verificacion" style="display: none;">
-  <p>Verifica tu correo para completar el registro.</p>
+  <p><strong>Esperando a que verifiques tu correo…</strong></p>
+
+  <p id="contadorReenviar" style="margin-top: 5px; font-size: 14px;">
+    Reenviar enlace en 30s
+  </p>
+
+  <!-- Botón deshabilitado inicialmente -->
+  <button id="btnReenviar" disabled style="margin-top: 10px; opacity: 0.5;">
+    Reenviar correo
+  </button>
+
+  <!-- Aparece después de 10 segundos -->
+  <p id="textoYaVerificado" style="margin-top: 15px; display: none;">
+    ¿Ya verificaste tu correo?  
+    <a href="login.html" style="color: rgb(0, 30, 43);">Inicia sesión aquí</a>
+  </p>
 </div>
+
 
   <div class="form-container">
     <!-- Logo de la empresa -->

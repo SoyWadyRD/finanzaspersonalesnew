@@ -1,5 +1,34 @@
 const API_URL = "/api/auth";
 
+let intervaloReenvio; // variable global
+
+function iniciarContadorReenvio() {
+  const contadorReenviar = document.getElementById("contadorReenviar");
+  const btnReenviar = document.getElementById("btnReenviar");
+
+  let tiempo = 30;
+
+  btnReenviar.disabled = true;
+  btnReenviar.style.opacity = "0.5";
+
+  contadorReenviar.textContent = `Reenviar enlace en ${tiempo}s`;
+
+  // Si ya había un intervalo, lo limpiamos para evitar duplicados
+  if (intervaloReenvio) clearInterval(intervaloReenvio);
+
+  intervaloReenvio = setInterval(() => {
+    tiempo--;
+    contadorReenviar.textContent = `Reenviar enlace en ${tiempo}s`;
+
+    if (tiempo <= 0) {
+      clearInterval(intervaloReenvio);
+      contadorReenviar.textContent = "Puedes reenviar el enlace";
+      btnReenviar.disabled = false;
+      btnReenviar.style.opacity = "1";
+    }
+  }, 1000);
+}
+
 // Función para mostrar el loader
 const mostrarLoader = () => {
   document.getElementById("loader").style.display = "flex";
@@ -11,16 +40,100 @@ const ocultarLoader = () => {
 };
 
 // Función para mostrar mensajes de error en el div
-const mostrarMensajeError = (mensaje) => {
+const mostrarMensajeError = (mensaje, esVerificacion = false) => {
   const mensajeError = document.getElementById("mensajeError");
-  mensajeError.querySelector("p").textContent = mensaje;
+  const textoError = document.getElementById("textoError");
+  const bloqueVerificacion = document.getElementById("bloqueVerificacion");
+
+  textoError.textContent = mensaje;
   mensajeError.style.display = "block";
 
-  // Ocultar el mensaje después de 3 segundos
-  setTimeout(() => {
-    mensajeError.style.display = "none";
-  }, 3000);
+  if (esVerificacion) {
+    bloqueVerificacion.style.display = "block";
+    iniciarContadorVerificacionError();
+  } else {
+    bloqueVerificacion.style.display = "none";
+  }
+
+  // Ocultar solo si no es error de verificación
+  if (!esVerificacion) {
+    setTimeout(() => {
+      mensajeError.style.display = "none";
+    }, 3000);
+  }
 };
+
+function iniciarContadorVerificacionError() {
+  const contador = document.getElementById("contadorError");
+  const btn = document.getElementById("btnReenviarDesdeError");
+  const ya = document.getElementById("yaVerificadoError");
+
+  let tiempo = 30;
+
+  btn.disabled = true;
+  btn.style.opacity = "0.5";
+
+  contador.textContent = `Reenviar enlace en ${tiempo}s`;
+  ya.style.display = "none";
+
+  if (intervaloReenvio) clearInterval(intervaloReenvio);
+
+  intervaloReenvio = setInterval(() => {
+    tiempo--;
+    contador.textContent = `Reenviar enlace en ${tiempo}s`;
+
+    if (tiempo <= 0) {
+      clearInterval(intervaloReenvio);
+      contador.textContent = "Puedes reenviar el enlace";
+      btn.disabled = false;
+      btn.style.opacity = "1";
+
+      ya.style.display = "block";
+    }
+  }, 1000);
+}
+
+
+
+const btnReenviarDesdeError = document.getElementById("btnReenviarDesdeError");
+if (btnReenviarDesdeError) {
+  btnReenviarDesdeError.addEventListener("click", async () => {
+
+    const correo = document.getElementById("correoLogin").value.trim();
+
+    if (!correo) {
+      mostrarMensajeError("Ingresa tu correo arriba para reenviar.");
+      return;
+    }
+
+    mostrarLoader();
+
+    try {
+      const res = await fetch(`${API_URL}/reenviar-verificacion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo })
+      });
+
+      const data = await res.json();
+      ocultarLoader();
+
+      if (res.ok) {
+        mostrarMensajeError("Correo reenviado ✔️");
+        iniciarContadorVerificacionError();
+      } else {
+        mostrarMensajeError(data.mensaje || "No se pudo reenviar.");
+      }
+
+    } catch {
+      ocultarLoader();
+      mostrarMensajeError("Error en el servidor ❌");
+    }
+  });
+}
+
+
+
 
 // Función para validar la contraseña
 const validarContraseña = (contraseña) => {
@@ -81,16 +194,26 @@ if (formRegistro) {
       ocultarLoader();
 
       if (res.ok) {
-        const mensajeVerificacion = document.getElementById("mensajeVerificacion");
-        mensajeVerificacion.style.display = "block";
+  const mensajeVerificacion = document.getElementById("mensajeVerificacion");
+  const contadorReenviar = document.getElementById("contadorReenviar");
+  const btnReenviar = document.getElementById("btnReenviar");
+  const textoYaVerificado = document.getElementById("textoYaVerificado");
 
-        setTimeout(() => {
-          mensajeVerificacion.style.display = "none";
-          window.location.href = "login.html";
-        }, 3000);
-      } else {
-        mostrarMensajeError(data.mensaje || "Error al registrarte ❌");
-      }
+  mensajeVerificacion.style.display = "block";
+
+  // Mostrar "¿Ya verificaste tu correo?" a los 10s
+  setTimeout(() => {
+    textoYaVerificado.style.display = "block";
+  }, 10000);
+
+  // 👉 SOLO UNA VEZ
+  iniciarContadorReenvio();
+}
+
+ else {
+  mostrarMensajeError(data.mensaje || "Error al registrarte ❌");
+}
+
     } catch (err) {
       ocultarLoader();
       mostrarMensajeError("Error en el servidor ❌");
@@ -133,14 +256,160 @@ if (formLogin) {
       ocultarLoader();
 
       if (res.ok) {
-        localStorage.setItem("token", data.token);
-        window.location.href = "dashboard.html";
-      } else {
-        mostrarMensajeError(data.mensaje || "Error al iniciar sesión ❌");
-      }
+  localStorage.setItem("token", data.token);
+  window.location.href = "dashboard.html";
+} else {
+
+  if (data.mensaje === "Cuenta no verificada") {
+
+  // 🟢 Mostrar el bloque de verificación
+  mostrarMensajeError("Cuenta no verificada", true);
+
+  // 🟢 Enviar automáticamente el correo de verificación
+  reenviarCorreoAutomatico(correo);
+
+} else {
+  mostrarMensajeError(data.mensaje || "Correo o contraseña incorrectos ❌");
+}
+
+
+}
+
     } catch (err) {
       ocultarLoader();
       mostrarMensajeError("Error en el servidor ❌");
+    }
+  });
+}
+
+
+
+
+async function reenviarCorreoAutomatico(correo) {
+  try {
+    const res = await fetch(`${API_URL}/reenviar-verificacion`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ correo })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      console.log("📨 Correo de verificación enviado automáticamente");
+      iniciarContadorVerificacionError(); // reinicia el contador
+    } else {
+      console.warn("No se pudo reenviar automáticamente:", data.mensaje);
+    }
+
+  } catch {
+    console.warn("Error reenviando correo automáticamente");
+  }
+}
+
+
+
+
+
+// Botón para reenviar verificación desde login
+const btnVerificarDesdeLogin = document.getElementById("btnVerificarDesdeLogin");
+if (btnVerificarDesdeLogin) {
+  btnVerificarDesdeLogin.addEventListener("click", async () => {
+
+    const correo = document.getElementById("correoLogin").value.trim();
+
+    if (!correo) {
+      mostrarMensajeError("Ingresa tu correo arriba para reenviar la verificación.");
+      return;
+    }
+
+    mostrarLoader();
+
+    try {
+      const res = await fetch(`${API_URL}/reenviar-verificacion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo })
+      });
+
+      const data = await res.json();
+      ocultarLoader();
+
+      if (res.ok) {
+        mostrarMensajeError("Correo de verificación enviado ✔️");
+      } else {
+        mostrarMensajeError(data.mensaje || "No se pudo enviar.");
+      }
+
+    } catch (err) {
+      ocultarLoader();
+      mostrarMensajeError("Error en el servidor ❌");
+    }
+  });
+}
+
+
+
+
+function iniciarContadorLogin() {
+  const contador = document.getElementById("contadorReenviarLogin");
+  const btn = document.getElementById("btnReenviarLogin");
+
+  let tiempo = 30;
+
+  btn.disabled = true;
+  btn.style.opacity = "0.5";
+
+  contador.textContent = `Reenviar enlace en ${tiempo}s`;
+
+  if (intervaloReenvio) clearInterval(intervaloReenvio);
+
+  intervaloReenvio = setInterval(() => {
+    tiempo--;
+    contador.textContent = `Reenviar enlace en ${tiempo}s`;
+
+    if (tiempo <= 0) {
+      clearInterval(intervaloReenvio);
+      contador.textContent = "Puedes reenviar el enlace";
+      btn.disabled = false;
+      btn.style.opacity = "1";
+    }
+  }, 1000);
+}
+
+
+const btnReenviarLogin = document.getElementById("btnReenviarLogin");
+if (btnReenviarLogin) {
+  btnReenviarLogin.addEventListener("click", async () => {
+    
+    const correo = document.getElementById("correoLogin").value.trim();
+
+    if (!correo) {
+      mostrarMensajeError("Ingresa tu correo arriba.");
+      return;
+    }
+
+    mostrarLoader();
+
+    try {
+      const res = await fetch(`${API_URL}/reenviar-verificacion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo })
+      });
+
+      const data = await res.json();
+      ocultarLoader();
+
+      if (res.ok) {
+        iniciarContadorLogin();
+      }
+
+      mostrarMensajeError(data.mensaje || "Intentando reenviar...");
+
+    } catch {
+      ocultarLoader();
+      mostrarMensajeError("Error en el servidor");
     }
   });
 }
@@ -237,3 +506,72 @@ if (formRecuperar) {
     }
   });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Reenviar correo de verificación
+// Reenviar correo de verificación
+const btnReenviar = document.getElementById("btnReenviar");
+if (btnReenviar) {
+  btnReenviar.addEventListener("click", async () => {
+    
+    // 🔥 BLOQUEO INMEDIATO (evita cualquier doble click)
+    btnReenviar.disabled = true;
+    btnReenviar.style.opacity = "0.5";
+
+    const correo = document.getElementById("correo").value.trim();
+
+    if (!correo) {
+      mostrarMensajeError("Primero ingresa un correo válido.");
+      
+      // 🔁 Rehabilitar si falla por correo vacío
+      btnReenviar.disabled = false;
+      btnReenviar.style.opacity = "1";
+
+      return;
+    }
+
+    mostrarLoader();
+
+    try {
+      const res = await fetch(`${API_URL}/reenviar-verificacion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo })
+      });
+
+      const data = await res.json();
+      ocultarLoader();
+
+      if (res.ok) {
+        mostrarMensajeError("Correo reenviado ✔️");
+        iniciarContadorReenvio(); // 🔥 Reinicia los 30 segundos
+      } else {
+        mostrarMensajeError(data.mensaje || "No se pudo reenviar.");
+
+        // 🔁 Rehabilitar si hubo error
+        btnReenviar.disabled = false;
+        btnReenviar.style.opacity = "1";
+      }
+    } catch (err) {
+      ocultarLoader();
+      mostrarMensajeError("Error en el servidor ❌");
+
+      // 🔁 Rehabilitar si hay error
+      btnReenviar.disabled = false;
+      btnReenviar.style.opacity = "1";
+    }
+  });
+}
+

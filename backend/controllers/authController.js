@@ -221,3 +221,47 @@ exports.actualizarNombre = async (req, res) => {
     res.status(500).json({ mensaje: "Error al actualizar nombre", error: error.message });
   }
 };
+
+
+
+
+
+exports.reenviarCorreoVerificacion = async (req, res) => {
+  const { correo } = req.body;
+
+  try {
+    const usuario = await Usuario.findOne({ correo });
+    if (!usuario) return res.status(400).json({ mensaje: "Usuario no encontrado." });
+
+    if (usuario.verificado) {
+      return res.status(400).json({ mensaje: "La cuenta ya está verificada." });
+    }
+
+    // Crear nuevo token
+    const tokenVerificacion = jwt.sign(
+      { id: usuario._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    const link = `${process.env.FRONTEND_URL}/api/auth/verificar/${tokenVerificacion}`;
+
+    const html = `
+      <h2>Hola ${usuario.nombre}</h2>
+      <p>Haz clic para verificar tu cuenta:</p>
+      <a href="${link}">Verificar cuenta</a>
+    `;
+
+    await enviarCorreo(correo, "Reenvío de verificación", html);
+
+    console.log(`📧 Reenvío de verificación enviado a: ${correo}`);
+
+    res.status(200).json({ mensaje: "Correo reenviado." });
+
+  } catch (error) {
+    res.status(500).json({
+      mensaje: "Error al reenviar correo.",
+      error: error.message
+    });
+  }
+};
