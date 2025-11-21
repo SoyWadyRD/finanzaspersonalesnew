@@ -39,8 +39,9 @@
   .modal-backdrop.show { display: flex; animation: fadeIn .18s ease; }
   .modal {
     width: 100%;
-    max-width: 400px;
-    height: 90vh;
+  max-width: 400px;
+  max-height: calc(100dvh - 40px);
+  height: auto;
     background: rgb(0,30,43);
     border: 2px solid #00a35c;
     border-radius: 12px;
@@ -95,7 +96,7 @@
 }
 
 #listaMovimientos li.gasto .tipo-movimiento {
-  color: #ff4d4d;
+  color: #ff4d6d;
   font-weight: bold;
 }
 
@@ -105,7 +106,7 @@
 }
 
 #listaMovimientos li.gasto .monto {
-  color: #ff4d4d;
+  color: #ff4d6d;
   font-weight: bold;
 }
   #listaMovimientos li.gasto { border-left: 4px solid #ff4d6d; }
@@ -124,7 +125,7 @@
   .btn-vermas { padding: 10px 14px; background: #00a35c; border: none; color: #012428; border-radius:8px; cursor: pointer; font-weight:700; }
 
   /* Responsivity */
-  @media (max-width: 768px) { .modal { max-width: 95%; height: 92vh; } .grafico { max-width: 240px; height:240px; } }
+  @media (max-width: 768px) { .modal { max-width: 95%; max-height: calc(100dvh - 40px); } .grafico { max-width: 240px; height:240px; } }
   @media (max-width: 480px) { .grafico { max-width: 180px; height:180px; } .resumen { flex-direction: column; gap:6px; } .btn-movimientos{width:100%} }
   
 </style>
