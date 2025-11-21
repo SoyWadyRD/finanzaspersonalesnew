@@ -326,3 +326,15 @@ categoriaSelect.addEventListener("change", () => {
     categoriaOtro.value = "";
   }
 });
+
+
+
+
+
+function verDetalle(id) {
+  localStorage.setItem("paginaAnterior", "dashboard.html");
+  window.location.href = `detalle.html?id=${id}`;
+}
+
+
+localStorage.setItem("paginaAnterior", "dashboard.html");
