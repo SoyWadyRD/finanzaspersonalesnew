@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Modal references
   const modalBackdrop = document.getElementById("modalBackdrop");
-  const modalClose = document.getElementById("modalClose");
   const btnCerrarModal = document.getElementById("btnCerrarModal");
   const listaMovimientosEl = document.getElementById("listaMovimientos");
   const btnVerMasModal = document.getElementById("btnVerMasModal");
@@ -165,7 +164,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (e.key === "Escape") cerrarModal();
   }
 
-  modalClose.addEventListener("click", cerrarModal);
+ 
   btnCerrarModal.addEventListener("click", cerrarModal);
   modalBackdrop.addEventListener("click", (e) => {
     if (e.target === modalBackdrop) cerrarModal();
