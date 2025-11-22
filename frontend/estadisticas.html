@@ -12,10 +12,49 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
   body { background-color: white; color: rgb(0,30,43); padding: 0; margin: 0; }
-  header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: rgb(0, 30, 43); border-bottom: 1px solid #333; width: 100%; box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2); flex-wrap: wrap; }
-  header h1 { font-size: 1.8rem; color: #ffffff; margin-bottom: 10px; }
-  header button { padding: 8px 16px; background-color: #00a35c; border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer; transition: 0.3s; }
-  header button:hover { background-color: #ff1a3c; }
+  /* Header */
+    header {
+        position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: rgb(0, 30, 43);
+      border-bottom: 1px solid #333;
+      gap: 20px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: white;
+      margin-left: 10px;
+      text-align: center;
+    }
+
+    .volver {
+      background-color: #00a35c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      position: absolute;
+      left: 20px;
+      width: 75px;
+    }
+
+    .volver:hover {
+      background-color: #00c9a7;
+      transform: translateY(-2px);
+    }
+
+    .volver:active {
+      background-color: #009b8f;
+      transform: translateY(2px);
+    }
+  
   #contenedorMeses { padding: 20px 40px; }
 
   .mes { background-color: rgb(0, 30, 43); border: 1px solid #00a35c; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 0 10px 0 #00a35c; color: white; position: relative; }
@@ -125,8 +164,126 @@
   .btn-vermas { padding: 10px 14px; background: #00a35c; border: none; color: #012428; border-radius:8px; cursor: pointer; font-weight:700; }
 
   /* Responsivity */
-  @media (max-width: 768px) { .modal { max-width: 95%; max-height: calc(100dvh - 40px); } .grafico { max-width: 240px; height:240px; } }
-  @media (max-width: 480px) { .grafico { max-width: 180px; height:180px; } .resumen { flex-direction: column; gap:6px; } .btn-movimientos{width:100%} }
+  @media (max-width: 768px) { header {
+        padding: 15px;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .modal { max-width: 95%; max-height: calc(100dvh - 40px); } .grafico { max-width: 240px; height:240px; } }
+  @media (max-width: 480px) { header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+      .grafico { max-width: 180px; height:180px; } .resumen { flex-direction: column; gap:6px; } .btn-movimientos{width:100%} }
+
+
+
+
+       /* --- 480px --- */
+@media (max-width: 480px) {
+
+    header {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 65px;
+        font-size: 13px;
+        padding: 8px 12px;
+        left: 10px;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+        width: 100%;
+        text-align: center;
+        padding-right: 10px;
+    }
+}
+
+
+
+
+
+     /* --- 425px --- */
+@media (max-width: 425px) {
+
+    header {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 75px;
+        font-size: 15px;
+        padding: 8px 12px;
+        left: 10px;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+        width: 100%;
+        text-align: right;
+        padding-right: 10px;
+    }
+}
+
+/* --- 375px --- */
+@media (max-width: 375px) {
+
+    header {
+        gap: 6px;
+                padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 75px;
+        font-size: 15px;
+        padding: 7px 11px;
+        left: 8px;
+    }
+
+    header h1 {
+        font-size: 1.50rem;
+        padding-right: 8px;
+        text-align: center;
+    }
+}
+
+/* --- 320px (super pequeño, iPhone SE) --- */
+@media (max-width: 320px) {
+
+    header {
+        gap: 4px;
+                padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 75px;
+        font-size: 15px;
+        padding: 6px 10px;
+        left: 6px;
+    }
+
+    header h1 {
+        font-size: 1.19rem;
+        padding-right: 6px;
+        text-align: right;
+    }
+}
   
 </style>
 </head>
@@ -134,7 +291,7 @@
 
 <header>
   <h1>Estadísticas Mensuales</h1>
-  <button onclick="window.location.href='dashboard.html'">Volver</button>
+  <button class="volver" onclick="window.location.href='dashboard.html'">Volver</button>
 </header>
 
 <div id="contenedorMeses"></div>
