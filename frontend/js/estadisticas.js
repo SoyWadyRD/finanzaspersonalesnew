@@ -64,9 +64,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     divMes.innerHTML = `
       <h2>${nombreMes}</h2>
       <div class="resumen">
-        <div>Ingresos: $${m.ingresos.toFixed(0)}</div>
-        <div>Gastos: $${m.gastos.toFixed(0)}</div>
-      </div>
+  <div>Ingresos: $${formatearMonto(m.ingresos)}</div>
+  <div>Gastos: $${formatearMonto(m.gastos)}</div>
+</div>
+
       <canvas class="grafico"></canvas>
       <div style="text-align:center;">
         <button class="btn-movimientos" data-mes="${m.mes}" data-año="${m.año}">Movimientos del mes</button>
