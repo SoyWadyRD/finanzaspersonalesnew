@@ -1,7 +1,7 @@
 {
   "name": "Finanzas Personales",
   "short_name": "Finanzas Personales",
-  "start_url": "https://finanzaspersonales.icu/dashboard.html",
+  "start_url": "/dashboard.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "rgb(0, 30, 43)",

@@ -53,23 +53,27 @@ app.use(
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'",
-        "https://cdnjs.cloudflare.com",
-        "https://fonts.googleapis.com",
-        "https://cdn.jsdelivr.net", // <- agregar esta línea
+        "https://cdnjs.cloudflare.com", // Permitir scripts de Cloudflare
+        "https://fonts.googleapis.com", // Permitir fuentes de Google
+        "https://cdn.jsdelivr.net", 
         "'unsafe-inline'"
       ],
       styleSrc: [
         "'self'",
-        "https://fonts.googleapis.com",
-        "https://cdnjs.cloudflare.com",
-        "'unsafe-inline'"
+        "https://cdnjs.cloudflare.com", // Permitir estilos de Cloudflare
+        "https://fonts.googleapis.com", // Permitir fuentes de Google Fonts
+        "'unsafe-inline'" // Permitir estilos en línea
       ],
       fontSrc: [
         "'self'",
-        "https://fonts.gstatic.com",
-        "https://cdnjs.cloudflare.com"
+        "https://fonts.gstatic.com", // Permitir fuentes desde Google Fonts
+        "https://cdnjs.cloudflare.com" // Permitir fuentes desde Cloudflare
       ],
-      connectSrc: ["'self'"],
+      connectSrc: [
+        "'self'", // Permitir conexiones desde el mismo dominio
+        "https://cdnjs.cloudflare.com", // Permitir conexiones desde Cloudflare
+        "https://fonts.gstatic.com" // Permitir conexiones a fuentes de Google
+      ],
       imgSrc: ["'self'", "data:"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
@@ -83,6 +87,8 @@ app.use(
 
 
 
+
+
 // Habilitar CORS
 app.use(cors()); // Usamos CORS antes de configurar las rutas y archivos estáticos
 
@@ -92,11 +98,22 @@ conectarDB();
 // Directorio para servir archivos estáticos
 const __dirnameBase = path.resolve();
 app.use(express.static(path.join(__dirname, '..', 'frontend'))); // Sirve todos los archivos estáticos desde el directorio frontend
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+
+console.log("Ruta pública: ", path.join(__dirname, 'public'));
 
 // Especificar rutas de los archivos estáticos de forma más precisa
 app.use('/reset-password/js', express.static(path.join(__dirnameBase, 'frontend', 'js')));
 app.use('/reset-password/img', express.static(path.join(__dirnameBase, 'frontend', 'img')));
 app.use('/reset-password/css', express.static(path.join(__dirnameBase, 'frontend', 'css')));
+
+
+
+
+
+
+
 
 // Verifica que los archivos estáticos sean accesibles
 app.use((req, res, next) => {
