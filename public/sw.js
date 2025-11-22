@@ -55,36 +55,25 @@ self.addEventListener('install', (event) => {
 
 // Filtrar y manejar solo URLs válidas durante el fetch
 self.addEventListener('fetch', (event) => {
-  console.log('Fetching:', event.request.url); // Ver qué solicitud está siendo procesada
+  console.log('Fetching:', event.request.url);
 
-  // Verificar si la solicitud proviene de una extensión (chrome-extension://)
-  if (event.request.url.includes('chrome-extension://')) {
-    console.log('Se ignoró una URL de extensión:', event.request.url);
-    return; // Ignorar esta solicitud
-  }
-
-  // Asegurarse de que no se intenten cachear solicitudes locales de desarrollo
-  if (event.request.url.includes('localhost:5000')) {
-    console.log('Se ignoró una solicitud a localhost:', event.request.url);
-    return; // Ignorar las solicitudes locales si es necesario
-  }
-
-  // Manejo de solicitudes GET
-  if (event.request.method === 'GET') {
+  // Cachea las solicitudes GET para APIs
+  if (event.request.method === 'GET' && event.request.url.includes('/api/')) {
     event.respondWith(
       caches.match(event.request)
         .then((cachedResponse) => {
+          // Si hay respuesta en cache, la devuelve
           if (cachedResponse) {
-            return cachedResponse; // Si está en el caché, responder con la versión cacheada
+            return cachedResponse;
           }
-          // Si no está en caché, hacer la solicitud y agregarla al caché si es válida
+
+          // Si no está en cache, lo solicita a la red y lo agrega al cache
           return fetch(event.request).then((response) => {
             if (!response.ok) {
-              return response; // Si no es válida, no la cacheamos
+              return response;
             }
             return caches.open(CACHE_NAME).then((cache) => {
-              console.log(`Caching: ${event.request.url}`); // Log de qué se está cacheando
-              cache.put(event.request, response.clone()); // Cachear la respuesta
+              cache.put(event.request, response.clone());
               return response;
             });
           });
@@ -92,8 +81,30 @@ self.addEventListener('fetch', (event) => {
     );
   }
 
-  // Manejo de solicitudes POST (sin cache)
+  // Para las solicitudes GET de archivos estáticos
+  if (event.request.method === 'GET' && !event.request.url.includes('/api/')) {
+    event.respondWith(
+      caches.match(event.request)
+        .then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return fetch(event.request).then((response) => {
+            if (!response.ok) {
+              return response;
+            }
+            return caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, response.clone());
+              return response;
+            });
+          });
+        })
+    );
+  }
+  
+  // Si es una solicitud POST o cualquier otra solicitud dinámica
   if (event.request.method === 'POST') {
     event.respondWith(fetch(event.request));
   }
 });
+
