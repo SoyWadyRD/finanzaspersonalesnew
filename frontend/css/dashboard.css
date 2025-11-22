@@ -72,6 +72,44 @@ header h1 {
 
 
 
+/* Estilo para el select */
+select {
+  background-color: #222;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #00a35c;
+  font-size: 1rem;
+  width: 100%; /* Asegura que ocupe el 100% del ancho disponible */
+  appearance: none; /* Elimina el estilo predeterminado del sistema */
+  -webkit-appearance: none; /* Elimina el estilo en Safari */
+  -moz-appearance: none; /* Elimina el estilo en Firefox */
+  background-image: url('ruta-del-icono'); /* Icono personalizado */
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* Ajusta la posición del ícono */
+  cursor: pointer;
+}
+
+/* Estilo para las opciones */
+select option {
+  background-color: #222;
+  color: #fff;
+  padding: 10px;
+}
+
+/* Estilo para el contenedor del select, para mejorar la visualización en dispositivos móviles */
+select:focus {
+  outline: none;
+  border-color: #00c77f; /* Cambio de color en focus */
+}
+
+/* Agregar un poco de animación para la transición */
+select, select:focus {
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+
+
 
 
 /* Menu hamburguesa */
