@@ -4,7 +4,7 @@
   "start_url": "https://finanzaspersonales.icu/dashboard.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#00a35c",
+  "theme_color": "rgb(0, 30, 43)",
   "icons": [
     {
       "src": "img/logo.jpeg",
