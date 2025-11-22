@@ -341,26 +341,3 @@ localStorage.setItem("paginaAnterior", "dashboard.html");
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Verificar si el navegador soporta Service Workers
-  if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')  // Ruta relativa desde la raíz del servidor
-    .then(registration => {
-      console.log('Service Worker registrado con éxito:', registration);
-    })
-    .catch(error => {
-      console.error('Error al registrar el Service Worker:', error);
-    });
-}

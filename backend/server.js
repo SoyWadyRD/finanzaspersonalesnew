@@ -98,10 +98,7 @@ conectarDB();
 // Directorio para servir archivos estáticos
 const __dirnameBase = path.resolve();
 app.use(express.static(path.join(__dirname, '..', 'frontend'))); // Sirve todos los archivos estáticos desde el directorio frontend
-app.use(express.static(path.join(__dirname, '..', 'public')));
 
-
-console.log("Ruta pública: ", path.join(__dirname, 'public'));
 
 // Especificar rutas de los archivos estáticos de forma más precisa
 app.use('/reset-password/js', express.static(path.join(__dirnameBase, 'frontend', 'js')));
