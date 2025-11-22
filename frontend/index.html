@@ -7,6 +7,17 @@
   <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#00a35c">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+
+
   <style>
     * {margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif;}
     body {background-color:#f4f4f4; color:#000; display:flex; flex-direction:column; align-items:center; min-height:100vh;}
@@ -425,6 +436,78 @@
     observer.observe(card);
   });
   benefitCards.forEach(card => observer.observe(card)); // 🔥 NUEVO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Función SPA para mostrar/ocultar secciones
+    function showPage(pageId) {
+      const pages = ['loginPage', 'registerPage', 'dashboardPage'];
+      pages.forEach(id => {
+        document.getElementById(id).style.display = (id === pageId) ? 'block' : 'none';
+      });
+    }
+
+    // Al cargar la web, mostrar login por defecto
+    showPage('loginPage');
+
+    // Login con backend
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email, password })
+      });
+
+      if(res.ok){
+        showPage('dashboardPage');
+      } else {
+        alert('Error de login');
+      }
+    });
+
+    // Registro con backend
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ name, email, password })
+      });
+
+      if(res.ok){
+        alert('Registro exitoso');
+        showPage('loginPage');
+      } else {
+        alert('Error en registro');
+      }
+    });
+
+    // Service Worker PWA (opcional, para offline)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('Service Worker registrado'))
+        .catch(err => console.log('Error en Service Worker:', err));
+    }
 </script>
 
 
