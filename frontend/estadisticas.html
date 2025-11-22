@@ -164,10 +164,12 @@
   .btn-vermas { padding: 10px 14px; background: #00a35c; border: none; color: #012428; border-radius:8px; cursor: pointer; font-weight:700; }
 
   /* Responsivity */
-  @media (max-width: 768px) { header {
-        padding: 15px;
-      }
+  @media (max-width: 768px) { 
 
+
+      header{
+        padding-top: 30px;
+      }
       header h1 {
         font-size: 1.5rem;
       }
@@ -198,7 +200,7 @@
         width: 65px;
         font-size: 13px;
         padding: 8px 12px;
-        left: 10px;
+        left: 15px;
     }
 
     header h1 {
@@ -228,7 +230,7 @@
         width: 75px;
         font-size: 15px;
         padding: 8px 12px;
-        left: 10px;
+        left: 20px;
     }
 
     header h1 {
@@ -252,15 +254,66 @@
         width: 75px;
         font-size: 15px;
         padding: 7px 11px;
-        left: 8px;
+        left: 15px;
     }
 
     header h1 {
-        font-size: 1.50rem;
+        font-size: 1.40rem;
         padding-right: 8px;
-        text-align: center;
+        text-align: right;
     }
 }
+
+
+/* --- 364px --- */
+@media (max-width: 364px) {
+
+    header {
+        gap: 6px;
+                padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 75px;
+        font-size: 15px;
+        padding: 7px 11px;
+        left: 15px;
+    }
+
+    header h1 {
+        font-size: 1.30rem;
+        padding-right: 8px;
+        text-align: right;
+    }
+}
+
+
+
+/* --- 345px --- */
+@media (max-width: 345px) {
+
+    header {
+        gap: 6px;
+                padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 65px;
+        font-size: 15px;
+        padding: 7px 11px;
+        left: 15px;
+    }
+
+    header h1 {
+        font-size: 1.25rem;
+        padding-right: 8px;
+        text-align: right;
+    }
+}
+
+
 
 /* --- 320px (super pequeño, iPhone SE) --- */
 @media (max-width: 320px) {
@@ -275,7 +328,8 @@
         width: 75px;
         font-size: 15px;
         padding: 6px 10px;
-        left: 6px;
+        left: 10px;
+        margin-right: 15px;
     }
 
     header h1 {
