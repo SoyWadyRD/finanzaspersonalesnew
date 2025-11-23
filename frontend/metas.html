@@ -71,6 +71,16 @@
       transform: translateY(2px);
     }
 
+
+
+
+    #crearMetaSection{
+      background-color: rgb(0, 30, 43);
+      padding: 20px;
+      border-radius: 5px;
+      color: white;
+    }
+
     /* Main */
     main {
       padding: 15px;
@@ -79,7 +89,7 @@
     }
 
     /* Estilos de los formularios y botones */
-    input, textarea, button {
+    input, textarea, button, select {
       padding: 10px;
       margin: 12px 0;
       border-radius: 4px;
@@ -88,7 +98,18 @@
       font-size: 14px;
     }
 
-    input{
+   #crearMetaSection input:focus, 
+#crearMetaSection textarea:focus, 
+#crearMetaSection select:focus, 
+#crearMetaSection button:focus {
+  outline: none; /* Elimina el borde por defecto */
+  box-shadow: 0 0 10px 2px #00a35c; /* Agrega un efecto de sombra */
+}
+
+
+    
+
+    input, select{
       background-color: rgb(0, 30, 43);
       color: white;
       border: 1px solid #00a35c;
@@ -108,6 +129,8 @@
       transition: background-color 0.3s ease;
     }
 
+    
+
     .crear {
       background-color: #45a049;
     }
@@ -119,6 +142,12 @@
     .crear:active {
       background-color: #3e8e41;
     }
+
+
+    h2{
+  text-align: center;
+}
+
 
     /* Sección de metas */
     #metasSection {
@@ -270,7 +299,6 @@ button.edit:hover {
 button.edit:active {
   background-color: #cc7700;
 }
-
 
 
 
@@ -472,7 +500,30 @@ button.edit:active {
       <form id="formMeta">
         <input type="text" id="nombreMeta" placeholder="Nombre de la meta" required>
         <input type="number" id="cantidadMeta" placeholder="Cantidad total de la meta" required>
+        <br>
+        <label for="fechaMeta">Fecha limite</label>
         <input type="date" id="fechaMeta" required>
+        <select id="categoriaSelect" required>
+  <option value="">Selecciona categoría</option>
+  <option value="Comida">Comida</option>
+  <option value="Bebida">Bebida</option>
+  <option value="Deporte">Deporte</option>
+  <option value="Entretenimiento">Entretenimiento</option>
+  <option value="Gasolina">Gasolina</option>
+  <option value="Servicios">Servicios</option>
+  <option value="Agua">Agua</option>
+  <option value="Luz">Luz</option>
+  <option value="Alquiler">Alquiler</option>
+  <option value="Internet">Internet</option>
+  <option value="Ropa">Ropa</option>
+  <option value="Salud">Salud</option>
+  <option value="Tecnología">Tecnología</option>
+  <option value="Transporte">Transporte</option>
+  <option value="Otro">Otro</option>
+</select>
+
+<input type="text" id="categoriaOtro" placeholder="Escribe la categoría" style="display:none; background-color: rgb(0,30,43); color:white; border:1px solid #00a35c;">
+
         <textarea id="descripcionMeta" placeholder="Descripción" required></textarea>
         <button type="submit" class="crear">Crear Meta</button>
       </form>
@@ -559,6 +610,30 @@ button.edit:active {
     <label for="editarFechaMeta" style="display:block; margin-top:10px; font-weight:bold;">Fecha Límite:</label>
     <input type="date" id="editarFechaMeta" required
       style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);">
+
+    <!-- Agregar el campo select para la categoría -->
+    <label for="editarCategoriaSelect" style="display:block; margin-top:10px; font-weight:bold;">Categoría:</label>
+    <select id="editarCategoriaSelect" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);">
+      <option value="Comida">Comida</option>
+      <option value="Bebida">Bebida</option>
+      <option value="Deporte">Deporte</option>
+      <option value="Entretenimiento">Entretenimiento</option>
+      <option value="Gasolina">Gasolina</option>
+      <option value="Servicios">Servicios</option>
+      <option value="Agua">Agua</option>
+      <option value="Luz">Luz</option>
+      <option value="Alquiler">Alquiler</option>
+      <option value="Internet">Internet</option>
+      <option value="Ropa">Ropa</option>
+      <option value="Salud">Salud</option>
+      <option value="Tecnología">Tecnología</option>
+      <option value="Transporte">Transporte</option>
+      <option value="Otro">Otro</option>
+    </select>
+
+    <!-- Input adicional para "Otro" si se selecciona la categoría -->
+    <input type="text" id="editarCategoriaOtro" placeholder="Escribe la categoría" style="display:none; background-color: rgb(0,30,43); color:white; border:1px solid #00a35c;">
 
     <label for="editarDescripcionMeta" style="display:block; margin-top:10px; font-weight:bold;">Descripción:</label>
     <textarea id="editarDescripcionMeta" placeholder="Descripción" required

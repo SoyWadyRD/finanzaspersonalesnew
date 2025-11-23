@@ -8,7 +8,6 @@ if (!token) {
 }
 
 let metasGlobal = []; // Variable global para almacenar las metas
-
 const mostrarMetas = () => {
   // Hacer la solicitud a la API
   fetch("/api/finanzas/metas", {
@@ -34,14 +33,14 @@ const mostrarMetas = () => {
         const cantidadTotal = parseFloat(meta.cantidad);
         const montoActual = parseFloat(meta.montoActual || 0); // Si no existe, lo asignamos a 0
         const [year, month, day] = meta.fechaMeta.split("T")[0].split("-");
-const fechaMeta = { year, month, day };  // objeto simple sin fecha js
-  // Convertimos la fecha de la meta
+        const fechaMeta = { year, month, day };  // objeto simple sin fecha js
+
+        // Convertimos la fecha de la meta
         const fechaHoy = new Date();  // Fecha actual
 
         // Verificar si la meta ya pasó
         const fechaJS = new Date(`${fechaMeta.year}-${fechaMeta.month}-${fechaMeta.day}T23:59:59`);
-const metaCompletada = fechaJS < new Date();
- // Si la fecha es anterior a hoy
+        const metaCompletada = fechaJS < new Date(); // Si la fecha es anterior a hoy
         const porcentaje = (montoActual / cantidadTotal) * 100;
 
         // Asegurarnos de que el porcentaje no exceda el 100%
@@ -67,6 +66,7 @@ const metaCompletada = fechaJS < new Date();
             <div><strong>Meta: </strong>$${cantidadTotal}</div>
             <div><strong>Logrado: </strong>$${montoActual}</div>
             <div><strong>Fecha: </strong>${fechaMeta.day}/${fechaMeta.month}/${fechaMeta.year}</div>
+            <div><strong>Categoria: </strong>${meta.categoria}</div> <!-- Aquí mostramos la categoría -->
             <div><strong>Descripción: </strong>${meta.descripcion}</div>
             <div><strong>Estado: </strong>${estadoMeta}</div>
           </div>
@@ -81,7 +81,6 @@ const metaCompletada = fechaJS < new Date();
             ` : ""}
           </div>
           <button class="edit" onclick="editarMeta('${meta._id}')">Editar Meta</button>
-
           <button class="delete" onclick="eliminarMeta('${meta._id}')">Eliminar Meta</button>
         `;
 
@@ -109,51 +108,60 @@ mostrarMetas();
 
 
 
-
 // Crear meta
 formMeta.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const nombre = document.getElementById("nombreMeta").value;
-  const cantidad = parseFloat(document.getElementById("cantidadMeta").value);
+  const nombre = document.getElementById("nombreMeta").value.trim();
+  const cantidad = document.getElementById("cantidadMeta").value;
   const fechaMeta = document.getElementById("fechaMeta").value;
-  const descripcion = document.getElementById("descripcionMeta").value;
+  const descripcion = document.getElementById("descripcionMeta").value.trim();
+  const categoriaSelect = document.getElementById("categoriaSelect");
+  const categoriaOtro = document.getElementById("categoriaOtro");
 
-  // Limpiar los mensajes previos
-  const mensajeVerificacion = document.getElementById("mensajeVerificacion");
-  const mensajeError = document.getElementById("mensajeError");
-  if (mensajeVerificacion) mensajeVerificacion.style.display = "none";
-  if (mensajeError) mensajeError.style.display = "none";
+  // Obtener categoría final
+  let categoria = categoriaSelect.value;
+  if (categoria === "Otro") {
+    categoria = categoriaOtro.value.trim();
+  }
+
+  if (!categoria) {
+    mostrarMensaje("error", "Debes seleccionar o escribir una categoría");
+    return;
+  }
 
   try {
-    mostrarLoader(); // Mostrar loader antes de la petición
-
     const res = await fetch("/api/finanzas/meta", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ nombre, cantidad, fechaMeta, descripcion }),
+      body: JSON.stringify({
+        nombre,
+        cantidad,
+        fechaMeta,
+        descripcion,
+        categoria,
+      }),
     });
 
     const data = await res.json();
 
-    if (!res.ok) {
-      mostrarMensaje("error", data.mensaje);
-      return;
-    }
+    if (!res.ok) throw new Error(data.message || "Error al crear meta");
 
-    mostrarMensaje("verificacion", "Meta creada correctamente");
     formMeta.reset();
-    mostrarMetas(); // Actualiza la lista de metas
-  } catch (err) {
-    mostrarMensaje("error", "Error en la conexión");
-    console.error("Error en la creación de la meta:", err);
-  } finally {
-    ocultarLoader(); // Ocultar loader cuando termina la petición
+    categoriaOtro.style.display = "none";
+
+    mostrarMetas();
+    mostrarMensaje("verificacion", "Meta creada con éxito");
+  } catch (e) {
+    console.error(e);
+    mostrarMensaje("error", "Hubo un error al crear la meta");
   }
 });
+
+
 
 
 
@@ -165,10 +173,17 @@ formMeta.addEventListener("submit", async (e) => {
 // Función para mostrar mensajes de éxito o error
 // Función para mostrar mensajes de éxito o error en el div
 const mostrarMensaje = (tipo, mensaje) => {
+  // Primero, elimina cualquier mensaje previo
+  const mensajeContainerExistente = document.getElementById(tipo === "verificacion" ? "mensajeVerificacion" : "mensajeError");
+  if (mensajeContainerExistente) {
+    mensajeContainerExistente.remove();
+  }
+
+  // Crear el nuevo contenedor de mensaje
   const mensajeContainer = document.createElement("div");
   mensajeContainer.textContent = mensaje;
 
-  // Asignamos las clases según el tipo de mensaje
+  // Asignar las clases y el ID según el tipo de mensaje
   if (tipo === "verificacion") {
     mensajeContainer.classList.add("mensaje-verificacion");
     mensajeContainer.id = "mensajeVerificacion";
@@ -188,7 +203,6 @@ const mostrarMensaje = (tipo, mensaje) => {
     mensajeContainer.style.display = "none";
   }, 3000);
 };
-
 
 
 
@@ -482,16 +496,57 @@ const editarMeta = (metaId) => {
   document.getElementById("editarFechaMeta").value = meta.fechaMeta.split("T")[0]; // formato yyyy-mm-dd
   document.getElementById("editarDescripcionMeta").value = meta.descripcion;
 
+  // Cargar la categoría en el select
+  const categoriaSelect = document.getElementById("editarCategoriaSelect");
+  categoriaSelect.value = meta.categoria || "Otro";  // "Otro" por defecto si no hay categoría
+
+  // Mostrar el campo de categoría personalizada si es "Otro"
+  const categoriaOtro = document.getElementById("editarCategoriaOtro");
+  if (meta.categoria === "Otro") {
+    categoriaOtro.style.display = "block";
+    categoriaOtro.value = meta.categoria;  // Asignar la categoría personalizada
+  } else {
+    categoriaOtro.style.display = "none";
+  }
+
   modalEditarMeta.style.display = "flex";
+
+  // Cuando se cambia la categoría en el select
+  categoriaSelect.onchange = () => {
+    if (categoriaSelect.value === "Otro") {
+      categoriaOtro.style.display = "block"; // Mostrar campo para otra categoría
+    } else {
+      categoriaOtro.style.display = "none"; // Ocultar campo si no es "Otro"
+    }
+  };
 
   const confirmarEditarMeta = document.getElementById("confirmarEditarMeta");
   const cancelarEditarMeta = document.getElementById("cancelarEditarMeta");
 
   confirmarEditarMeta.onclick = async () => {
-    const nombre = document.getElementById("editarNombreMeta").value;
-    const cantidad = parseFloat(document.getElementById("editarCantidadMeta").value);
-    const fechaMeta = document.getElementById("editarFechaMeta").value;
-    const descripcion = document.getElementById("editarDescripcionMeta").value;
+    const nombreMeta = document.getElementById("editarNombreMeta").value; // Definir correctamente
+    const cantidadMeta = parseFloat(document.getElementById("editarCantidadMeta").value); // Definir correctamente
+    const fechaMeta = document.getElementById("editarFechaMeta").value; // Definir correctamente
+    const descripcionMeta = document.getElementById("editarDescripcionMeta").value; // Definir correctamente
+    const categoriaSelect = document.getElementById("editarCategoriaSelect");
+    const categoriaOtro = document.getElementById("editarCategoriaOtro");
+
+    // Verificar que todos los campos estén completos
+    if (!nombreMeta || !cantidadMeta || !fechaMeta || !descripcionMeta || !categoriaSelect || !categoriaOtro) {
+      return mostrarMensaje("error", "Algunos elementos del formulario no se encuentran.");
+    }
+
+    let categoria = categoriaSelect.value;
+
+    // Si se selecciona "Otro", obtener el valor del campo de texto adicional
+    if (categoria === "Otro") {
+      categoria = categoriaOtro.value.trim(); // Obtener valor del campo "Otro"
+    }
+
+    // Validar que la categoría no esté vacía
+    if (!categoria) {
+      return mostrarMensaje("error", "Debes seleccionar o escribir una categoría");
+    }
 
     try {
       mostrarLoader(); // Mostrar loader antes de la petición
@@ -502,7 +557,7 @@ const editarMeta = (metaId) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ nombre, cantidad, fechaMeta, descripcion }),
+        body: JSON.stringify({ nombre: nombreMeta, cantidad: cantidadMeta, fechaMeta, descripcion: descripcionMeta, categoria }), // Usar las variables correctamente
       });
 
       if (!res.ok) {
@@ -510,7 +565,7 @@ const editarMeta = (metaId) => {
         return mostrarMensaje("error", data.mensaje || "Error al editar la meta");
       }
 
-      mostrarMetas(); // refresca la lista
+      mostrarMetas(); // Refresca la lista
       modalEditarMeta.style.display = "none";
     } catch (err) {
       console.error("Error al editar meta:", err);
@@ -528,3 +583,20 @@ const editarMeta = (metaId) => {
 
 
 
+
+
+const categoriaSelect = document.getElementById("categoriaSelect");
+const categoriaOtro = document.getElementById("categoriaOtro");
+
+let categoriaFinal = categoriaSelect.value;
+
+categoriaSelect.addEventListener("change", () => {
+  if (categoriaSelect.value === "Otro") {
+    categoriaOtro.style.display = "block";
+    categoriaOtro.required = true;
+  } else {
+    categoriaOtro.style.display = "none";
+    categoriaOtro.required = false;
+    categoriaOtro.value = "";
+  }
+});

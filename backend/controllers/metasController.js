@@ -1,8 +1,11 @@
 const Meta = require("../models/Meta");
+const Gasto = require("../models/gasto");  // <-- FALTA ESTO
+
 
 // Crear una nueva meta
+// Crear meta
 exports.crearMeta = async (req, res) => {
-  const { nombre, cantidad, descripcion, fechaMeta } = req.body;
+  const { nombre, cantidad, descripcion, fechaMeta, categoria } = req.body;
   const usuarioId = req.usuarioId;
 
   try {
@@ -11,6 +14,7 @@ exports.crearMeta = async (req, res) => {
       cantidad,
       descripcion,
       fechaMeta,
+      categoria,
       usuarioId
     });
 
@@ -22,18 +26,26 @@ exports.crearMeta = async (req, res) => {
   }
 };
 
-// Obtener todas las metas del usuario
-exports.obtenerMetas = async (req, res) => {
-  const usuarioId = req.usuarioId;
 
+
+
+
+// Obtener todas las metas del usuario
+// Obtener metas
+exports.obtenerMetas = async (req, res) => {
   try {
-    const metas = await Meta.find({ usuarioId });
+    const metas = await Meta.find({ usuarioId: req.usuarioId });
     res.json(metas);
   } catch (error) {
-    console.error("Error al obtener las metas:", error);
-    res.status(500).json({ mensaje: "Error al obtener las metas", error: error.message });
+    res.status(500).json({ mensaje: "Error al obtener metas", error: error.message });
   }
 };
+
+
+
+
+
+
 
 // Actualizar una meta (por ejemplo, para marcarla como alcanzada)
 exports.actualizarMeta = async (req, res) => {
@@ -57,19 +69,19 @@ exports.actualizarMeta = async (req, res) => {
 };
 
 // Eliminar una meta
+// Eliminar meta
 exports.eliminarMeta = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const meta = await Meta.findOneAndDelete({ _id: id, usuarioId: req.usuarioId });
-    if (!meta) {
-      return res.status(404).json({ mensaje: "Meta no encontrada" });
-    }
+    const meta = await Meta.findOneAndDelete({
+      _id: req.params.id,
+      usuarioId: req.usuarioId
+    });
+
+    if (!meta) return res.status(404).json({ mensaje: "Meta no encontrada" });
 
     res.json({ mensaje: "Meta eliminada correctamente" });
   } catch (error) {
-    console.error("Error al eliminar la meta:", error);
-    res.status(500).json({ mensaje: "Error al eliminar la meta", error: error.message });
+    res.status(500).json({ mensaje: "Error al eliminar meta", error: error.message });
   }
 };
 
@@ -88,26 +100,41 @@ exports.eliminarMeta = async (req, res) => {
 
 
 
-// Agregar monto a una meta
-// Agregar monto a una meta
+
+// Agregar monto
 exports.agregarMonto = async (req, res) => {
   const { id } = req.params;
   const { monto } = req.body;
 
   try {
     const meta = await Meta.findOne({ _id: id, usuarioId: req.usuarioId });
-    if (!meta) {
-      return res.status(404).json({ mensaje: "Meta no encontrada" });
+    if (!meta) return res.status(404).json({ mensaje: "Meta no encontrada" });
+
+    meta.montoActual = (meta.montoActual || 0) + monto;
+
+    const metaCompletada = meta.montoActual >= meta.cantidad;
+    if (metaCompletada && meta.estado !== "completada") {
+      meta.estado = "completada";
+
+      // Crear el gasto con la categoría de la meta
+      await Gasto.create({
+        usuarioId: req.usuarioId,
+        monto: meta.cantidad,
+        categoria: meta.categoria,  // Usar la categoría de la meta
+        descripcion: `Meta "${meta.nombre}" completada`
+      });
     }
 
-    // Incrementar montoActual
-    meta.montoActual = (meta.montoActual || 0) + monto; // Asegúrate de que el monto se sume correctamente
     await meta.save();
 
-    // Responde con la meta actualizada
-    res.json({ mensaje: "Monto agregado correctamente", meta });
+    res.json({
+      mensaje: metaCompletada
+        ? "Monto agregado y meta completada"
+        : "Monto agregado correctamente",
+      meta
+    });
+
   } catch (error) {
-    console.error("Error al agregar monto:", error);
     res.status(500).json({ mensaje: "Error al agregar monto", error: error.message });
   }
 };
@@ -127,28 +154,23 @@ exports.agregarMonto = async (req, res) => {
 
 
 
-// Quitar monto de una meta
+// Quitar monto
 exports.quitarMonto = async (req, res) => {
   const { id } = req.params;
   const { monto } = req.body;
 
   try {
     const meta = await Meta.findOne({ _id: id, usuarioId: req.usuarioId });
-    if (!meta) {
-      return res.status(404).json({ mensaje: "Meta no encontrada" });
-    }
+    if (!meta) return res.status(404).json({ mensaje: "Meta no encontrada" });
 
-    // Restar montoActual
-    meta.montoActual = (meta.montoActual || 0) - monto; // Asegúrate de que el monto se reste correctamente
-    if (meta.montoActual < 0) {
-      meta.montoActual = 0; // Evita que el monto actual sea negativo
-    }
+    meta.montoActual = (meta.montoActual || 0) - monto;
+    if (meta.montoActual < 0) meta.montoActual = 0;
+
     await meta.save();
 
-    // Responde con la meta actualizada
     res.json({ mensaje: "Monto quitado correctamente", meta });
+
   } catch (error) {
-    console.error("Error al quitar monto:", error);
     res.status(500).json({ mensaje: "Error al quitar monto", error: error.message });
   }
 };
@@ -159,30 +181,32 @@ exports.quitarMonto = async (req, res) => {
 
 
 // Actualizar meta
-// Actualizar meta existente completamente
+// Editar meta
 exports.editarMeta = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, cantidad, fechaMeta, descripcion } = req.body;
+    const { nombre, cantidad, fechaMeta, descripcion, categoria } = req.body; // Asegúrate de que 'categoria' esté en el body
 
-    if (!nombre || !cantidad || !fechaMeta || !descripcion) {
-      return res.status(400).json({ mensaje: "Todos los campos son obligatorios" });
-    }
+    const meta = await Meta.findOne({
+      _id: id,
+      usuarioId: req.usuarioId
+    });
 
-    const metaActualizada = await Meta.findOneAndUpdate(
-      { _id: id, usuarioId: req.usuarioId },
-      { nombre, cantidad, fechaMeta, descripcion },
-      { new: true }
-    );
-
-    if (!metaActualizada) {
+    if (!meta) {
       return res.status(404).json({ mensaje: "Meta no encontrada" });
     }
 
-    res.json({ mensaje: "Meta actualizada correctamente", meta: metaActualizada });
+    meta.nombre = nombre;
+    meta.cantidad = cantidad;
+    meta.fechaMeta = fechaMeta;
+    meta.descripcion = descripcion;
+    meta.categoria = categoria;  // Aquí se actualiza la categoría
+
+    await meta.save();
+
+    res.json({ mensaje: "Meta actualizada correctamente", meta });
   } catch (error) {
-    console.error("Error al actualizar meta:", error);
-    res.status(500).json({ mensaje: "Error interno del servidor" });
+    res.status(500).json({ mensaje: "Error al editar meta", error: error.message });
   }
 };
 
