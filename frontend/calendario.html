@@ -450,24 +450,7 @@
     }
 
 
-    setInterval(function() {
-  const fechaHoy = moment();
-  const diaActual = fechaHoy.date();
-  
-  if (diaActual !== lastKnownDia) {
-    // Si el día ha cambiado, actualiza la tarjeta del día
-    lastKnownDia = diaActual;
-    $.ajax({
-      url: '/api/calendarios', 
-      method: 'GET',
-      success: function(response) {
-        // Actualiza las tarjetas con los nuevos días
-        renderCalendario(response.meses);
-      }
-    });
-  }
-}, 60000);  // Comprobar cada minuto
-
+    
 
     let ingresos = 0;
     let gastos = 0;

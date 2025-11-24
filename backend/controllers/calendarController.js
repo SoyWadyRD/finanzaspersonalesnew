@@ -34,16 +34,7 @@ exports.obtenerCalendarios = async (req, res) => {
     }
 
     const fechaRegistro = moment(usuario.createdAt); // Fecha de registro del usuario
-    const fechaHoy = moment().hours(12).minutes(0).seconds(0);  // Hora establecida a las 12:00 PM
-if (fechaHoy.isAfter(moment(usuario.createdAt))) {
-  // Si estamos después de las 12 PM y el usuario ya está registrado, agrega un nuevo día
-  const nuevoDia = {
-    dia: fechaHoy.date(),
-    fecha: fechaHoy.format('YYYY-MM-DD')
-  };
-  mesHoy.dias.push(nuevoDia);
-}
-
+    const fechaHoy = moment().hours(12).minutes(0).seconds(0); // Establecer la hora a las 12:00 PM
 
 
     // Crear un array para los meses
