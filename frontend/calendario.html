@@ -484,7 +484,8 @@
   console.log("Fecha seleccionada en el frontend: ", fecha);
 
   // Aquí es donde puedes agregar el formato de la fecha
-  const fechaFormateada = moment(fecha).format('YYYY-MM-DD'); // Asegúrate de enviar solo la fecha (sin hora) al backend
+  const fechaFormateada = moment(fecha).local().format('YYYY-MM-DD'); // Asegura que se esté usando la zona horaria local
+
   console.log("Fecha formateada: ", fechaFormateada); // Para verificar la fecha formateada
 
   mostrarModal(dia, fechaFormateada);
@@ -584,7 +585,7 @@ function mostrarModal(dia, fecha) {
       movimientos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
 
-      
+
       let contenido = '<ul>';
       ingresos = 0;
       gastos = 0;

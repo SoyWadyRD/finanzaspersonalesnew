@@ -84,8 +84,9 @@ exports.obtenerGastosIngresosDelDia = async (req, res) => {
     const { fecha } = req.params;
 
     // Convertir la fecha en un formato adecuado con hora local
-    const fechaInicio = moment(fecha).startOf('day').utc().toDate();  
-    const fechaFin = moment(fecha).endOf('day').utc().toDate();    
+    const fechaInicio = moment(fecha).startOf('day').toDate();  
+    const fechaFin = moment(fecha).endOf('day').toDate();
+   
     
     
     
