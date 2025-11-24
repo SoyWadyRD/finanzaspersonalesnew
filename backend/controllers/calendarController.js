@@ -129,8 +129,10 @@ exports.obtenerGastosIngresosDelDia = async (req, res) => {
       }
     });
 
-    console.log("Fecha de inicio: ", fechaInicio);
-    console.log("Fecha de fin: ", fechaFin);
+    console.log("Fecha recibida desde frontend: ", fecha);
+console.log("Fecha de inicio (startOf day): ", fechaInicio);
+console.log("Fecha de fin (endOf day): ", fechaFin);
+
 
     // Unir ambos arreglos
     const movimientos = [...gastos, ...ingresos];
