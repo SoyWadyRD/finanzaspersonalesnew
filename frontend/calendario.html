@@ -479,8 +479,8 @@
 
         $('.dia').on('click', function() {
           const dia = $(this).data('dia');
-          const fecha = $(this).data('fecha');
-          console.log("Fecha seleccionada: ", fecha);  // Ahora fecha está definida dentro de este bloque
+          const fecha = $(this).data('fecha');  
+          console.log("Fecha seleccionada: ", fecha);  
           mostrarModal(dia, fecha);
         });
 
