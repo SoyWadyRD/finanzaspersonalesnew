@@ -456,50 +456,48 @@
     let gastos = 0;
 
     $.ajax({
-      url: '/api/calendarios',
-      method: 'GET',
-      headers: { 'Authorization': `Bearer ${token}` },
-      success: function (response) {
-        const calendarios = response.meses;
-        calendarios.sort((a, b) => new Date(b.mes) - new Date(a.mes));
+  url: '/api/calendarios',
+  method: 'GET',
+  headers: { 'Authorization': `Bearer ${token}` },
+  success: function (response) {
+    const calendarios = response.meses;
 
-        calendarios.forEach(mes => {
-          const nombreMes = moment(mes.mes, "MMMM YYYY").locale('es').format('MMMM YYYY');
-
-          const tarjeta = `
-            <div class="tarjeta-mes">
-              <h3>${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)}</h3>
-              <div class="dias">
-                ${mes.dias.map(dia => `<div class="dia" data-fecha="${dia.fecha}" data-dia="${dia.dia}">${dia.dia}</div>`).join('')}
-              </div>
-            </div>
-          `;
-          $('#calendarios').append(tarjeta);
-        });
-
-        $('.dia').on('click', function() {
-  const dia = $(this).data('dia');
-  const fecha = $(this).data('fecha');  
-  console.log("Fecha seleccionada: ", fecha);  
-  console.log("Fecha seleccionada en el frontend: ", fecha);
-
-  // Aquí es donde puedes agregar el formato de la fecha
-  const fechaFormateada = moment(fecha).local().format('YYYY-MM-DD'); // Asegura que se esté usando la zona horaria local
- // Asegura que se esté usando la zona horaria local
-
-  console.log("Fecha formateada: ", fechaFormateada); // Para verificar la fecha formateada
-
-  mostrarModal(dia, fechaFormateada);
-});
-
-        $('#modal-close').on('click', function() {
-          $('#modal').hide();
-        });
-      },
-      error: function (error) {
-        mostrarMensajeError('Hubo un error al cargar los calendarios');
-      }
+    // Ordena los meses de forma que los más recientes estén al principio
+    calendarios.sort((a, b) => {
+      const fechaA = moment(a.mes, "MMMM YYYY");
+      const fechaB = moment(b.mes, "MMMM YYYY");
+      return fechaB - fechaA;  // Orden descendente
     });
+
+    calendarios.forEach(mes => {
+      const nombreMes = moment(mes.mes, "MMMM YYYY").locale('es').format('MMMM YYYY');
+
+      const tarjeta = `
+        <div class="tarjeta-mes">
+          <h3>${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)}</h3>
+          <div class="dias">
+            ${mes.dias.map(dia => `<div class="dia" data-fecha="${dia.fecha}" data-dia="${dia.dia}">${dia.dia}</div>`).join('')}
+          </div>
+        </div>
+      `;
+      $('#calendarios').append(tarjeta);
+    });
+
+    $('.dia').on('click', function() {
+      const dia = $(this).data('dia');
+      const fecha = $(this).data('fecha');  
+      console.log("Fecha seleccionada: ", fecha);  
+      mostrarModal(dia, fecha);
+    });
+
+    $('#modal-close').on('click', function() {
+      $('#modal').hide();
+    });
+  },
+  error: function (error) {
+    mostrarMensajeError('Hubo un error al cargar los calendarios');
+  }
+});
 
  
 
