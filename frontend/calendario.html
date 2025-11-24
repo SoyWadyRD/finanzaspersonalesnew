@@ -480,6 +480,7 @@
         $('.dia').on('click', function() {
           const dia = $(this).data('dia');
           const fecha = $(this).data('fecha');
+          console.log("Fecha seleccionada: ", fecha);  // Ahora fecha está definida dentro de este bloque
           mostrarModal(dia, fecha);
         });
 
@@ -491,6 +492,8 @@
         mostrarMensajeError('Hubo un error al cargar los calendarios');
       }
     });
+
+ 
 
     function renderizarGrafico(ingresos, gastos, fecha) {
   const canvas = $('#grafico-donut')[0];

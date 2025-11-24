@@ -97,13 +97,16 @@ exports.obtenerCalendarios = async (req, res) => {
 
 
 // Ruta para obtener los gastos e ingresos del día
+// Ruta para obtener los gastos e ingresos del día
 exports.obtenerGastosIngresosDelDia = async (req, res) => {
   try {
     const { fecha } = req.params;
 
-    // Convertir la fecha en un formato adecuado
-    const fechaInicio = moment(fecha).startOf('day').toDate();
-    const fechaFin = moment(fecha).endOf('day').toDate();
+
+    // Convertir la fecha en un formato adecuado con hora local
+const fechaInicio = moment(fecha).startOf('day').local().toDate();  // .local() asegura que la hora sea local
+const fechaFin = moment(fecha).endOf('day').local().toDate();      // .local() asegura que la hora sea local
+
 
     // Obtener el usuario
     const authHeader = req.headers.authorization;
@@ -134,29 +137,27 @@ exports.obtenerGastosIngresosDelDia = async (req, res) => {
       fecha: { $gte: fechaInicio, $lte: fechaFin }
     });
 
+    // Asignar tipo explícito a los gastos e ingresos
+    gastos.forEach(gasto => {
+      gasto.tipo = 'gasto'; // Todos los gastos se marcan como tipo 'gasto'
+    });
 
-// Asignar tipo explícito a los gastos e ingresos
-gastos.forEach(gasto => {
-  gasto.tipo = 'gasto'; // Todos los gastos se marcan como tipo 'gasto'
-});
+    ingresos.forEach(ingreso => {
+      if (!ingreso.tipo) {
+        ingreso.tipo = 'sueldo'; // Si no tiene tipo, lo asignamos como 'sueldo'
+      } else if (ingreso.tipo !== 'sueldo') {
+        ingreso.tipo = 'ingreso'; // Si tiene un tipo diferente a 'sueldo', lo tratamos como ingreso
+      }
+    });
 
-ingresos.forEach(ingreso => {
-  if (!ingreso.tipo) {
-    ingreso.tipo = 'sueldo'; // Si no tiene tipo, lo asignamos como 'sueldo'
-  } else if (ingreso.tipo !== 'sueldo') {
-    ingreso.tipo = 'ingreso'; // Si tiene un tipo diferente a 'sueldo', lo tratamos como ingreso
-  }
-});
+    console.log("Fecha de inicio: ", fechaInicio);
+    console.log("Fecha de fin: ", fechaFin);
 
-// Unir ambos arreglos
-const movimientos = [...gastos, ...ingresos];
+    // Unir ambos arreglos
+    const movimientos = [...gastos, ...ingresos];
 
-// Asegúrate de revisar en consola que el tipo sea correcto
-
-
-// Responder con los movimientos
-res.json({ movimientos });
-
+    // Responder con los movimientos
+    res.json({ movimientos });
 
   } catch (error) {
     console.error("Error al obtener los gastos e ingresos del día:", error);
