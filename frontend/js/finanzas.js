@@ -82,20 +82,22 @@ function mostrar10Movimientos() {
     const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
 
     const fechaCorta = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+    const hora = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
     const fechaLarga = `${diasSemana[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} del ${d.getFullYear()}`;
 
     li.innerHTML = `
-      <div class="movimiento-info">
-        <span class="tipo-movimiento">${tipoMovimiento}</span>
-        <span class="monto">${monto}</span>
-      </div>
-      <div class="detalle-movimiento">
-        <span class="fecha">Fecha: ${fechaCorta}</span>
-        <span class="fecha-larga">${fechaLarga}</span>
-        <span class="categoria">Categoría: ${categoria}</span>
-        <span class="descripcion">Descripción: ${descripcion}</span>
-      </div>
-    `;
+  <div class="movimiento-info">
+    <span class="tipo-movimiento">${tipoMovimiento}</span>
+    <span class="monto">${monto}</span>
+  </div>
+  <div class="detalle-movimiento">
+    <span class="fecha">Fecha: ${fechaCorta}</span>
+    <span class="hora" style="color: #6b6b6bff;">${hora}</span> <!-- Aquí va el span para la hora -->
+    <span class="fecha-larga">${fechaLarga}</span>
+    <span class="categoria">Categoría: ${categoria}</span>
+    <span class="descripcion">Descripción: ${descripcion}</span>
+  </div>
+`;
 
     li.addEventListener("click", () => {
       window.location.href = `detalle.html?id=${m._id}`;

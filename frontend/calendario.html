@@ -486,7 +486,7 @@
     $('.dia').on('click', function() {
       const dia = $(this).data('dia');
       const fecha = $(this).data('fecha');  
-      console.log("Fecha seleccionada: ", fecha);  
+
       mostrarModal(dia, fecha);
     });
 
@@ -524,22 +524,24 @@
     labels: [],
     datasets: [{
       data: [],
-      backgroundColor: ['#ff4d6d', '#00a35c'],
+      backgroundColor: [],  // Cambiar para generar dinámicamente
       borderWidth: 0
     }]
   };
 
-  // Solo agregar "Gastos" si hay gastos
   if (gastos > 0) {
     data.labels.push('Gastos');
     data.datasets[0].data.push(gastos);
+    data.datasets[0].backgroundColor.push('#ff4d6d'); // Color para los gastos
   }
 
-  // Solo agregar "Ingresos" si hay ingresos
   if (ingresos > 0) {
     data.labels.push('Ingresos');
     data.datasets[0].data.push(ingresos);
+    data.datasets[0].backgroundColor.push('#00a35c'); // Color para los ingresos
   }
+
+  
 
   // Crear gráfico
   window.chart = new Chart(ctx, {
@@ -571,6 +573,7 @@
   });
 }
 
+
 function mostrarModal(dia, fecha) {
   $('#modal-title').text(`Detalles del Día ${dia}`);
   $('#modal-body').html('Cargando...');
@@ -598,35 +601,46 @@ function mostrarModal(dia, fecha) {
 
       // Si hay movimientos, mostrar los detalles
       movimientos.forEach(movimiento => {
-        let tipoMovimiento = movimiento.tipo || 'gasto';
-        if (tipoMovimiento !== 'ingreso') tipoMovimiento = 'gasto';
-        const tipoClase = tipoMovimiento === 'gasto' ? 'gasto' : 'ingreso';
-        const tipoTexto = tipoMovimiento.charAt(0).toUpperCase() + tipoMovimiento.slice(1);
-        contenido += `<li class="${tipoClase}" data-id="${movimiento._id}">
-          <div class="movimiento-info">
-            <span class="tipo-movimiento">${tipoTexto}</span>
-            <span class="monto">$${formatearMonto(Math.abs(movimiento.monto))}</span>
-          </div>
-          <div class="detalle-movimiento">
-            <span class="fecha-larga">${new Date(movimiento.fecha).toLocaleDateString('es-ES')} 
-              ${new Date(movimiento.fecha).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-            </span>
-            <span class="fecha-larga-completa">${new Date(movimiento.fecha).toLocaleString('es-ES', { weekday: 'long' }).replace(/^./, (match) => match.toUpperCase())} 
-              ${new Date(movimiento.fecha).getDate()} de 
-              ${new Date(movimiento.fecha).toLocaleString('es-ES', { month: 'long' })} del 
-              ${new Date(movimiento.fecha).getFullYear()}
-            </span>
-            <span class="categoria">Categoría: ${movimiento.categoria}</span>
-            <span class="descripcion">Descripción: ${movimiento.descripcion || 'Sin descripción'}</span>
-          </div>
-        </li>`;
+  let tipoMovimiento = movimiento.tipo || 'gasto'; // Si no tiene tipo, asignamos 'gasto' por defecto
+  const tipoClase = tipoMovimiento === 'gasto' ? 'gasto' : 'ingreso';
+  const tipoTexto = tipoMovimiento.charAt(0).toUpperCase() + tipoMovimiento.slice(1);
 
-        if (tipoMovimiento === 'ingreso') {
-          ingresos += movimiento.monto;
-        } else {
-          gastos += movimiento.monto;
-        }
-      });
+  if (tipoMovimiento === 'ingreso') {
+    ingresos += movimiento.monto;  // Asegurémonos que este valor es numérico
+  } else {
+    gastos += movimiento.monto;  // Asegurémonos que este valor es numérico
+  }
+
+  contenido += `<li class="${tipoClase}" data-id="${movimiento._id}">
+    <div class="movimiento-info">
+      <span class="tipo-movimiento">${tipoTexto}</span>
+      <span class="monto">$${formatearMonto(Math.abs(movimiento.monto))}</span>
+    </div>
+    <div class="detalle-movimiento">
+      <span class="fecha-larga">${new Date(movimiento.fecha).toLocaleDateString('es-ES')} 
+        ${new Date(movimiento.fecha).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+      </span>
+      <span class="fecha-larga-completa">${new Date(movimiento.fecha).toLocaleString('es-ES', { weekday: 'long' }).replace(/^./, (match) => match.toUpperCase())} 
+        ${new Date(movimiento.fecha).getDate()} de 
+        ${new Date(movimiento.fecha).toLocaleString('es-ES', { month: 'long' })} del 
+        ${new Date(movimiento.fecha).getFullYear()}
+      </span>
+      <span class="categoria">Categoría: ${movimiento.categoria}</span>
+      <span class="descripcion">Descripción: ${movimiento.descripcion || 'Sin descripción'}</span>
+    </div>
+  </li>`;
+
+ 
+
+
+    // Aquí acumulamos el monto de los ingresos y los gastos
+    if (tipoMovimiento === 'ingreso') {
+      ingresos += movimiento.monto;
+    } else {
+      gastos += movimiento.monto;
+    }
+});
+
 
       contenido += '</ul>';
       $('#modal-body').html(contenido);
