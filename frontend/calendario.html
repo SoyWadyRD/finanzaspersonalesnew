@@ -478,13 +478,17 @@
         });
 
         $('.dia').on('click', function() {
-          const dia = $(this).data('dia');
-          const fecha = $(this).data('fecha');  
-          console.log("Fecha seleccionada: ", fecha);  
-          console.log("Fecha seleccionada en el frontend: ", fecha);
+  const dia = $(this).data('dia');
+  const fecha = $(this).data('fecha');  
+  console.log("Fecha seleccionada: ", fecha);  
+  console.log("Fecha seleccionada en el frontend: ", fecha);
 
-          mostrarModal(dia, fecha);
-        });
+  // Aquí es donde puedes agregar el formato de la fecha
+  const fechaFormateada = moment(fecha).format('YYYY-MM-DD'); // Asegúrate de enviar solo la fecha (sin hora) al backend
+  console.log("Fecha formateada: ", fechaFormateada); // Para verificar la fecha formateada
+
+  mostrarModal(dia, fechaFormateada);
+});
 
         $('#modal-close').on('click', function() {
           $('#modal').hide();
@@ -572,13 +576,15 @@ function mostrarModal(dia, fecha) {
   $('#modal-body').html('Cargando...');
 
   $.ajax({
-    url: `/api/gastos-ingresos/${fecha}`,
+    url: `/api/gastos-ingresos/${fecha}`,  // Aquí pasas la fecha formateada
     method: 'GET',
     headers: { 'Authorization': `Bearer ${token}` },
     success: function (data) {
       const { movimientos } = data;
       movimientos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
+
+      
       let contenido = '<ul>';
       ingresos = 0;
       gastos = 0;

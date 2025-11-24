@@ -84,8 +84,14 @@ exports.obtenerGastosIngresosDelDia = async (req, res) => {
     const { fecha } = req.params;
 
     // Convertir la fecha en un formato adecuado con hora local
-    const fechaInicio = moment(fecha).startOf('day').toDate();  // Sin .local()
-    const fechaFin = moment(fecha).endOf('day').toDate();      // Sin .local()
+    const fechaInicio = moment(fecha).startOf('day').local().toDate();  
+    const fechaFin = moment(fecha).endOf('day').local().toDate();    
+    
+    
+    
+    console.log("Fecha recibida desde frontend: ", fecha);
+console.log("Fecha de inicio (startOf day): ", fechaInicio);
+console.log("Fecha de fin (endOf day): ", fechaFin);
 
     // Obtener el usuario
     const authHeader = req.headers.authorization;
@@ -129,9 +135,6 @@ exports.obtenerGastosIngresosDelDia = async (req, res) => {
       }
     });
 
-    console.log("Fecha recibida desde frontend: ", fecha);
-console.log("Fecha de inicio (startOf day): ", fechaInicio);
-console.log("Fecha de fin (endOf day): ", fechaFin);
 
 
     // Unir ambos arreglos
