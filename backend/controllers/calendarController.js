@@ -1,8 +1,9 @@
 const Gasto = require('../models/gasto');
 const Ingreso = require('../models/ingreso');
 const Usuario = require('../models/usuario');
-const moment = require('moment');
+
 const jwt = require('jsonwebtoken');
+const moment = require('moment-timezone');
 
 exports.obtenerCalendarios = async (req, res) => {
   try {
@@ -84,8 +85,9 @@ exports.obtenerGastosIngresosDelDia = async (req, res) => {
     const { fecha } = req.params;
 
     // Convertir la fecha en un formato adecuado con hora local
-    const fechaInicio = moment(fecha).startOf('day').toDate();  
-    const fechaFin = moment(fecha).endOf('day').toDate();
+    const fechaInicio = moment.tz(fecha, 'YYYY-MM-DD', 'America/Santo_Domingo').startOf('day').toDate();  
+const fechaFin = moment.tz(fecha, 'YYYY-MM-DD', 'America/Santo_Domingo').endOf('day').toDate();
+
    
     
     
