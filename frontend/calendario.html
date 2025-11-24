@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="/manifest.json">
   <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="css/mensajes.css">
@@ -423,6 +424,10 @@
   <script src="js/mensajes.js"></script>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.min.js"></script>
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  <!-- Solo una vez -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <!-- Primero Chart.js -->
@@ -456,7 +461,8 @@
         calendarios.sort((a, b) => new Date(b.mes) - new Date(a.mes));
 
         calendarios.forEach(mes => {
-          const nombreMes = new Date(`${mes.mes} 1, 2021`).toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+          const nombreMes = moment(mes.mes, "MMMM YYYY").locale('es').format('MMMM YYYY');
+
           const tarjeta = `
             <div class="tarjeta-mes">
               <h3>${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)}</h3>
