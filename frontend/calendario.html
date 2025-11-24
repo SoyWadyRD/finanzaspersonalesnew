@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="css/mensajes.css">
+
+  <title>Calendario | Finanzas Personales</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+    }
+
+      /* Header */
+    header {
+        position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: rgb(0, 30, 43);
+      border-bottom: 1px solid #333;
+      gap: 20px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: white;
+      margin-left: 10px;
+      text-align: center;
+    }
+
+
+    /* Botón de Volver */
+    .volver {
+      background-color: #00a35c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      position: absolute;
+      left: 20px;
+      width: 75px;
+    }
+
+    .volver:hover {
+      background-color: #00c9a7;
+      transform: translateY(-2px);
+    }
+
+    .volver:active {
+      background-color: #009b8f;
+      transform: translateY(2px);
+    }
+
+
+   #calendarios {
+  display: flex;
+  flex-direction: column;  /* Asegura que las tarjetas se alineen verticalmente */
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+      .tarjeta-mes {
+  background-color: rgb(0, 30, 43);
+  color: white;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 5px;
+  width: 100%;  /* Cambié el ancho a 100% para que las tarjetas se adapten a pantallas pequeñas */
+  max-width: 395px;  /* Limita el tamaño de la tarjeta */
+  box-sizing: border-box;
+  border: 1px solid #00a35c;
+  box-shadow: 0 0 20px 2px #00a35c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Asegura que los elementos dentro de la tarjeta estén centrados */
+}
+
+      .dias {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;  /* Centra los días dentro de la tarjeta */
+      align-items: center;  /* Centra los días verticalmente */
+      width: 100%;
+    }
+
+    .dia {
+      display: inline-block;
+      background-color: #444;
+      margin: 5px;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .dia:hover {
+      background-color: #00a35c;
+    }
+
+
+/* Estilo para el modal */
+/* Estilo para el modal */
+.modal {
+  display: none;  /* El modal empieza oculto */
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;  /* Asegura que el modal ocupe toda la pantalla */
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;  /* Centra el contenido horizontalmente */
+  align-items: center;  /* Centra el contenido verticalmente */
+  z-index: 1000;  /* Aseguramos que el modal esté encima de todo */
+}
+
+/* Contenido del modal */
+.modal-content {
+  background-color: rgb(0, 30, 43);
+  padding: 20px;
+  border-radius: 5px;
+  width: 300px;  /* Puedes ajustar este tamaño según tus necesidades */
+  max-width: 400px;
+  max-height: 80%;
+  overflow-y: auto;
+  margin: 0;  /* Elimina cualquier margen extra */
+  border: 1px solid #00a35c;
+      box-shadow: 0 0 20px 2px #00a35c;
+}
+
+.modal-content h2{
+    color: #fff;
+}
+
+.no-movimiento {
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+
+   .modal-header {
+  font-size: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; /* Añadido para poder posicionar el botón de cerrar */
+  margin-top: 15px;  /* Aumentamos el margen superior del título */
+}
+
+.modal-close {
+  cursor: pointer;
+  background-color: transparent; /* Sin fondo */
+  color: #f44336; /* Rojo para el ícono */
+  border: none;
+  font-size: 24px; /* Tamaño del ícono */
+  padding: 5px;
+  border-radius: 50%; /* Lo hace redondeado */
+  transition: background-color 0.3s ease;
+  position: absolute; /* Posición absoluta para ubicarlo en la esquina */
+  top: -15px; /* Un pequeño margen desde la parte superior */
+  right: 5px; /* Un pequeño margen desde la parte derecha */
+}
+
+
+
+
+ /* Agregar estilo para el canvas */
+    /* Responsividad para el gráfico donut */
+.grafico-donut {
+  margin-bottom: 15px;
+  width: 100%;
+  height: 200px; /* Esto es para la versión de escritorio */
+}
+
+@media (max-width: 768px) {
+  .grafico-donut {
+    height: 180px;  /* Ajustamos el tamaño para tabletas */
+  }
+}
+
+@media (max-width: 480px) {
+  .grafico-donut {
+    height: 160px;  /* Ajustamos aún más para pantallas más pequeñas */
+  }
+}
+
+@media (max-width: 320px) {
+  .grafico-donut {
+    height: 140px;  /* Ajustamos para pantallas más pequeñas, como en el iPhone SE */
+  }
+}
+
+
+
+
+/* Centrar el contenido de la lista */
+#modal-body ul {
+  list-style-type: none;  /* Eliminar los puntos de lista */
+  padding: 0;
+  margin: 0 auto;  /* Centrar el ul */
+  max-width: 350px;  /* Puedes ajustar el ancho máximo */
+}
+
+
+
+
+
+
+
+
+
+    /* Estilos de los movimientos */
+    li {
+      background-color: #444;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    li.gasto {
+      border-left: 4px solid #ff4d6d; /* Rojo para los gastos */
+    }
+
+    li.ingreso {
+      border-left: 4px solid #00ff90; /* Verde para los ingresos */
+    }
+
+    .movimiento-info {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .tipo-movimiento {
+      color: #fff;
+    }
+
+    .monto {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .detalle-movimiento {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #ddd;
+    }
+
+    .categoria,
+    .descripcion {
+      display: block;
+      margin: 5px 0;
+      font-size: 0.95rem;
+    }
+
+    .categoria {
+      color: #ffb84d;
+    }
+
+    .descripcion {
+      font-style: italic;
+    }
+
+    li span {
+      font-weight: bold;
+    }
+
+    /* Estilo para Ingreso */
+    li.ingreso .tipo-movimiento {
+      color: #00ff90;
+    }
+
+    li.ingreso .monto {
+      color: #00ff90;
+    }
+
+    /* Estilo para Gasto */
+    li.gasto .tipo-movimiento {
+      color: #ff4d6d;
+    }
+
+    li.gasto .monto {
+      color: #ff4d6d;
+    }
+
+    .fecha-larga {
+      display: block;
+      font-size: 0.9em;
+      color: #fff;
+      margin-top: 3px;
+      margin-bottom: 3px;
+    }
+
+     .fecha-larga-completa {
+        
+      color: #555;
+    }
+
+    /* MEDIA QUERIES PARA HACER LA PÁGINA RESPONSIVE */
+
+    /* Para dispositivos móviles de 320px a 480px */
+    @media (max-width: 480px) {
+
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+      .tarjeta-mes {
+        width: 95%;
+      }
+
+      .modal-content {
+        width: 100%;
+      }
+
+      .movimiento-info {
+        font-size: 1rem;
+      }
+
+      .fecha-larga {
+        font-size: 0.8rem;
+      }
+
+      
+    }
+
+    /* Para pantallas de tablet y dispositivos más grandes */
+    @media (max-width: 768px) {
+
+      header {
+        padding: 15px;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+      .tarjeta-mes {
+        width: 95%;
+      }
+
+      .modal-content {
+        width: 80%;
+      }
+    }
+
+   
+
+  </style>
+</head>
+<body>
+
+
+
+
+
+
+  
+  <!-- Div para mensajes de error -->
+<div id="mensajeError" class="mensaje-error" style="display: none;">
+  <p></p>
+</div>
+
+<!-- Div para mensaje de éxito -->
+<div id="mensajeExito" class="mensaje-verificacion" style="display: none;">
+  <!-- El mensaje de éxito se agregará aquí dinámicamente -->
+</div>
+
+
+
+<header>
+    <button class="volver" onclick="window.location.href = '/dashboard.html';">Volver</button>
+
+
+    <h1>Calendario</h1>
+  </header>
+
+
+
+
+  <div id="calendarios"></div>
+
+  <!-- Modal para mostrar detalles del día -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- Aquí se mostrará el gráfico -->
+
+
+        <span id="modal-close" class="modal-close"><i class="fas fa-times"></i></span>
+        <h2 id="modal-title">Detalles del Día</h2>
+      </div>
+      <canvas id="grafico-donut" class="grafico-donut"></canvas>
+      <div id="modal-body">
+        <!-- Aquí se mostrarán los movimientos -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/mensajes.js"></script>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  <!-- Solo una vez -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  <!-- Primero Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>  <!-- Después ChartDataLabels -->
+
+
+
+
+
+  <script>
+    $(document).ready(function () {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      mostrarMensajeError('No estás autenticado');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 3000);
+      return;
+    }
+
+    let ingresos = 0;
+    let gastos = 0;
+
+    $.ajax({
+      url: '/api/calendarios',
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` },
+      success: function (response) {
+        const calendarios = response.meses;
+        calendarios.sort((a, b) => new Date(b.mes) - new Date(a.mes));
+
+        calendarios.forEach(mes => {
+          const nombreMes = new Date(`${mes.mes} 1, 2021`).toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+          const tarjeta = `
+            <div class="tarjeta-mes">
+              <h3>${nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1)}</h3>
+              <div class="dias">
+                ${mes.dias.map(dia => `<div class="dia" data-fecha="${dia.fecha}" data-dia="${dia.dia}">${dia.dia}</div>`).join('')}
+              </div>
+            </div>
+          `;
+          $('#calendarios').append(tarjeta);
+        });
+
+        $('.dia').on('click', function() {
+          const dia = $(this).data('dia');
+          const fecha = $(this).data('fecha');
+          mostrarModal(dia, fecha);
+        });
+
+        $('#modal-close').on('click', function() {
+          $('#modal').hide();
+        });
+      },
+      error: function (error) {
+        mostrarMensajeError('Hubo un error al cargar los calendarios');
+      }
+    });
+
+    function renderizarGrafico(ingresos, gastos, fecha) {
+  const canvas = $('#grafico-donut')[0];
+  const ctx = canvas.getContext('2d');
+
+  // Limpiar gráfico anterior
+  if (window.chart) {
+    window.chart.destroy();
+  }
+
+  // Comprobar si no hay ingresos ni gastos
+  if (ingresos === 0 && gastos === 0) {
+    $('#grafico-donut').hide();  // Ocultar gráfico si no hay datos
+    $('#modal-body').html('Este día no hubo ningún movimiento.');  // Mensaje de "sin movimientos"
+    return;
+  } else {
+    $('#grafico-donut').show();  // Mostrar gráfico si hay datos
+  }
+
+  // Configuración del gráfico
+  const data = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: ['#ff4d6d', '#00a35c'],
+      borderWidth: 0
+    }]
+  };
+
+  // Solo agregar "Gastos" si hay gastos
+  if (gastos > 0) {
+    data.labels.push('Gastos');
+    data.datasets[0].data.push(gastos);
+  }
+
+  // Solo agregar "Ingresos" si hay ingresos
+  if (ingresos > 0) {
+    data.labels.push('Ingresos');
+    data.datasets[0].data.push(ingresos);
+  }
+
+  // Crear gráfico
+  window.chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#ffffff',
+            font: { size: 14 }
+          }
+        },
+        datalabels: {
+          display: true,
+          color: '#fff',
+          font: { weight: 'bold', size: 14 },
+          formatter: (value, context) => {
+            const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+            const percentage = total === 0 ? '0%' : ((value / total) * 100).toFixed(1) + '%';
+            return percentage;  // Solo muestra el porcentaje
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+function mostrarModal(dia, fecha) {
+  $('#modal-title').text(`Detalles del Día ${dia}`);
+  $('#modal-body').html('Cargando...');
+
+  $.ajax({
+    url: `/api/gastos-ingresos/${fecha}`,
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${token}` },
+    success: function (data) {
+      const { movimientos } = data;
+      movimientos.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+      let contenido = '<ul>';
+      ingresos = 0;
+      gastos = 0;
+
+    if (movimientos.length === 0) {
+  // Si no hay movimientos, mostrar mensaje y ocultar gráfico
+  $('#grafico-donut').hide();
+  $('#modal-body').html('<p class="no-movimiento">Este día no hubo ningún movimiento.</p>');
+  return;
+}
+
+      // Si hay movimientos, mostrar los detalles
+      movimientos.forEach(movimiento => {
+        let tipoMovimiento = movimiento.tipo || 'gasto';
+        if (tipoMovimiento !== 'ingreso') tipoMovimiento = 'gasto';
+        const tipoClase = tipoMovimiento === 'gasto' ? 'gasto' : 'ingreso';
+        const tipoTexto = tipoMovimiento.charAt(0).toUpperCase() + tipoMovimiento.slice(1);
+        contenido += `<li class="${tipoClase}" data-id="${movimiento._id}">
+          <div class="movimiento-info">
+            <span class="tipo-movimiento">${tipoTexto}</span>
+            <span class="monto">$${formatearMonto(Math.abs(movimiento.monto))}</span>
+          </div>
+          <div class="detalle-movimiento">
+            <span class="fecha-larga">${new Date(movimiento.fecha).toLocaleDateString('es-ES')} 
+              ${new Date(movimiento.fecha).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+            </span>
+            <span class="fecha-larga-completa">${new Date(movimiento.fecha).toLocaleString('es-ES', { weekday: 'long' }).replace(/^./, (match) => match.toUpperCase())} 
+              ${new Date(movimiento.fecha).getDate()} de 
+              ${new Date(movimiento.fecha).toLocaleString('es-ES', { month: 'long' })} del 
+              ${new Date(movimiento.fecha).getFullYear()}
+            </span>
+            <span class="categoria">Categoría: ${movimiento.categoria}</span>
+            <span class="descripcion">Descripción: ${movimiento.descripcion || 'Sin descripción'}</span>
+          </div>
+        </li>`;
+
+        if (tipoMovimiento === 'ingreso') {
+          ingresos += movimiento.monto;
+        } else {
+          gastos += movimiento.monto;
+        }
+      });
+
+      contenido += '</ul>';
+      $('#modal-body').html(contenido);
+
+      renderizarGrafico(ingresos, gastos, fecha);
+
+      $('#modal-body li').on('click', function() {
+        const movimientoId = $(this).data('id');
+        window.location.href = `detalle.html?id=${movimientoId}`;
+      });
+    },
+    error: function () {
+      $('#modal-body').html('No se pudo cargar la información.');
+    }
+  });
+
+  $('#modal').css('display', 'flex');
+}
+
+    function formatearMonto(num) {
+      return new Intl.NumberFormat('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+    }
+  });
+
+
+function verDetalle(id) {
+  localStorage.setItem("paginaAnterior", "calendario.html");
+  window.location.href = `detalle.html?id=${id}`;
+}
+
+
+localStorage.setItem("paginaAnterior", "calendario.html");
+  </script>
+</body>
+</html>

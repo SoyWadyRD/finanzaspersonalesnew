@@ -109,38 +109,37 @@ function mostrar10Movimientos() {
 }
 
 
-
 function agregarBotonVerMas() {
-  // Eliminar si existe
-  const btnExistente = document.getElementById("btnVerMas");
-  if (btnExistente) btnExistente.remove();
+   // Eliminar si existe
+   const btnExistente = document.getElementById("btnVerMas");
+   if (btnExistente) btnExistente.remove();
 
-  // Si ya no hay más movimientos, no mostrar
-  if (movimientosMostrados >= todosLosMovimientos.length) return;
+   // Si ya no hay más movimientos o el filtro ha mostrado todos, no mostrar el botón
+   if (movimientosMostrados >= todosLosMovimientos.length) return;
 
-  // Crear botón
-  const btn = document.createElement("button");
-  btn.id = "btnVerMas";
-  btn.textContent = "Ver más";
+   // Crear botón
+   const btn = document.createElement("button");
+   btn.id = "btnVerMas";
+   btn.textContent = "Ver más";
 
-  // estilos del botón
-  btn.style.display = "block";
-  btn.style.margin = "15px auto";
-  btn.style.width = "90%";
-  btn.style.padding = "12px";
-  btn.style.background = "#00a35c";
-  btn.style.color = "white";
-  btn.style.border = "none";
-  btn.style.borderRadius = "8px";
-  btn.style.fontWeight = "bold";
-  btn.style.cursor = "pointer";
+   // Estilos del botón
+   btn.style.display = "block";
+   btn.style.margin = "15px auto";
+   btn.style.width = "90%";
+   btn.style.padding = "12px";
+   btn.style.background = "#00a35c";
+   btn.style.color = "white";
+   btn.style.border = "none";
+   btn.style.borderRadius = "8px";
+   btn.style.fontWeight = "bold";
+   btn.style.cursor = "pointer";
 
-  btn.onclick = () => {
-    mostrar10Movimientos();
-  };
+   btn.onclick = () => {
+     mostrar10Movimientos();
+   };
 
-  // Insertar justo debajo de la lista
-  listaMovimientos.after(btn);
+   // Insertar justo debajo de la lista
+   listaMovimientos.after(btn);
 }
 
 

@@ -296,7 +296,7 @@ volverBtn.addEventListener("click", () => {
   let pagina = localStorage.getItem("paginaAnterior");
 
   // Si la página no existe o es inválida, evitar caer siempre en dashboard
-  if (pagina !== "dashboard.html" && pagina !== "estadisticas.html") {
+  if (pagina !== "dashboard.html" && pagina !== "estadisticas.html" && pagina !== "calendario.html") {
     pagina = "dashboard.html"; 
   }
 

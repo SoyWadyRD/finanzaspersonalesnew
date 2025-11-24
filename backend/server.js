@@ -17,6 +17,10 @@ require('./jobs/enviarCorreoRecordatorio'); // ✅ Esto ejecuta la tarea de reco
 
 
 
+const calendarRoutes = require('./routes/calendarRoutes');
+
+
+
 
 
 
@@ -53,26 +57,28 @@ app.use(
       defaultSrc: ["'self'"],
       scriptSrc: [
         "'self'",
-        "https://cdnjs.cloudflare.com", // Permitir scripts de Cloudflare
-        "https://fonts.googleapis.com", // Permitir fuentes de Google
-        "https://cdn.jsdelivr.net", 
+        "https://cdnjs.cloudflare.com",
+        "https://fonts.googleapis.com",
+        "https://code.jquery.com",
+        "https://cdn.jsdelivr.net", // Permitir Chart.js desde jsdelivr
         "'unsafe-inline'"
       ],
       styleSrc: [
         "'self'",
-        "https://cdnjs.cloudflare.com", // Permitir estilos de Cloudflare
-        "https://fonts.googleapis.com", // Permitir fuentes de Google Fonts
-        "'unsafe-inline'" // Permitir estilos en línea
+        "https://cdnjs.cloudflare.com",
+        "https://fonts.googleapis.com",
+        "'unsafe-inline'"
       ],
       fontSrc: [
         "'self'",
-        "https://fonts.gstatic.com", // Permitir fuentes desde Google Fonts
-        "https://cdnjs.cloudflare.com" // Permitir fuentes desde Cloudflare
+        "https://fonts.gstatic.com",
+        "https://cdnjs.cloudflare.com"
       ],
       connectSrc: [
-        "'self'", // Permitir conexiones desde el mismo dominio
-        "https://cdnjs.cloudflare.com", // Permitir conexiones desde Cloudflare
-        "https://fonts.gstatic.com" // Permitir conexiones a fuentes de Google
+        "'self'",
+        "https://cdnjs.cloudflare.com",
+        "https://fonts.gstatic.com",
+        "https://cdn.jsdelivr.net" // Permitir conexiones a jsdelivr
       ],
       imgSrc: ["'self'", "data:"],
       objectSrc: ["'none'"],
@@ -84,7 +90,6 @@ app.use(
     }
   })
 );
-
 
 
 
@@ -131,6 +136,10 @@ app.use("/api/admin", adminRoutes);
 
 app.use('/api/servicios', servicesRoutes);
 app.use("/api", deudaRoutes);  
+
+
+// Rutas
+app.use('/api', calendarRoutes);
 
 
 // Ruta raíz que sirve login.html

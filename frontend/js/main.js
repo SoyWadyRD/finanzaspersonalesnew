@@ -53,7 +53,7 @@ const resumenFiltros = document.getElementById("resumenFiltros");
 const filtroCategoria = document.getElementById("filtroCategoria");
 
 // Mostrar modal
-btnFiltro.addEventListener("click", () => {
+/*btnFiltro.addEventListener("click", () => {
   modalFiltro.style.display = "block";
   modalFiltro.querySelector(".modal-content").style.animation = "fadeInZoom 0.3s forwards";
 
@@ -97,6 +97,9 @@ filtroFecha.addEventListener("change", () => {
   }
 });
 
+
+
+
 // Función para aplicar filtros
 aplicarFiltro.addEventListener("click", () => {
   const tipo = document.getElementById("filtroTipo").value;
@@ -111,13 +114,14 @@ aplicarFiltro.addEventListener("click", () => {
   // Obtener todos los <li> de movimientos
   const movimientos = listaMovimientos.querySelectorAll("li");
 
+  let movimientosVisibles = [];
+
   movimientos.forEach(li => {
     const liTipo = li.classList.contains("gasto") ? "gasto" : "ingreso";
     const liCategoria = li.querySelector(".categoria").textContent.replace("Categoría: ", "");
     const liDescripcion = li.querySelector(".descripcion").textContent.replace("Descripción: ", "").toLowerCase();
     const liMonto = parseFloat(li.querySelector(".monto").textContent.replace("$", ""));
     const liFStr = li.dataset.fecha; // 'yyyy-mm-dd'
-    const hoyStr = new Date().toISOString().split('T')[0];
 
     let mostrar = true;
 
@@ -129,71 +133,63 @@ aplicarFiltro.addEventListener("click", () => {
 
     // Filtrar por fecha
     if (fecha === "hoy") {
-      mostrar = mostrar && liFStr === hoyStr;
-    } else if (fecha === "7dias") {
+      mostrar = mostrar && liFStr === new Date().toISOString().split('T')[0];
+    } if (fecha === "7dias") {
+  const hoy = new Date();
+  const hace7 = new Date();
+  hace7.setDate(hoy.getDate() - 6); // El 6 hace que incluya el día actual también
+  mostrar = mostrar && new Date(liFStr) >= hace7 && new Date(liFStr) <= hoy;
+}
+ else if (fecha === "mes") {
       const hoy = new Date();
-      const hace7 = new Date();
-      hace7.setDate(hoy.getDate() - 6);
-      const liDate = new Date(liFStr);
-      mostrar = mostrar && liDate >= new Date(hace7.toISOString().split('T')[0]) && liDate <= new Date(hoyStr);
-    } else if (fecha === "mes") {
-      const hoy = new Date();
-      const liDate = new Date(liFStr);
-      mostrar = mostrar &&
-        liDate.getFullYear() === hoy.getFullYear() &&
-        liDate.getMonth() === hoy.getMonth();
+      mostrar = mostrar && new Date(liFStr).getMonth() === hoy.getMonth() && new Date(liFStr).getFullYear() === hoy.getFullYear();
     } else if (fecha === "personalizado" && inicio && fin) {
-      const liDate = new Date(liFStr);
-      mostrar = mostrar && liDate >= new Date(inicio) && liDate <= new Date(fin);
+      const inicioDate = new Date(inicio);
+      const finDate = new Date(fin);
+      mostrar = mostrar && new Date(liFStr) >= inicioDate && new Date(liFStr) <= finDate;
     }
 
-    li.style.display = mostrar ? "block" : "none";
+    if (mostrar) {
+      li.style.display = "block";
+      movimientosVisibles.push(li);
+    } else {
+      li.style.display = "none";
+    }
   });
 
-
-
-
-
-// Contar cuántos movimientos se están mostrando
-const movimientosVisibles = Array.from(movimientos).filter(li => li.style.display === "block");
-const totalMostrados = movimientosVisibles.length;
-
-// Construir resumen
-let resumenText = `Mostrando ${totalMostrados} movimiento${totalMostrados !== 1 ? "s" : ""}`;
-
-// Añadir tipo de movimiento si se seleccionó
-if (tipo) resumenText += ` ${tipo}${totalMostrados !== 1 ? "s" : ""}`;
-
-// Añadir categoría si se seleccionó
-if (categoria) resumenText += ` de ${categoria}`;
-
-// Añadir rango de monto si se especificó
-if (montoMin || montoMax) resumenText += ` entre $${montoMin || 0} y $${montoMax || "∞"}`;
-
-// Añadir fecha de forma amigable
-if (fecha) {
-  if (fecha === "hoy") resumenText += " hoy";
-  else if (fecha === "7dias") resumenText += " últimos 7 días";
-  else if (fecha === "mes") resumenText += " este mes";
-  else if (fecha === "personalizado" && inicio && fin) resumenText += ` del ${inicio} al ${fin}`;
+  // Si no hay movimientos visibles, eliminar el botón de "Ver más"
+  const btnExistente = document.getElementById("btnVerMas");
+  if (movimientosVisibles.length === 0) {
+  const btnExistente = document.getElementById("btnVerMas");
+  if (btnExistente) btnExistente.remove();  // Eliminar el botón si no hay movimientos
+} else {
+  // Si aún hay más movimientos para mostrar, asegúrate de que el botón "Ver más" no se añada
+  if (movimientosMostrados < todosLosMovimientos.length) {
+    agregarBotonVerMas();
+  }
 }
 
-// Añadir descripción si se filtró
-if (descripcion) resumenText += ` con descripción que contiene '${descripcion}'`;
 
-resumenFiltros.textContent = resumenText;
+  // Resumen de filtros aplicados
+  let resumenText = `Mostrando ${movimientosVisibles.length} movimiento${movimientosVisibles.length !== 1 ? "s" : ""}`;
+  if (tipo) resumenText += ` ${tipo}${movimientosVisibles.length !== 1 ? "s" : ""}`;
+  if (categoria) resumenText += ` de ${categoria}`;
+  if (montoMin || montoMax) resumenText += ` entre $${montoMin || 0} y $${montoMax || "∞"}`;
+  if (fecha) resumenText += ` ${fecha === "hoy" ? "hoy" : fecha === "7dias" ? "últimos 7 días" : fecha === "mes" ? "este mes" : `del ${inicio} al ${fin}`}`;
+  if (descripcion) resumenText += ` con descripción que contiene '${descripcion}'`;
 
+  resumenFiltros.textContent = resumenText;
 
   // Cerrar modal
   cerrarModal.click();
 });
 
 
-// Limpiar filtros
 limpiarFiltro.addEventListener("click", () => {
   const movimientos = listaMovimientos.querySelectorAll("li");
   movimientos.forEach(li => li.style.display = "block");
   resumenFiltros.textContent = "";
+
   // Reset inputs
   document.getElementById("filtroTipo").value = "";
   document.getElementById("filtroCategoria").value = "";
@@ -206,7 +202,12 @@ limpiarFiltro.addEventListener("click", () => {
   document.getElementById("montoMax").value = "";
   document.getElementById("filtroDescripcion").value = "";
 
+  // Mostrar el botón "Ver más" nuevamente si es necesario
+  if (movimientos.length > cantidadPorPagina) {
+    agregarBotonVerMas();
+  }
+
   // Cerrar modal
   cerrarModal.click();
-});
+}); */
 
