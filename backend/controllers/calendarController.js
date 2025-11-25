@@ -105,9 +105,7 @@ const fechaFin = moment.tz(fecha, 'YYYY-MM-DD', 'America/Santo_Domingo').endOf('
     
     
     
-    console.log("Fecha recibida desde frontend: ", fecha);
-console.log("Fecha de inicio (startOf day): ", fechaInicio);
-console.log("Fecha de fin (endOf day): ", fechaFin);
+
 
     // Obtener el usuario
     const authHeader = req.headers.authorization;
