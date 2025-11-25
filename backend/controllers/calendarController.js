@@ -28,7 +28,8 @@ exports.obtenerCalendarios = async (req, res) => {
     }
 
     const fechaRegistro = moment(usuario.createdAt);  // Fecha de registro
-    const fechaHoy = moment().startOf('day'); // Aseguramos que sea a las 00:00 de hoy
+    const fechaHoy = moment.tz('America/Santo_Domingo').startOf('day');
+ // Aseguramos que sea a las 00:00 de hoy
 
     const meses = [];
     let mesActual = fechaRegistro.clone().startOf('month');
