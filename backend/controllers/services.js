@@ -1,13 +1,21 @@
 const Servicio = require("../models/servicio");
 const Gasto = require("../models/gasto");
 const { enviarCorreoRecordatorio } = require("../utils/notificaciones");
+const jwt = require("jsonwebtoken"); // ← FALTA ESTA LÍNEA
 
-const { format, addMonths, addYears, addWeeks } = require("date-fns"); // Usando date-fns
+const { format, addMonths, addYears, addWeeks } = require("date-fns");
+
 
 exports.crearServicio = async (req, res) => {
   try {
+
+    const authHeader = req.headers.authorization;
+const token = authHeader.split(" ")[1];
+const decoded = jwt.verify(token, process.env.JWT_SECRET);
+const usuarioId = decoded.id;
+
     // Obtener los datos enviados en la solicitud
-const { usuarioId, nombre, monto, categoria, fechaPago, periodo, recordatorioSemanal, recordatorioDia, descripcion, tipo } = req.body;
+const { nombre, monto, categoria, fechaPago, periodo, recordatorioSemanal, recordatorioDia, descripcion, tipo } = req.body;
    
 
 
@@ -108,13 +116,25 @@ exports.marcarPagado = async (req, res) => {
 
 
 
-// Controlador para obtener todos los servicios
 exports.obtenerServicios = async (req, res) => {
   try {
-    const servicios = await Servicio.find(); // Obtiene todos los servicios
-    res.status(200).json(servicios); // Devuelve los servicios en formato JSON
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "No autorizado" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const usuarioId = decoded.id; // ← ID del usuario logueado
+
+    // Traer solo los servicios del usuario logueado
+    const servicios = await Servicio.find({ usuarioId });
+
+    res.status(200).json(servicios);
   } catch (error) {
-    console.error(error);
+    console.error("Error al obtener servicios:", error);
     res.status(500).json({ error: "Hubo un error al obtener los servicios" });
   }
 };

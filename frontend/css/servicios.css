@@ -174,12 +174,15 @@ header h1 {
       border-radius: 5px;
       font-size: 14px;
       color: #333;
+      background-color: rgb(0, 30, 43);
+      color: white;
     }
 
-    input:focus{
-      border: none;
+    input, select:focus{
       outline: none;
     }
+
+   
 
     button {
       background-color: #00a35c;

@@ -23,6 +23,7 @@
       <input type="text" id="nombreEdicion" name="nombreEdicion" placeholder="Nombre" required />
       <input type="number" id="montoEdicion" name="montoEdicion" placeholder="Monto" step="0.01" required />
       <select id="categoriaEdicion" name="categoriaEdicion" required>
+
         <option value="">Selecciona categoría</option>
         <option value="Comida">Comida</option>
         <option value="Bebida">Bebida</option>
@@ -40,6 +41,7 @@
         <option value="Transporte">Transporte</option>
         <option value="Otro">Otro</option>
       </select>
+      <input type="text" id="otraCategoriaEdicion" placeholder="Especifica la categoría" style="display:none; margin-top:5px;" />
       <input type="date" id="fechaPagoEdicion" name="fechaPagoEdicion" required />
       <select id="periodoEdicion" name="periodoEdicion" required>
         <option value="">Selecciona periodo</option>
@@ -205,7 +207,16 @@ formAgregarServicio.addEventListener("submit", async (e) => {
     descripcion: "Servicio recurrente",
   };
   try {
-    const response = await fetch("/api/servicios", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(servicioData) });
+    const response = await fetch("/api/servicios", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + localStorage.getItem("token")
+  },
+  body: JSON.stringify(servicioData)
+});
+
+
     if (!response.ok) throw new Error("Error al agregar el servicio");
     mostrarExito("Servicio agregado con éxito");
     formAgregarServicio.reset();
@@ -220,15 +231,42 @@ formAgregarServicio.addEventListener("submit", async (e) => {
 
 const cargarServicios = async () => {
   try {
-    const response = await fetch("/api/servicios");
-    const servicios = await response.json();
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      mostrarError("Debes iniciar sesión");
+      return;
+    }
+
+    const response = await fetch("/api/servicios", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      mostrarError("Error al cargar servicios");
+      console.error("Error:", data);
+      return;
+    }
+
+    // Asegurar que data sea un array
+    const servicios = Array.isArray(data) ? data : [];
+
     const lista = document.getElementById("listaServicios");
     lista.innerHTML = "";
 
-    const hoy = new Date(); // Fecha actual
+    const hoy = new Date();
+
     servicios.forEach(servicio => {
       const fechaPago = new Date(servicio.fechaPago);
-      const fechaFormateada = `${fechaPago.getDate().toString().padStart(2,'0')}/${(fechaPago.getMonth()+1).toString().padStart(2,'0')}/${fechaPago.getFullYear()}`;
+      const fechaFormateada =
+        `${fechaPago.getDate().toString().padStart(2, '0')}/` +
+        `${(fechaPago.getMonth() + 1).toString().padStart(2, '0')}/` +
+        `${fechaPago.getFullYear()}`;
 
       // Verificar si está pendiente
       let estado = "";
@@ -238,25 +276,33 @@ const cargarServicios = async () => {
 
       const div = document.createElement("div");
       div.classList.add("servicio-item");
+
       div.innerHTML = `
         <h3>${servicio.nombre}</h3>
         <p>Monto: $${servicio.monto}</p>
         <p>Fecha de pago: ${fechaFormateada} ${estado}</p>
         <p>Categoría: ${servicio.categoria}</p>
         <p>Periodo: ${servicio.periodo}</p>
-        <button class="marcar-pagado-btn" data-id="${servicio._id}">Pagar</button>
+
+        <button class="marcar-pagado-btn" data-id="${servicio._id}">
+          Pagar
+        </button>
+
         <div class="action-buttons">
           <button class="edit" data-id="${servicio._id}">Editar</button>
           <button class="delete" data-id="${servicio._id}">Eliminar</button>
         </div>
       `;
+
       lista.prepend(div);
     });
-  } catch (error) { 
-    console.error(error); 
-    mostrarError("Hubo un error al cargar los servicios"); 
+
+  } catch (error) {
+    console.error(error);
+    mostrarError("Hubo un error inesperado al cargar los servicios");
   }
 };
+
 
 // Confirmación eliminar
 document.addEventListener("click", (e) => {
@@ -305,7 +351,40 @@ document.addEventListener("click", async (e) => {
       document.getElementById("servicioIdEdicion").value=servicio._id;
       document.getElementById("nombreEdicion").value=servicio.nombre;
       document.getElementById("montoEdicion").value=servicio.monto;
-      document.getElementById("categoriaEdicion").value=servicio.categoria;
+     const categoriaEdicion = document.getElementById("categoriaEdicion");
+const otraCategoriaEdicion = document.getElementById("otraCategoriaEdicion");
+
+const categoriasPredefinidas = [
+  "Comida","Bebida","Deporte","Entretenimiento","Gasolina","Servicios",
+  "Agua","Luz","Alquiler","Internet","Ropa","Salud","Tecnología","Transporte","Otro"
+];
+
+if (categoriasPredefinidas.includes(servicio.categoria)) {
+  categoriaEdicion.value = servicio.categoria;
+  otraCategoriaEdicion.style.display = "none";
+  otraCategoriaEdicion.value = "";
+} else {
+  categoriaEdicion.value = "Otro";
+  otraCategoriaEdicion.style.display = "block";
+  otraCategoriaEdicion.value = servicio.categoria;
+}
+
+// Mostrar/ocultar input de categoría personalizada en EDICIÓN
+const categoriaEdicionSelect = document.getElementById("categoriaEdicion");
+const otraCategoriaEdicionInput = document.getElementById("otraCategoriaEdicion");
+
+categoriaEdicionSelect.addEventListener("change", () => {
+  if (categoriaEdicionSelect.value === "Otro") {
+    otraCategoriaEdicionInput.style.display = "block";
+    otraCategoriaEdicionInput.required = true;
+  } else {
+    otraCategoriaEdicionInput.style.display = "none";
+    otraCategoriaEdicionInput.required = false;
+    otraCategoriaEdicionInput.value = "";
+  }
+});
+
+
       document.getElementById("periodoEdicion").value=servicio.periodo;
       document.getElementById("fechaPagoEdicion").value=servicio.fechaPago.split('T')[0];
       recordatorioSemanalEdicion.checked=servicio.recordatorioSemanal||false;
@@ -320,7 +399,11 @@ document.getElementById("formEditarServicio").addEventListener("submit", async (
   const data = {
     nombre: document.getElementById("nombreEdicion").value,
     monto: parseFloat(document.getElementById("montoEdicion").value),
-    categoria: document.getElementById("categoriaEdicion").value,
+    categoria:
+  document.getElementById("categoriaEdicion").value === "Otro"
+    ? document.getElementById("otraCategoriaEdicion").value.trim()
+    : document.getElementById("categoriaEdicion").value,
+
     periodo: document.getElementById("periodoEdicion").value,
     fechaPago: document.getElementById("fechaPagoEdicion").value+"T00:00:00",
     recordatorioSemanal: recordatorioSemanalEdicion.checked,
