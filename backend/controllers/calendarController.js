@@ -4,6 +4,7 @@ const Usuario = require('../models/usuario');
 
 const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone');
+moment.locale('es');    // ← SOLUCIÓN
 
 exports.obtenerCalendarios = async (req, res) => {
   try {
@@ -27,55 +28,45 @@ exports.obtenerCalendarios = async (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    const fechaRegistro = moment(usuario.createdAt);  // Fecha de registro
-    const fechaHoy = moment.tz('America/Santo_Domingo').startOf('day');
- // Aseguramos que sea a las 00:00 de hoy
+    // FECHAS
+    const fechaRegistro = moment.tz(usuario.createdAt, 'America/Santo_Domingo').startOf('month');
+    const fechaHoy = moment.tz('America/Santo_Domingo').startOf('month');
+    const hoyDia = moment.tz('America/Santo_Domingo').date();
 
+    let mesActual = fechaRegistro.clone();
     const meses = [];
-    let mesActual = fechaRegistro.clone().startOf('month');
 
-    // Si el usuario es nuevo, solo mostramos desde el día del registro
-    while (mesActual.isBefore(fechaHoy, 'month')) {
-      const mes = { mes: mesActual.format('MMMM YYYY'), dias: [] };
-      const diasEnElMes = mesActual.daysInMonth();
-      for (let i = 1; i <= diasEnElMes; i++) {
-        const dia = mesActual.clone().date(i);
-        // Solo mostrar días a partir del registro
-        if (mesActual.isSame(fechaRegistro, 'month') && dia.isBefore(fechaRegistro, 'day')) {
-          continue;
-        }
-        if (dia.isBefore(fechaHoy) || dia.isSame(fechaHoy, 'day')) {
-          mes.dias.push({ dia: dia.date(), fecha: dia.format('YYYY-MM-DD') });
-        }
-      }
-      meses.push(mes);
-      mesActual.add(1, 'month');
-    }
+    // RECORRER DESDE EL MES DE REGISTRO HASTA HOY
+    while (mesActual.isSameOrBefore(fechaHoy, 'month')) {
 
-    // Agregar el mes actual
-    if (fechaHoy.isSameOrAfter(fechaRegistro, 'day')) {
-      const mesHoy = {
-        mes: fechaHoy.format('MMMM YYYY'),
-        dias: []
-      };
-      
-      // Si el usuario se registró hoy, solo mostramos el día actual
-      if (fechaRegistro.isSame(fechaHoy, 'day')) {
-        mesHoy.dias.push({
-          dia: fechaHoy.date(),
-          fecha: fechaHoy.format('YYYY-MM-DD')
-        });
-      } else {
-        // Mostrar los días hasta el día actual
-        for (let i = 1; i <= fechaHoy.date(); i++) {
-          mesHoy.dias.push({
-            dia: i,
-            fecha: fechaHoy.clone().date(i).format('YYYY-MM-DD')
+      const inicioMes = mesActual.clone().startOf('month');
+      const finMes = mesActual.clone().endOf('month');
+      const diasMes = [];
+
+      let diaActual = inicioMes.clone();
+
+      while (diaActual.isSameOrBefore(finMes, 'day')) {
+
+        // Evitar días futuros
+        if (
+          diaActual.isSameOrAfter(fechaRegistro, 'day') &&
+          diaActual.isSameOrBefore(moment.tz('America/Santo_Domingo'), 'day')
+        ) {
+          diasMes.push({
+            dia: diaActual.date(),
+            fecha: diaActual.format('YYYY-MM-DD')
           });
         }
+
+        diaActual.add(1, 'day');
       }
 
-      meses.push(mesHoy);
+      meses.push({
+        mes: mesActual.format('MMMM YYYY'),
+        dias: diasMes
+      });
+
+      mesActual.add(1, 'month');
     }
 
     res.json({ meses });
