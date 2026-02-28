@@ -1,0 +1,183 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Body y fondo */
+body {
+  background-color: #f4f4f4;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Header */
+header {
+  width: 100%;
+  background-color: rgb(0, 30, 43);
+  color: #fff;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrado por defecto */
+  position: relative;
+  border-bottom: 2px solid #00a35c;
+}
+
+/* Título centrado */
+header h1 {
+  font-size: 1.8rem;
+  color: #fff;
+  text-align: center;
+  flex: 1;
+}
+
+/* Botón Volver */
+/* Botón Volver */
+.header-btn {
+  background-color: #00a35c;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  position: absolute;
+  left: 20px;
+}
+
+.header-btn:hover {
+  background-color: #00c77f;
+  box-shadow: 0 0 12px #00c77f, 0 0 25px #00c77f;
+  transform: scale(1.05);
+}
+
+/* Botón Editar Perfil */
+.perfil-btn {
+  background-color: #222;
+  color: #00a35c;
+  border: 2px solid #00a35c;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.perfil-btn:hover {
+  background-color: #00a35c;
+  color: #fff;
+  box-shadow: 0 0 12px #00a35c, 0 0 25px #00a35c;
+  transform: scale(1.05);
+}
+
+/* Main y sección de perfil */
+main {
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+section {
+  background-color: rgb(0, 30, 43);
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  box-shadow: 0 0 15px rgba(0, 163, 92, 0.6);
+}
+
+h2 {
+  color: #00a35c;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Campos del perfil */
+section p {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+section p strong {
+  color: #00a35c;
+}
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+  header {
+    padding: 12px 20px;
+  }
+  header h1 {
+    font-size: 1.6rem;
+  }
+  .header-btn {
+    padding: 8px 14px;
+    font-size: 0.95rem;
+  }
+  main {
+    padding: 20px;
+  }
+  section {
+    padding: 20px;
+  }
+}
+
+
+
+/* Cuando la pantalla es menor a 500px */
+@media (max-width: 500px) {
+  header {
+    justify-content: flex-start; /* botón izquierda */
+  }
+
+  header h1 {
+    text-align: right;
+    margin-left: auto;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.4rem;
+  }
+  .header-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+  section p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 320px) {
+  header h1 {
+    font-size: 1.2rem;
+  }
+  .header-btn {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+  }
+  section p {
+    font-size: 0.95rem;
+  }
+}

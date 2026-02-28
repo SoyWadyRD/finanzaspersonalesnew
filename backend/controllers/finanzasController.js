@@ -83,3 +83,42 @@ exports.listarMovimientos = async (req, res) => {
     res.status(500).json({ mensaje: "Error al listar movimientos", error: error.message });
   }
 };
+
+
+exports.actualizarMovimiento = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { monto, categoria, descripcion, fecha } = req.body; // ✅ ahora incluye fecha
+
+    let movimiento = await Ingreso.findById(id);
+    if (movimiento) {
+      if (monto !== undefined) movimiento.monto = monto;
+      if (categoria) movimiento.categoria = categoria;
+      if (descripcion !== undefined) movimiento.descripcion = descripcion;
+      if (fecha) {
+  movimiento.fecha = new Date(fecha);
+}
+ // ✅ actualiza la fecha
+      await movimiento.save();
+      return res.json({ mensaje: "Ingreso actualizado correctamente", movimiento });
+    }
+
+    movimiento = await Gasto.findById(id);
+    if (movimiento) {
+      if (monto !== undefined) movimiento.monto = monto;
+      if (categoria) movimiento.categoria = categoria;
+      if (descripcion !== undefined) movimiento.descripcion = descripcion;
+      if (fecha) {
+  movimiento.fecha = new Date(fecha);
+}
+ // ✅ actualiza la fecha
+      await movimiento.save();
+      return res.json({ mensaje: "Gasto actualizado correctamente", movimiento });
+    }
+
+    res.status(404).json({ mensaje: "Movimiento no encontrado" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ mensaje: "Error al actualizar el movimiento" });
+  }
+};

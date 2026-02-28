@@ -1,0 +1,508 @@
+
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+    body {
+      background-color: #f4f4f4;
+        overflow-x: hidden;
+    }
+
+    /* Header */
+header {
+  width: 100%;
+  background-color: rgb(0, 30, 43);
+  color: #fff;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrado por defecto */
+  position: relative;
+  border-bottom: 2px solid #00a35c;
+  height: 70px;
+}
+
+/* Título centrado */
+header h1 {
+  font-size: 1.8rem;
+  color: #fff;
+  text-align: center;
+  flex: 1;
+}
+
+/* Botón Volver */
+/* Botón Volver */
+.header-btn {
+  background-color: #00a35c;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  position: absolute;
+  left: 20px;
+  width:100px;
+}
+
+.header-btn:hover {
+  background-color: #00c77f;
+  box-shadow: 0 0 12px #00c77f, 0 0 25px #00c77f;
+  transform: scale(1.05);
+}
+
+  .container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Para que los elementos vayan desde arriba */
+  align-items: center; /* Centrado horizontal */
+  padding: 20px;
+}
+
+
+ 
+
+ #agregarBtn {
+  background-color: #00a35c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+}
+
+
+    #agregarBtn:hover {
+      background-color: #008f4e;
+    }
+
+    #listaServicios, #listaDeudas {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        margin-top: 20px;
+      gap: 20px;
+    }
+
+    .servicio-item {
+      background-color: rgb(0, 30, 43);
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 163, 92, 0.6);
+      border: 2px solid #00a35c;
+        margin-bottom: 10px;
+    }
+
+    .servicio-item h3 {
+      margin-top: 0;
+    }
+
+    .servicio-item p {
+      margin: 5px 0;
+    }
+
+    .servicio-item button {
+      background-color: #00a35c;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin-top: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .servicio-item button:hover {
+      background-color: #008f4e;
+    }
+
+    .servicio-item .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .servicio-item .action-buttons button {
+      background-color: #f44336;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .servicio-item .action-buttons button.edit {
+      background-color: #00a35c;
+      margin-right: 10px;
+            margin-left: 0px;
+    }
+
+    .servicio-item .action-buttons button:hover {
+      background-color: #ff5722;
+    }
+
+    #formulario {
+      display: none;
+      background-color: rgb(0, 30, 43);
+      border: 2px solid #00a35c;
+      color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #00a35c;
+      border-radius: 5px;
+      font-size: 14px;
+      color: #333;
+      background-color: rgb(0, 30, 43);
+      color: white;
+    }
+
+    input, select:focus{
+      outline: none;
+    }
+
+   
+
+    button {
+      background-color: #00a35c;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #cancelarBtn{
+      background-color: rgb(255, 37, 37);
+    }
+
+    button:hover {
+      background-color: #008f4e;
+    }
+
+    .close-btn {
+      background-color: #f44336;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .close-btn:hover {
+      background-color: #d32f2f;
+    }
+
+
+
+
+/* Clase para ocultar el formulario */
+.oculto {
+  display: none;
+}
+
+/* Clase para mostrar el formulario */
+.mostrar {
+  display: block;
+}
+
+
+
+
+
+  #formularioEdicion {
+  background-color: rgb(0, 30, 43);
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid #00a35c;
+  box-shadow: 0 0 15px rgba(0, 163, 92, 0.6);
+  position: fixed; /* 🔥 Cambiado de absolute a fixed */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 500px;
+  display: none;
+  box-sizing: border-box;
+  transition: opacity 0.3s ease;
+  z-index: 9999; /* 🔥 Asegura que quede sobre todo */
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 9998;
+  display: none;
+}
+
+
+  #formularioEdicion form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #formularioEdicion input,
+  #formularioEdicion select,
+  #formularioEdicion button {
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    border: 1px solid #00a35c;
+    color: #fff;
+    background-color: rgb(0, 30, 43);
+  }
+
+  #formularioEdicion select:focus,
+  #formularioEdicion input:focus {
+    outline: none;
+    border-color: #00c87a;
+ 
+  }
+
+  #formularioEdicion button {
+    background-color: #00a35c;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+#formularioEdicion button:hover {
+  background-color: #008f4e;
+}
+
+#formularioEdicion .close-btn {
+  background-color: #f44336;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+#formularioEdicion .close-btn:hover {
+  background-color: #d32f2f;
+}
+
+#formularioEdicion .camposDeuda input,
+#formularioEdicion .camposDeuda select {
+  background-color: rgb(0, 30, 43);
+}
+
+#formularioEdicion .camposDeuda input,
+#formularioEdicion .camposDeuda select {
+  background-color: rgb(0, 30, 43);
+}
+
+
+
+
+/* Mensajes y confirmación */
+    .mensaje-verificacion, .mensaje-error {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 1.2rem;
+      width: 80%;
+      max-width: 300px;
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 1001;
+      display: none;
+    }
+
+    .mensaje-verificacion { background-color: rgba(0,163,92,0.97); color: #fff; }
+    .mensaje-error { background-color: rgba(255,0,0,0.9); color: #fff; }
+
+    .confirmacion-eliminacion {
+      background-color: rgb(0,0,0);
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 9999;
+      width: 300px;
+      display: none;
+    }
+
+    .confirmacion-eliminacion button {
+      background-color: #00a35c;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .confirmacion-eliminacion button:hover { background-color: #00c77f; }
+    .confirmacion-eliminacion #cancelarEliminarBtn, .confirmacion-eliminacion #cancelarPagarBtn { background-color: #ff4d4d; }
+    .confirmacion-eliminacion #cancelarEliminarBtn:hover, .confirmacion-eliminacion #cancelarPagarBtn:hover { background-color: #ff6666; }
+
+
+
+
+    /* Ajustes responsive */
+@media (max-width: 768px) {
+  header {
+    padding: 12px 20px;
+  }
+
+
+
+  .header-btn {
+    padding: 8px 14px;
+    font-size: 0.95rem;
+  }
+  .container {
+        padding: 10px;
+      }
+      #formulario {
+        width: 90%;
+      }
+
+       #formularioEdicion {
+      width: 90%;
+      max-width: 450px;
+      padding: 15px;
+    }
+
+    #formularioEdicion input,
+    #formularioEdicion select {
+      font-size: 13px;
+      padding: 10px;
+    }
+
+    #formularioEdicion button {
+      font-size: 14px;
+      padding: 12px;
+    }
+
+
+    .confirmacion-eliminacion {
+    width: 90%;
+    max-width: 400px;
+    padding: 15px;
+  }
+
+  .confirmacion-eliminacion p{
+    margin-bottom: 10px;
+  }
+
+
+  .confirmacion-eliminacion button {
+    font-size: 14px;
+    padding: 10px;
+    margin: 5px;
+  }
+  }
+    
+
+
+
+
+/* Cuando la pantalla es menor a 500px */
+@media (max-width: 500px) {
+  header {
+    justify-content: flex-start; /* botón izquierda */
+  }
+
+ 
+
+  #formularioEdicion {
+      width: 90%;
+      padding: 12px;
+    }
+
+    #formularioEdicion input,
+    #formularioEdicion select,
+    #formularioEdicion button {
+      font-size: 12px;
+    }
+
+
+    .confirmacion-eliminacion {
+    width: 90%;
+    max-width: 350px;
+    padding: 12px;
+  }
+  .confirmacion-eliminacion button {
+    font-size: 13px;
+    padding: 8px;
+    margin: 5px 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1{
+    margin-left: 25px;
+  }
+  .header-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+  
+}
+
+@media (max-width: 320px) {
+   header h1{
+    margin-left: 50px;
+  }
+  .header-btn {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+      width:80px;
+  }
+   #formularioEdicion {
+      width: 90%;
+      padding: 10px;
+    }
+
+    #formularioEdicion input,
+    #formularioEdicion select,
+    #formularioEdicion button {
+      font-size: 11px;
+      padding: 8px;
+    }
+
+    .confirmacion-eliminacion {
+    width: 90%;
+    padding: 10px;
+  }
+  .confirmacion-eliminacion button {
+    font-size: 14px;
+    padding: 8px;
+    margin: 3px 2px;
+  }
+}

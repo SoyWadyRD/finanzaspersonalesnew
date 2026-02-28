@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
-  <title>Mis Metas</title>
+      <link rel="manifest" href="/manifest.json">
+  <title>Metas | Finanzas Personales</title>
   <style>
     /* Reset básico */
     * {
@@ -24,8 +25,9 @@
 
     /* Header */
     header {
+        position: relative;
       display: flex;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
       padding: 20px;
       background: rgb(0, 30, 43);
@@ -37,6 +39,7 @@
       font-size: 1.8rem;
       color: white;
       margin-left: 10px;
+      text-align: center;
     }
 
     li{
@@ -53,6 +56,9 @@
       padding: 10px 20px;
       border-radius: 5px;
       transition: background-color 0.3s ease, transform 0.3s ease;
+      position: absolute;
+      left: 20px;
+      width: 75px;
     }
 
     .volver:hover {
@@ -65,13 +71,25 @@
       transform: translateY(2px);
     }
 
+
+
+
+    #crearMetaSection{
+      background-color: rgb(0, 30, 43);
+      padding: 20px;
+      border-radius: 8px;
+      color: white;
+    }
+
     /* Main */
     main {
       padding: 15px;
+        max-width: 425px;   /* espacio máximo del contenido */
+  margin: 0 auto;     /* centra el main */
     }
 
     /* Estilos de los formularios y botones */
-    input, textarea, button {
+    input, textarea, button, select {
       padding: 10px;
       margin: 12px 0;
       border-radius: 4px;
@@ -80,7 +98,18 @@
       font-size: 14px;
     }
 
-    input{
+   #crearMetaSection input:focus, 
+#crearMetaSection textarea:focus, 
+#crearMetaSection select:focus, 
+#crearMetaSection button:focus {
+  outline: none; /* Elimina el borde por defecto */
+  box-shadow: 0 0 10px 2px #00a35c; /* Agrega un efecto de sombra */
+}
+
+
+    
+
+    input, select{
       background-color: rgb(0, 30, 43);
       color: white;
       border: 1px solid #00a35c;
@@ -100,6 +129,8 @@
       transition: background-color 0.3s ease;
     }
 
+    
+
     .crear {
       background-color: #45a049;
     }
@@ -112,10 +143,25 @@
       background-color: #3e8e41;
     }
 
+
+    h2{
+  text-align: center;
+}
+
+
     /* Sección de metas */
     #metasSection {
       margin-top: 40px;
     }
+
+    /* Centrar las tarjetas dentro del ul */
+#listaMetas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* centra las tarjetas */
+  gap: 20px;
+  padding: 0;
+}
 
     .meta-item {
       border: 1px solid #333;
@@ -125,6 +171,8 @@
       margin-bottom: 20px;
       color: #e0e0e0;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        width: 100%;
+  max-width: 425px;   /* lo que pediste */
     }
 
     .meta-item h3 {
@@ -135,11 +183,12 @@
     .meta-item .meta-details {
       display: flex;
       justify-content: space-between;
+       flex-direction: column;
     }
 
     .meta-item .meta-details div {
       flex: 1;
-      text-align: center;
+      text-align: left;
     }
 
     /* Barra de progreso */
@@ -175,17 +224,17 @@
 
     /* Botones de agregar/quitar dinero */
     button.add-remove {
-      background-color: #52f321;
+      background-color: #00a35c;
       width: auto;
       margin-top: 10px;
     }
 
     button.add-remove:hover {
-      background-color: #52f321;
+      background-color: #00a35c;
     }
 
     button.add-remove:active {
-      background-color: #52f321;
+      background-color: #00a35c;
     }
 
     button.remove {
@@ -230,6 +279,26 @@
       background-color: #b71c1c;
     }
 
+
+
+
+
+
+
+
+
+    button.edit {
+  background-color: #ff9800;
+  margin-top: 10px;
+}
+
+button.edit:hover {
+  background-color: #e68a00;
+}
+
+button.edit:active {
+  background-color: #cc7700;
+}
 
 
 
@@ -308,6 +377,36 @@
   text-align: center;
 }
 
+.editarMeta{
+    height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #00a35c;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #00c97d;
+}
+
+/* Firefox */
+.modal-content {
+  scrollbar-width: thin;
+  scrollbar-color: #00a35c rgba(0,0,0,0.2);
+}
+
+
 .modal input {
   margin-bottom: 10px;
   padding: 10px;
@@ -319,6 +418,44 @@
   width: 100%;
   margin: 5px 0;
   cursor: pointer;
+}
+
+
+
+
+
+
+/* Estilo del loader */
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  z-index: 9999; /* Asegúrate de que el z-index sea alto */
+}
+
+/* Añadir animación de carga (opcional) */
+.loader:before {
+  content: "";
+  width: 50px;
+  height: 50px;
+  border: 5px solid #fff;
+  border-top: 5px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 
@@ -363,7 +500,7 @@
       }
 
       .meta-item {
-        padding: 10px;
+        padding: 15px;
       }
 
       .meta-item h3 {
@@ -373,12 +510,7 @@
       .meta-item .meta-details div {
         text-align: left;
       }
-
-
-      button, .volver {
-        width: 100%;
-      }
-    }
+ }
   </style>
 </head>
 <body>
@@ -395,7 +527,30 @@
       <form id="formMeta">
         <input type="text" id="nombreMeta" placeholder="Nombre de la meta" required>
         <input type="number" id="cantidadMeta" placeholder="Cantidad total de la meta" required>
+        <br>
+        <label for="fechaMeta">Fecha limite</label>
         <input type="date" id="fechaMeta" required>
+        <select id="categoriaSelect" required>
+  <option value="">Selecciona categoría</option>
+  <option value="Comida">Comida</option>
+  <option value="Bebida">Bebida</option>
+  <option value="Deporte">Deporte</option>
+  <option value="Entretenimiento">Entretenimiento</option>
+  <option value="Gasolina">Gasolina</option>
+  <option value="Servicios">Servicios</option>
+  <option value="Agua">Agua</option>
+  <option value="Luz">Luz</option>
+  <option value="Alquiler">Alquiler</option>
+  <option value="Internet">Internet</option>
+  <option value="Ropa">Ropa</option>
+  <option value="Salud">Salud</option>
+  <option value="Tecnología">Tecnología</option>
+  <option value="Transporte">Transporte</option>
+  <option value="Otro">Otro</option>
+</select>
+
+<input type="text" id="categoriaOtro" placeholder="Escribe la categoría" style="display:none; background-color: rgb(0,30,43); color:white; border:1px solid #00a35c;">
+
         <textarea id="descripcionMeta" placeholder="Descripción" required></textarea>
         <button type="submit" class="crear">Crear Meta</button>
       </form>
@@ -411,7 +566,8 @@
 
 
 
-
+  <!-- Loader -->
+<div id="loader" class="loader" style="display: none;"></div>
 
 
 
@@ -460,6 +616,62 @@
     <button id="cancelarEliminarMeta"  style="background-color: rgb(255, 25, 25);">Cancelar</button>
   </div>
 </div>
+
+
+
+
+
+
+<div id="modalEditarMeta" class="modal">
+  <div class="modal-content editarMeta" style="background-color: rgb(0, 30, 43); color: white;">
+    <h3 style="margin-bottom: 15px; text-align: center;">Editar Meta</h3>
+
+    <label for="editarNombreMeta" style="display:block; margin-top:10px; font-weight:bold;">Nombre de la Meta:</label>
+    <input type="text" id="editarNombreMeta" placeholder="Nombre de la meta" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);">
+
+    <label for="editarCantidadMeta" style="display:block; margin-top:10px; font-weight:bold;">Cantidad Total:</label>
+    <input type="number" id="editarCantidadMeta" placeholder="Cantidad total" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);">
+
+    <label for="editarFechaMeta" style="display:block; margin-top:10px; font-weight:bold;">Fecha Límite:</label>
+    <input type="date" id="editarFechaMeta" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);">
+
+    <!-- Agregar el campo select para la categoría -->
+    <label for="editarCategoriaSelect" style="display:block; margin-top:10px; font-weight:bold;">Categoría:</label>
+    <select id="editarCategoriaSelect" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);">
+      <option value="Comida">Comida</option>
+      <option value="Bebida">Bebida</option>
+      <option value="Deporte">Deporte</option>
+      <option value="Entretenimiento">Entretenimiento</option>
+      <option value="Gasolina">Gasolina</option>
+      <option value="Servicios">Servicios</option>
+      <option value="Agua">Agua</option>
+      <option value="Luz">Luz</option>
+      <option value="Alquiler">Alquiler</option>
+      <option value="Internet">Internet</option>
+      <option value="Ropa">Ropa</option>
+      <option value="Salud">Salud</option>
+      <option value="Tecnología">Tecnología</option>
+      <option value="Transporte">Transporte</option>
+      <option value="Otro">Otro</option>
+    </select>
+
+    <!-- Input adicional para "Otro" si se selecciona la categoría -->
+    <input type="text" id="editarCategoriaOtro" placeholder="Escribe la categoría" style="display:none; background-color: rgb(0,30,43); color:white; border:1px solid #00a35c;">
+
+    <label for="editarDescripcionMeta" style="display:block; margin-top:10px; font-weight:bold;">Descripción:</label>
+    <textarea id="editarDescripcionMeta" placeholder="Descripción" required
+      style="border: 1px solid #00a35c; color: #fff; background-color: rgb(0,30,43);"></textarea>
+
+    <button id="confirmarEditarMeta" style="background-color: #ff9800; margin-top:15px;">Guardar Cambios</button>
+    <button id="cancelarEditarMeta" style="background-color: #f44336; margin-top:5px;">Cancelar</button>
+  </div>
+</div>
+
+
 
   <script src="js/metas.js"></script>
 </body>

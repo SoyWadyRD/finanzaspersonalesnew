@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose"); // 🔹 Faltaba
 const Gasto = require("../models/gasto"); // 🔹 Faltaba
 const Ingreso = require("../models/ingreso"); // 🔹 Faltaba
-const { registrarGasto, registrarIngreso, obtenerBalance, listarMovimientos } = require("../controllers/finanzasController");
+const { registrarGasto, registrarIngreso, obtenerBalance, listarMovimientos, actualizarMovimiento } = require("../controllers/finanzasController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 // GASTOS
@@ -63,6 +63,8 @@ router.delete("/movimiento/:id", authMiddleware, async (req, res) => {
     res.status(500).json({ mensaje: "Error al eliminar el movimiento", error: error.message });
   }
 });
+
+router.put("/movimiento/:id", authMiddleware, actualizarMovimiento);
 
 
 module.exports = router;

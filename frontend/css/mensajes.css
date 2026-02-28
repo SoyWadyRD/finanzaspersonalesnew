@@ -1,0 +1,42 @@
+
+
+.mensaje-verificacion {
+  background-color: rgba(0, 163, 92, 0.971);
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 1.2rem;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+}
+
+
+
+
+
+
+/* Estilo para los mensajes de error */
+.mensaje-error {
+  background-color: rgba(255, 0, 0, 0.971);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  z-index: 1001;
+  display: none; /* Inicialmente oculto */
+}
+
+

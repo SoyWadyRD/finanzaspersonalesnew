@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
-  <title>Detalle de Transacción</title>
+  <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+    <link rel="manifest" href="/manifest.json">
+  <title>Detalles | Finanzas Personales</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
-    /* Reset básico */
     * {
       margin: 0;
       padding: 0;
@@ -24,7 +25,6 @@
       align-items: center;
     }
 
-    /* Header */
     header {
       display: flex;
       justify-content: space-between;
@@ -34,11 +34,13 @@
       border-bottom: 1px solid #333;
       width: 100%;
       box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2);
+      flex-wrap: wrap;
     }
 
     header h1 {
       font-size: 1.8rem;
-      color: #ffffff; /* Verde */
+      color: #ffffff;
+      margin-bottom: 10px;
     }
 
     header button {
@@ -56,7 +58,6 @@
       background-color: #ff1a3c;
     }
 
-    /* Main */
     main {
       flex: 1;
       display: flex;
@@ -66,7 +67,6 @@
       width: 100%;
     }
 
-    /* Tarjeta de detalle */
     #detalle {
       background-color: rgb(0, 30, 43);
       padding: 30px 40px;
@@ -75,46 +75,132 @@
       max-width: 600px;
       width: 100%;
       box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-      transition: 0.3s;
     }
 
     #detalle p {
       margin-bottom: 15px;
       font-size: 1.1rem;
+      color: #fff;
     }
 
     #detalle p strong {
-      color: #00a35c; /* Verde */
+      color: #00a35c;
     }
 
-    #detalle span {
+    #detalle input,
+    #detalle select {
+      background: #001e2b;
       color: #fff;
+      border: 1px solid #00a35c;
+      border-radius: 5px;
+      padding: 8px 10px;
+      width: 100%;
+      margin-top: 5px;
+      font-size: 1rem;
+      transition: 0.2s;
     }
 
-    /* Efecto hover en la tarjeta */
-    #detalle:hover {
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    #detalle input:focus,
+    #detalle select:focus {
+      outline: none;
+      border-color: #00c77f;
+      box-shadow: 0 0 6px rgba(0, 163, 92, 0.6);
     }
 
-    /* Estilo del botón eliminar */
-    #eliminarBtn {
-      margin-top: 20px;
-      background-color: #ff4d6d;
-      color: #fff;
+    #detalle button {
+      margin-top: 12px;
+      width: 100%;
       padding: 12px 20px;
       border: none;
       border-radius: 6px;
-      cursor: pointer;
       font-weight: bold;
+      cursor: pointer;
       transition: 0.3s;
-      width: 100%;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    #editarBtn {
+      background-color: #00a35c;
+    }
+
+    #editarBtn:hover {
+      background-color: #00c77f;
+    }
+
+    #cancelarEdicionBtn {
+      background-color: #ff4d6d;
+    }
+
+    #cancelarEdicionBtn:hover {
+      background-color: #ff1a3c;
+    }
+
+    #eliminarBtn {
+      background-color: #ff4d6d;
     }
 
     #eliminarBtn:hover {
       background-color: #ff1a3c;
     }
 
-    /* Responsividad */
+    /* MENSAJES Y CONFIRMACIÓN */
+    .mensaje-verificacion, .mensaje-error {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 1.2rem;
+      width: 80%;
+      max-width: 300px;
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 1001;
+      display: none;
+    }
+
+    .mensaje-verificacion { background-color: rgba(0,163,92,0.97); color: #fff; }
+    .mensaje-error { background-color: rgba(255,0,0,0.9); color: #fff; }
+
+    .confirmacion-eliminacion {
+      background-color: rgb(0,0,0);
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 9999;
+      width: 300px;
+      display: none;
+    }
+
+    .confirmacion-eliminacion button {
+      background-color: #00a35c;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .confirmacion-eliminacion button:hover {
+      background-color: #00c77f;
+    }
+
+    .confirmacion-eliminacion #cancelarEliminarBtn {
+      background-color: #ff4d4d;
+    }
+
+    .confirmacion-eliminacion #cancelarEliminarBtn:hover {
+      background-color: #ff6666;
+    }
+
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       header {
         padding: 15px 20px;
@@ -159,139 +245,51 @@
       }
     }
 
+    @media (max-width: 375px) {
 
+      #detalle {
+        padding: 15px;
+      }
+    }
 
+    @media (max-width: 320px) {
 
-
-
-
-
-
-
-    .mensaje-verificacion {
-  background-color: rgba(0, 163, 92, 0.971);
-  padding: 10px;
-  border-radius: 5px;
-  color: #fff;
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  font-size: 1.2rem;
-  width: 80%;
-  max-width: 300px;
-  z-index: 1001;
-}
-
-
-
-
-
-
-/* Estilo para los mensajes de error */
-.mensaje-error {
-  background-color: rgba(255, 0, 0, 0.971);
-  color: #fff;
-  padding: 10px;
-  border-radius: 5px;
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 1.2rem;
-  text-align: center;
-  width: 80%;
-  max-width: 300px;
-  z-index: 1001;
-  display: none; /* Inicialmente oculto */
-}
-
-
-
-
-
-
-
-
-
-
-
-.confirmacion-eliminacion {
-  background-color: rgb(0, 0, 0);
-  color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 9999;
-  width: 300px;
-  display: none; /* Inicialmente oculto */
-}
-
-.confirmacion-eliminacion button {
-  background-color: #00a35c !important;
-  color: #fff !important;
-  border: none !important;
-  padding: 10px !important;
-  margin: 10px !important;
-  border-radius: 5px !important;
-  cursor: pointer !important;
-}
-
-.confirmacion-eliminacion button:hover {
-  background-color: #00c77f !important;
-}
-
-.confirmacion-eliminacion button#cancelarEliminarBtn {
-  background-color: #ff4d4d !important;
-}
-
-.confirmacion-eliminacion button#cancelarEliminarBtn:hover {
-  background-color: #ff6666 !important;
-}
-
-
-.confirmacion-eliminacion button#cancelarEliminarBtn:hover {
-  background-color: #ff6666 !important;
-}
+      #detalle button {
+        font-size: 0.85rem;
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
     <h1>Detalle de la Transacción</h1>
-    <button onclick="window.history.back()">Volver</button>
+    <button id="volverBtn">Volver</button>
   </header>
 
-
- <!-- HTML -->
-<div id="confirmacionEliminacion" class="confirmacion-eliminacion" style="display: none;">
-  <p>¿Seguro que deseas eliminar este movimiento?</p>
-  <button id="confirmarEliminarBtn">Aceptar</button>
-  <button id="cancelarEliminarBtn">Cancelar</button>
-</div>
-
-  <!-- Div para mensajes de error -->
-  <div id="mensajeError" class="mensaje-error" style="display: none;">
-    <p></p>
+  <div id="confirmacionEliminacion" class="confirmacion-eliminacion">
+    <p>¿Seguro que deseas eliminar este movimiento?</p>
+    <button id="confirmarEliminarBtn">Aceptar</button>
+    <button id="cancelarEliminarBtn">Cancelar</button>
   </div>
 
-  <!-- Div para mensaje de éxito -->
-  <div id="mensajeExito" class="mensaje-verificacion" style="display: none;">
-    <!-- El mensaje de éxito se agregará aquí dinámicamente -->
-  </div>
+  <div id="mensajeError" class="mensaje-error"><p></p></div>
+  <div id="mensajeExito" class="mensaje-verificacion"></div>
 
   <main>
     <div id="detalle">
       <p><strong>Tipo de transacción:</strong> <span id="tipo"></span></p>
       <p><strong>Monto:</strong> $<span id="monto"></span></p>
       <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+      <p id="fechaLarga" style="color:#ccc; font-size:0.95rem;"></p>
       <p><strong>Categoría:</strong> <span id="categoria"></span></p>
       <p><strong>Descripción:</strong> <span id="descripcion"></span></p>
-      <button id="eliminarBtn">Eliminar</button>
+
+ <button id="editarBtn"><i class="fas fa-edit"></i> Editar</button>
+<button id="cancelarEdicionBtn" style="display:none;">Cancelar</button>
+
+<button id="eliminarBtn">Eliminar</button>
+
     </div>
   </main>
 

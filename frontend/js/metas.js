@@ -8,7 +8,6 @@ if (!token) {
 }
 
 let metasGlobal = []; // Variable global para almacenar las metas
-
 const mostrarMetas = () => {
   // Hacer la solicitud a la API
   fetch("/api/finanzas/metas", {
@@ -33,11 +32,15 @@ const mostrarMetas = () => {
 
         const cantidadTotal = parseFloat(meta.cantidad);
         const montoActual = parseFloat(meta.montoActual || 0); // Si no existe, lo asignamos a 0
-        const fechaMeta = new Date(meta.fechaMeta);  // Convertimos la fecha de la meta
+        const [year, month, day] = meta.fechaMeta.split("T")[0].split("-");
+        const fechaMeta = { year, month, day };  // objeto simple sin fecha js
+
+        // Convertimos la fecha de la meta
         const fechaHoy = new Date();  // Fecha actual
 
         // Verificar si la meta ya pasó
-        const metaCompletada = fechaMeta < fechaHoy; // Si la fecha es anterior a hoy
+        const fechaJS = new Date(`${fechaMeta.year}-${fechaMeta.month}-${fechaMeta.day}T23:59:59`);
+        const metaCompletada = fechaJS < new Date(); // Si la fecha es anterior a hoy
         const porcentaje = (montoActual / cantidadTotal) * 100;
 
         // Asegurarnos de que el porcentaje no exceda el 100%
@@ -62,7 +65,8 @@ const mostrarMetas = () => {
           <div class="meta-details">
             <div><strong>Meta: </strong>$${cantidadTotal}</div>
             <div><strong>Logrado: </strong>$${montoActual}</div>
-            <div><strong>Fecha: </strong>${fechaMeta.toLocaleDateString()}</div>
+            <div><strong>Fecha: </strong>${fechaMeta.day}/${fechaMeta.month}/${fechaMeta.year}</div>
+            <div><strong>Categoria: </strong>${meta.categoria}</div> <!-- Aquí mostramos la categoría -->
             <div><strong>Descripción: </strong>${meta.descripcion}</div>
             <div><strong>Estado: </strong>${estadoMeta}</div>
           </div>
@@ -76,6 +80,7 @@ const mostrarMetas = () => {
               <button class="remove" onclick="quitarMonto('${meta._id}')">Quitar Monto</button>
             ` : ""}
           </div>
+          <button class="edit" onclick="editarMeta('${meta._id}')">Editar Meta</button>
           <button class="delete" onclick="eliminarMeta('${meta._id}')">Eliminar Meta</button>
         `;
 
@@ -103,21 +108,27 @@ mostrarMetas();
 
 
 
-
 // Crear meta
 formMeta.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const nombre = document.getElementById("nombreMeta").value;
-  const cantidad = parseFloat(document.getElementById("cantidadMeta").value);
+  const nombre = document.getElementById("nombreMeta").value.trim();
+  const cantidad = document.getElementById("cantidadMeta").value;
   const fechaMeta = document.getElementById("fechaMeta").value;
-  const descripcion = document.getElementById("descripcionMeta").value;
+  const descripcion = document.getElementById("descripcionMeta").value.trim();
+  const categoriaSelect = document.getElementById("categoriaSelect");
+  const categoriaOtro = document.getElementById("categoriaOtro");
 
-  // Limpiar los mensajes previos
-  const mensajeVerificacion = document.getElementById("mensajeVerificacion");
-  const mensajeError = document.getElementById("mensajeError");
-  if (mensajeVerificacion) mensajeVerificacion.style.display = "none";
-  if (mensajeError) mensajeError.style.display = "none";
+  // Obtener categoría final
+  let categoria = categoriaSelect.value;
+  if (categoria === "Otro") {
+    categoria = categoriaOtro.value.trim();
+  }
+
+  if (!categoria) {
+    mostrarMensaje("error", "Debes seleccionar o escribir una categoría");
+    return;
+  }
 
   try {
     const res = await fetch("/api/finanzas/meta", {
@@ -126,27 +137,32 @@ formMeta.addEventListener("submit", async (e) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ nombre, cantidad, fechaMeta, descripcion }),
+      body: JSON.stringify({
+        nombre,
+        cantidad,
+        fechaMeta,
+        descripcion,
+        categoria,
+      }),
     });
 
     const data = await res.json();
 
-    if (!res.ok) {
-      // Mostrar el mensaje de error
-      mostrarMensaje("error", data.mensaje);
-      return;
-    }
+    if (!res.ok) throw new Error(data.message || "Error al crear meta");
 
-    // Mostrar el mensaje de éxito
-    mostrarMensaje("verificacion", "Meta creada correctamente");
     formMeta.reset();
-    mostrarMetas(); // Actualiza la lista de metas
-  } catch (err) {
-    // Mostrar el mensaje de error en caso de conexión fallida
-    mostrarMensaje("error", "Error en la conexión");
-    console.error("Error en la creación de la meta:", err);
+    categoriaOtro.style.display = "none";
+
+    mostrarMetas();
+    mostrarMensaje("verificacion", "Meta creada con éxito");
+  } catch (e) {
+    console.error(e);
+    mostrarMensaje("error", "Hubo un error al crear la meta");
   }
 });
+
+
+
 
 
 
@@ -157,10 +173,17 @@ formMeta.addEventListener("submit", async (e) => {
 // Función para mostrar mensajes de éxito o error
 // Función para mostrar mensajes de éxito o error en el div
 const mostrarMensaje = (tipo, mensaje) => {
+  // Primero, elimina cualquier mensaje previo
+  const mensajeContainerExistente = document.getElementById(tipo === "verificacion" ? "mensajeVerificacion" : "mensajeError");
+  if (mensajeContainerExistente) {
+    mensajeContainerExistente.remove();
+  }
+
+  // Crear el nuevo contenedor de mensaje
   const mensajeContainer = document.createElement("div");
   mensajeContainer.textContent = mensaje;
 
-  // Asignamos las clases según el tipo de mensaje
+  // Asignar las clases y el ID según el tipo de mensaje
   if (tipo === "verificacion") {
     mensajeContainer.classList.add("mensaje-verificacion");
     mensajeContainer.id = "mensajeVerificacion";
@@ -188,6 +211,17 @@ const mostrarMensaje = (tipo, mensaje) => {
 
 
 
+// Función para mostrar el loader
+const mostrarLoader = () => {
+  document.getElementById("loader").style.display = "flex";
+};
+
+// Función para ocultar el loader
+const ocultarLoader = () => {
+  document.getElementById("loader").style.display = "none";
+};
+
+
 
 
 
@@ -198,27 +232,24 @@ const modalAgregarMonto = document.getElementById("modalAgregarMonto");
 const modalQuitarMonto = document.getElementById("modalQuitarMonto");
 const modalEliminarMeta = document.getElementById("modalEliminarMeta");
 
-// Función para abrir el modal de agregar monto
+
+
+
 // Función para abrir el modal de agregar monto
 const agregarMonto = (metaId) => {
   modalAgregarMonto.style.display = "flex";
-
-  // Limpiar el campo de monto al abrir el modal
   document.getElementById("montoAgregar").value = "";
 
   const confirmarAgregarMonto = document.getElementById("confirmarAgregarMonto");
   const cancelarAgregarMonto = document.getElementById("cancelarAgregarMonto");
 
-  // Confirmar agregar monto
   confirmarAgregarMonto.onclick = () => {
     let monto = parseFloat(document.getElementById("montoAgregar").value);
     
-    // Verificar si el monto es válido
     if (!monto || isNaN(monto) || monto <= 0) {
       return mostrarMensaje("error", "Por favor ingrese un monto válido.");
     }
 
-    // Obtener la meta correspondiente desde metasGlobal
     const meta = metasGlobal.find((meta) => meta._id === metaId);
     if (!meta) {
       return mostrarMensaje("error", "Meta no encontrada");
@@ -227,12 +258,13 @@ const agregarMonto = (metaId) => {
     const cantidadTotal = parseFloat(meta.cantidad);
     const montoActual = parseFloat(meta.montoActual || 0);
 
-    // Validar que el monto agregado no sea mayor que el total menos lo que ya se ha alcanzado
     if (montoActual + monto > cantidadTotal) {
       return mostrarMensaje("error", "No puedes agregar más de lo que queda para completar la meta.");
     }
 
-    // Hacer la solicitud de agregar monto
+    // Mostrar loader antes de la petición
+    mostrarLoader();
+
     fetch(`/api/finanzas/meta/agregar/${metaId}`, {  
       method: "PUT", 
       headers: {
@@ -243,22 +275,21 @@ const agregarMonto = (metaId) => {
     })
     .then((res) => res.json())
     .then(() => {
-      mostrarMetas(); // Actualiza las metas al agregar el monto
+      mostrarMetas();
       modalAgregarMonto.style.display = "none";
-      
-      // Limpiar el campo de monto después de agregarlo
       document.getElementById("montoAgregar").value = "";
     })
     .catch((err) => {
       console.error("Error al agregar monto:", err);
       mostrarMensaje("error", "Error al agregar el monto: " + err.message);
+    })
+    .finally(() => {
+      ocultarLoader(); // Ocultar loader cuando la petición termina
     });
   };
 
-  // Cancelar acción
   cancelarAgregarMonto.onclick = () => {
     modalAgregarMonto.style.display = "none";
-    // Limpiar el campo de monto si el usuario cancela la acción
     document.getElementById("montoAgregar").value = "";
   };
 };
@@ -280,38 +311,34 @@ const agregarMonto = (metaId) => {
 
 
 // Función para abrir el modal de quitar monto
+// Función para abrir el modal de quitar monto
 const quitarMonto = (metaId) => {
   modalQuitarMonto.style.display = "flex";
-
-  // Limpiar el campo de monto al abrir el modal
   document.getElementById("montoQuitar").value = "";
 
   const confirmarQuitarMonto = document.getElementById("confirmarQuitarMonto");
   const cancelarQuitarMonto = document.getElementById("cancelarQuitarMonto");
 
-  // Confirmar quitar monto
   confirmarQuitarMonto.onclick = () => {
     const monto = parseFloat(document.getElementById("montoQuitar").value);
-    
-    // Verificar si el monto es válido
+
     if (!monto || isNaN(monto) || monto <= 0) {
       return mostrarMensaje("error", "Por favor ingrese un monto válido.");
     }
 
-    // Obtener la meta correspondiente desde metasGlobal
     const meta = metasGlobal.find((meta) => meta._id === metaId);
     if (!meta) {
       return mostrarMensaje("error", "Meta no encontrada");
     }
 
     const montoActual = parseFloat(meta.montoActual || 0);
-
-    // Validar que el monto a quitar no sea mayor que lo que se ha logrado
     if (monto > montoActual) {
       return mostrarMensaje("error", "No puedes quitar más de lo que has logrado.");
     }
 
-    // Hacer la solicitud de quitar monto
+    // Mostrar loader antes de la petición
+    mostrarLoader();
+
     fetch(`/api/finanzas/meta/quitar/${metaId}`, {
       method: "PUT", 
       headers: {
@@ -321,13 +348,18 @@ const quitarMonto = (metaId) => {
       body: JSON.stringify({ monto }),
     })
     .then(() => {
-      mostrarMetas(); // Actualiza las metas al quitar el monto
+      mostrarMetas();
       modalQuitarMonto.style.display = "none";
     })
-    .catch((err) => alert("Error al quitar el monto"));
+    .catch((err) => {
+      console.error("Error al quitar el monto:", err);
+      mostrarMensaje("error", "Error al quitar el monto: " + err.message);
+    })
+    .finally(() => {
+      ocultarLoader(); // Ocultar loader cuando la petición termina
+    });
   };
 
-  // Cancelar acción
   cancelarQuitarMonto.onclick = () => {
     modalQuitarMonto.style.display = "none";
   };
@@ -354,8 +386,10 @@ const eliminarMeta = (metaId) => {
   const confirmarEliminarMeta = document.getElementById("confirmarEliminarMeta");
   const cancelarEliminarMeta = document.getElementById("cancelarEliminarMeta");
 
-  // Confirmar eliminar meta
   confirmarEliminarMeta.onclick = () => {
+    // Mostrar loader antes de la petición
+    mostrarLoader();
+
     fetch(`/api/finanzas/meta/${metaId}`, {
       method: "DELETE",  
       headers: {
@@ -363,21 +397,25 @@ const eliminarMeta = (metaId) => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then(() => {
-        mostrarMetas(); // Actualiza la lista de metas después de eliminarla
-        modalEliminarMeta.style.display = "none";
-      })
-      .catch((err) => {
-        console.error("Error al eliminar la meta:", err);
-        alert("Error al eliminar la meta: " + err.message);
-      });
+    .then(() => {
+      mostrarMetas(); // Actualiza la lista de metas después de eliminarla
+      modalEliminarMeta.style.display = "none";
+    })
+    .catch((err) => {
+      console.error("Error al eliminar la meta:", err);
+      mostrarMensaje("error", "Error al eliminar la meta: " + err.message);
+    })
+    .finally(() => {
+      // Ocultar loader cuando la petición termina
+      ocultarLoader();
+    });
   };
 
-  // Cancelar acción
   cancelarEliminarMeta.onclick = () => {
     modalEliminarMeta.style.display = "none";
   };
 };
+
 
 
 
@@ -436,3 +474,129 @@ confirmarAgregarMonto.onclick = () => {
     mostrarMensaje("error", "Error al agregar el monto: " + err.message);
   });
 };
+
+
+
+
+
+
+
+
+
+
+const modalEditarMeta = document.getElementById("modalEditarMeta");
+
+const editarMeta = (metaId) => {
+  const meta = metasGlobal.find((m) => m._id === metaId);
+  if (!meta) return mostrarMensaje("error", "Meta no encontrada");
+
+  // Rellenar los campos del modal con los datos actuales
+  document.getElementById("editarNombreMeta").value = meta.nombre;
+  document.getElementById("editarCantidadMeta").value = meta.cantidad;
+  document.getElementById("editarFechaMeta").value = meta.fechaMeta.split("T")[0]; // formato yyyy-mm-dd
+  document.getElementById("editarDescripcionMeta").value = meta.descripcion;
+
+  // Cargar la categoría en el select
+  const categoriaSelect = document.getElementById("editarCategoriaSelect");
+  categoriaSelect.value = meta.categoria || "Otro";  // "Otro" por defecto si no hay categoría
+
+  // Mostrar el campo de categoría personalizada si es "Otro"
+  const categoriaOtro = document.getElementById("editarCategoriaOtro");
+  if (meta.categoria === "Otro") {
+    categoriaOtro.style.display = "block";
+    categoriaOtro.value = meta.categoria;  // Asignar la categoría personalizada
+  } else {
+    categoriaOtro.style.display = "none";
+  }
+
+  modalEditarMeta.style.display = "flex";
+
+  // Cuando se cambia la categoría en el select
+  categoriaSelect.onchange = () => {
+    if (categoriaSelect.value === "Otro") {
+      categoriaOtro.style.display = "block"; // Mostrar campo para otra categoría
+    } else {
+      categoriaOtro.style.display = "none"; // Ocultar campo si no es "Otro"
+    }
+  };
+
+  const confirmarEditarMeta = document.getElementById("confirmarEditarMeta");
+  const cancelarEditarMeta = document.getElementById("cancelarEditarMeta");
+
+  confirmarEditarMeta.onclick = async () => {
+    const nombreMeta = document.getElementById("editarNombreMeta").value; // Definir correctamente
+    const cantidadMeta = parseFloat(document.getElementById("editarCantidadMeta").value); // Definir correctamente
+    const fechaMeta = document.getElementById("editarFechaMeta").value; // Definir correctamente
+    const descripcionMeta = document.getElementById("editarDescripcionMeta").value; // Definir correctamente
+    const categoriaSelect = document.getElementById("editarCategoriaSelect");
+    const categoriaOtro = document.getElementById("editarCategoriaOtro");
+
+    // Verificar que todos los campos estén completos
+    if (!nombreMeta || !cantidadMeta || !fechaMeta || !descripcionMeta || !categoriaSelect || !categoriaOtro) {
+      return mostrarMensaje("error", "Algunos elementos del formulario no se encuentran.");
+    }
+
+    let categoria = categoriaSelect.value;
+
+    // Si se selecciona "Otro", obtener el valor del campo de texto adicional
+    if (categoria === "Otro") {
+      categoria = categoriaOtro.value.trim(); // Obtener valor del campo "Otro"
+    }
+
+    // Validar que la categoría no esté vacía
+    if (!categoria) {
+      return mostrarMensaje("error", "Debes seleccionar o escribir una categoría");
+    }
+
+    try {
+      mostrarLoader(); // Mostrar loader antes de la petición
+
+      const res = await fetch(`/api/finanzas/meta/editar/${metaId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ nombre: nombreMeta, cantidad: cantidadMeta, fechaMeta, descripcion: descripcionMeta, categoria }), // Usar las variables correctamente
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        return mostrarMensaje("error", data.mensaje || "Error al editar la meta");
+      }
+
+      mostrarMetas(); // Refresca la lista
+      modalEditarMeta.style.display = "none";
+    } catch (err) {
+      console.error("Error al editar meta:", err);
+      mostrarMensaje("error", "Error al editar la meta");
+    } finally {
+      ocultarLoader(); // Ocultar loader al finalizar la petición
+    }
+  };
+
+  cancelarEditarMeta.onclick = () => {
+    modalEditarMeta.style.display = "none";
+  };
+};
+
+
+
+
+
+
+const categoriaSelect = document.getElementById("categoriaSelect");
+const categoriaOtro = document.getElementById("categoriaOtro");
+
+let categoriaFinal = categoriaSelect.value;
+
+categoriaSelect.addEventListener("change", () => {
+  if (categoriaSelect.value === "Otro") {
+    categoriaOtro.style.display = "block";
+    categoriaOtro.required = true;
+  } else {
+    categoriaOtro.style.display = "none";
+    categoriaOtro.required = false;
+    categoriaOtro.value = "";
+  }
+});

@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
-  <title>Dashboard - Finanzas Personales</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <title>Dashboard | Finanzas Personales</title>
   <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
@@ -31,56 +34,128 @@
 
   <nav id="menu" class="menu">
     <ul>
-      <li><a href="metas.html">Metas</a></li>
-      <li><a href="#" id="logoutBtn">Cerrar sesión</a></li>
+      <li><a href="metas.html"><i class="fa-solid fa-bullseye"></i> Metas</a></li>
+      <li><a href="servicios.html"><i class="fas fa-cogs"></i> Servicios</a></li>
+      <li><a href="estadisticas.html"><i class="fa-solid fa-chart-line"></i> Estadisticas</a></li>
+      <li><a href="calendario.html"><i class="fa-regular fa-calendar"></i> Calendario</a></li>
+      <li><a href="perfil.html"><i class="fas fa-user"></i> Perfil</a></li>
+      <li><a href="configuracion.html"><i class="fas fa-gear"></i> Configuración</a></li>
+      <li><a href="descargar.html"><i class="fa-solid fa-download"></i> Descargar</a></li>
+      <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
     </ul>
   </nav>
 
   <main>
-    <section id="balanceSection">
-      <h2>Balance actual</h2>
-      <p>Total Ingresos: $<span id="totalIngresos">0</span></p>
-      <p>Total Gastos: $<span id="totalGastos">0</span></p>
-      <p>Balance: $<span id="balance">0</span></p>
-    </section>
+  <!-- Cuadro grande solo para el balance -->
+  <section id="balancePrincipal">
+    <p class="balance-titulo">Balance Actual</p>
+    <p class="cuadro-balance">$<span id="balance">0</span></p>
+  </section>
 
-    <section id="registroSection">
-      <h2>Registrar movimiento</h2>
-      <form id="formGastoIngreso">
-        <!-- Dentro del formulario de registrar movimiento -->
-<select id="tipoMovimiento">
-  <option value="gasto">Gasto</option>
-  <option value="ingreso">Ingreso</option>
-</select>
+  <!-- Sección de totales -->
+  <section id="balanceSection">
+    <h2>Resumen general</h2>
+    <p>Total Ingresos: $<span id="totalIngresos">0</span></p>
+    <p>Total Gastos: $<span id="totalGastos">0</span></p>
+  </section>
 
-<input type="number" id="monto" placeholder="Monto" required>
+  <section id="registroSection">
+    <h2>Registrar movimiento</h2>
+    <form id="formGastoIngreso">
+      <select id="tipoMovimiento">
+        <option value="gasto">Gasto</option>
+        <option value="ingreso">Ingreso</option>
+      </select>
 
-<select id="categoriaSelect" required>
-  <option value="">Selecciona categoría</option>
-  <option value="Comida">Comida</option>
-  <option value="Deporte">Deporte</option>
-  <option value="Entretenimiento">Entretenimiento</option>
-  <option value="Gasolina">Gasolina</option>
-  <option value="Ropa">Ropa</option>
-  <option value="Salud">Salud</option>
-  <option value="Tecnología">Tecnología</option>
-  <option value="Transporte">Transporte</option>
-  <option value="Otro">Otro</option>
-</select>
+      <input type="number" id="monto" placeholder="Monto" step="0.01" required>
 
-<input type="text" id="categoriaOtro" placeholder="Escribe la categoría" style="display:none;">
 
-<input type="text" id="descripcion" placeholder="Descripción">
-<button type="submit">Registrar</button>
+      <select id="categoriaSelect" required>
+      <option value="">Selecciona categoría</option>
+      <option value="Comida">Comida</option>
+      <option value="Bebida">Bebida</option>
+      <option value="Deporte">Deporte</option>
+      <option value="Entretenimiento">Entretenimiento</option>
+      <option value="Gasolina">Gasolina</option>
+      <option value="Servicios">Servicios</option>
+      <option value="Agua">Agua</option>
+      <option value="Luz">Luz</option>
+      <option value="Alquiler">Alquiler</option>
+      <option value="Internet">Internet</option>
+      <option value="Ropa">Ropa</option>
+      <option value="Salud">Salud</option>
+      <option value="Tecnología">Tecnología</option>
+      <option value="Transporte">Transporte</option>
+      <option value="Otro">Otro</option>
+      </select>
 
-      </form>
-    </section>
+      <input type="text" id="categoriaOtro" placeholder="Escribe la categoría" style="display:none;">
+      <input type="text" id="descripcion" placeholder="Descripción">
+      <button type="submit">Registrar</button>
+    </form>
+  </section>
 
-    <section id="movimientosSection">
-      <h2>Movimientos recientes</h2>
-      <ul id="listaMovimientos"></ul>
-    </section>
-  </main>
+  <section id="movimientosSection">
+    <h2>
+      Movimientos recientes
+      <!--<button id="btnFiltro" class="filtro-btn" title="Filtrar movimientos">
+        <i class="fas fa-filter"></i>
+      </button> -->
+    </h2>
+
+    <div id="modalFiltro" class="modal-filtro">
+      <div class="modal-content">
+        <h3>Filtrar movimientos</h3>
+
+        <label>Tipo:</label>
+        <select id="filtroTipo">
+          <option value="">Todos</option>
+          <option value="gasto">Gasto</option>
+          <option value="ingreso">Ingreso</option>
+        </select>
+
+        <label>Categoría:</label>
+        <select id="filtroCategoria">
+          <option value="">Todas</option>
+        </select>
+
+        <label>Fecha:</label>
+        <select id="filtroFecha">
+          <option value="">Todas</option>
+          <option value="hoy">Hoy</option>
+          <option value="7dias">Últimos 7 días</option>
+          <option value="mes">Este mes</option>
+          <option value="personalizado">Rango personalizado</option>
+        </select>
+
+        <input type="date" id="fechaInicio" style="display:none;">
+        <input type="date" id="fechaFin" style="display:none;">
+
+        <label>Monto:</label>
+        <input type="number" id="montoMin" placeholder="Mínimo">
+        <input type="number" id="montoMax" placeholder="Máximo">
+
+        <label>Descripción:</label>
+        <input type="text" id="filtroDescripcion" placeholder="Buscar descripción">
+
+        <div class="modal-buttons">
+          <button id="aplicarFiltro">Aplicar filtros</button>
+          <button id="limpiarFiltro">Limpiar filtros</button>
+          <button id="cerrarModal"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="resumenFiltros" class="resumen-filtros"></div>
+    <br>
+    <ul id="listaMovimientos"></ul>
+    <button id="btnVerMas">Ver más</button>
+  </section>
+</main>
+
+
+
+
 
   <script src="js/main.js"></script>
   <script src="js/finanzas.js"></script>

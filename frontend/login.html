@@ -7,12 +7,32 @@
   <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon"> <!-- Sin el / al principio -->
   <link rel="stylesheet" href="css/estilos.css"> <!-- Sin el / al principio -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body>
 
-  <div id="mensajeError" class="mensaje-error" style="display: none;">
-    <p></p>
-  </div>
+ <div id="mensajeError" class="mensaje-error" style="display: none;">
+    <p id="textoError"></p>
+
+    <!-- Se mostrarán solo si es error de verificación -->
+    <div id="bloqueVerificacion" style="display:none; margin-top:10px;">
+        <button id="btnReenviarDesdeError" 
+            style="background:white; color:#c00; border:none;
+            padding:8px 12px; border-radius:5px; cursor:pointer;">
+            Reenviar verificación
+        </button>
+
+        <p id="contadorError" style="margin-top:8px; font-size:14px;"></p>
+
+        <p id="yaVerificadoError" 
+           style="display:none; margin-top:10px; font-size:14px;">
+           ¿Ya verificaste tu correo? 
+           <a href="login.html" style="color: rgb(255, 255, 255); text-decoration: underline;">Intenta iniciar sesión nuevamente.</a>
+        </p>
+    </div>
+</div>
+
+  
 
   <div id="loader" class="loader" style="display: none;"></div>
 

@@ -1,8 +1,17 @@
+    const formatearMonto = (num) => {
+  return new Intl.NumberFormat('es-DO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num);
+};
+
 const nombreUsuario = document.getElementById("nombreUsuario");
 const totalIngresosEl = document.getElementById("totalIngresos");
 const totalGastosEl = document.getElementById("totalGastos");
 const balanceEl = document.getElementById("balance");
 const listaMovimientos = document.getElementById("listaMovimientos");
+
+let todosLosMovimientos = [];
+let movimientosMostrados = 0;
+const cantidadPorPagina = 10;
+
 
 const token = localStorage.getItem("token");
 if (!token) window.location.href = "login.html";
@@ -21,12 +30,14 @@ const actualizarBalance = () => {
   })
   .then(res => res.json())
   .then(data => {
-    totalIngresosEl.textContent = data.totalIngresos;
-    totalGastosEl.textContent = data.totalGastos;
-    balanceEl.textContent = data.balance;
+balanceEl.textContent = formatearMonto(data.balance);
+totalIngresosEl.textContent = formatearMonto(data.totalIngresos);
+totalGastosEl.textContent = formatearMonto(data.totalGastos);
+
   });
 };
 actualizarBalance();
+
 
 
 
@@ -38,39 +49,100 @@ const mostrarMovimientos = () => {
   })
   .then(res => res.json())
   .then(data => {
+    todosLosMovimientos = data;
+    movimientosMostrados = 0;
     listaMovimientos.innerHTML = "";
-    data.forEach(m => {
-      const li = document.createElement("li");
-      li.classList.add(m.tipo); // Añadir clase 'ingreso' o 'gasto'
-      li.dataset.id = m._id;
 
-      // Crear una estructura más ordenada para mostrar los movimientos
-      const tipoMovimiento = m.tipo.toUpperCase();
-      const monto = `$${m.monto.toFixed(2)}`;
-      const categoria = m.categoria ? m.categoria : "Sin categoría";
-      const descripcion = m.descripcion ? m.descripcion : "Sin descripción";
-
-      li.innerHTML = `
-        <div class="movimiento-info">
-          <span class="tipo-movimiento">${tipoMovimiento}</span>
-          <span class="monto">${monto}</span>
-        </div>
-        <div class="detalle-movimiento">
-          <span class="categoria">Categoría: ${categoria}</span>
-          <span class="descripcion">Descripción: ${descripcion}</span>
-        </div>
-      `;
-
-      li.addEventListener("click", () => {
-        window.location.href = `detalle.html?id=${m._id}`;
-      });
-      listaMovimientos.appendChild(li);
-    });
+    mostrar10Movimientos(); // YA FUNCIONA
   })
   .catch(err => console.error("Error al cargar movimientos:", err));
 };
-mostrarMovimientos();
 
+mostrarMovimientos();  // <-- AHORA SÍ FUNCIONA
+
+
+// === FUNCIÓN GLOBAL (ahora sí disponible para el botón) ===
+function mostrar10Movimientos() {
+  const fin = movimientosMostrados + cantidadPorPagina;
+  const nuevos = todosLosMovimientos.slice(movimientosMostrados, fin);
+
+  nuevos.forEach(m => {
+    const li = document.createElement("li");
+    li.classList.add(m.tipo);
+    li.dataset.id = m._id;
+    li.dataset.fecha = new Date(m.fecha).toISOString().split("T")[0];
+
+    const tipoMovimiento = m.tipo.toUpperCase();
+    const monto = `$${formatearMonto(m.monto)}`;
+    const categoria = m.categoria || "Sin categoría";
+    const descripcion = m.descripcion || "Sin descripción";
+    const d = new Date(m.fecha);
+
+    const diasSemana = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+    const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+    const fechaCorta = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+    const hora = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const fechaLarga = `${diasSemana[d.getDay()]} ${d.getDate()} de ${meses[d.getMonth()]} del ${d.getFullYear()}`;
+
+    li.innerHTML = `
+  <div class="movimiento-info">
+    <span class="tipo-movimiento">${tipoMovimiento}</span>
+    <span class="monto">${monto}</span>
+  </div>
+  <div class="detalle-movimiento">
+    <span class="fecha">Fecha: ${fechaCorta}</span>
+    <span class="hora" style="color: #6b6b6bff;">${hora}</span> <!-- Aquí va el span para la hora -->
+    <span class="fecha-larga">${fechaLarga}</span>
+    <span class="categoria">Categoría: ${categoria}</span>
+    <span class="descripcion">Descripción: ${descripcion}</span>
+  </div>
+`;
+
+    li.addEventListener("click", () => {
+      window.location.href = `detalle.html?id=${m._id}`;
+    });
+
+    listaMovimientos.appendChild(li);
+  });
+
+  movimientosMostrados = fin;
+  agregarBotonVerMas();
+}
+
+
+function agregarBotonVerMas() {
+   // Eliminar si existe
+   const btnExistente = document.getElementById("btnVerMas");
+   if (btnExistente) btnExistente.remove();
+
+   // Si ya no hay más movimientos o el filtro ha mostrado todos, no mostrar el botón
+   if (movimientosMostrados >= todosLosMovimientos.length) return;
+
+   // Crear botón
+   const btn = document.createElement("button");
+   btn.id = "btnVerMas";
+   btn.textContent = "Ver más";
+
+   // Estilos del botón
+   btn.style.display = "block";
+   btn.style.margin = "15px auto";
+   btn.style.width = "90%";
+   btn.style.padding = "12px";
+   btn.style.background = "#00a35c";
+   btn.style.color = "white";
+   btn.style.border = "none";
+   btn.style.borderRadius = "8px";
+   btn.style.fontWeight = "bold";
+   btn.style.cursor = "pointer";
+
+   btn.onclick = () => {
+     mostrar10Movimientos();
+   };
+
+   // Insertar justo debajo de la lista
+   listaMovimientos.after(btn);
+}
 
 
 
@@ -215,9 +287,15 @@ const actualizarCategorias = (tipo) => {
     categoriaSelect.innerHTML = `
       <option value="">Selecciona categoría</option>
       <option value="Comida">Comida</option>
+      <option value="Bebida">Bebida</option>
       <option value="Deporte">Deporte</option>
       <option value="Entretenimiento">Entretenimiento</option>
       <option value="Gasolina">Gasolina</option>
+      <option value="Servicios">Servicios</option>
+      <option value="Agua">Agua</option>
+      <option value="Luz">Luz</option>
+      <option value="Alquiler">Alquiler</option>
+      <option value="Internet">Internet</option>
       <option value="Ropa">Ropa</option>
       <option value="Salud">Salud</option>
       <option value="Tecnología">Tecnología</option>
@@ -249,3 +327,18 @@ categoriaSelect.addEventListener("change", () => {
     categoriaOtro.value = "";
   }
 });
+
+
+
+
+
+function verDetalle(id) {
+  localStorage.setItem("paginaAnterior", "dashboard.html");
+  window.location.href = `detalle.html?id=${id}`;
+}
+
+
+localStorage.setItem("paginaAnterior", "dashboard.html");
+
+
+

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="manifest" href="/manifest.json">
+  <title>ADMIN | Finanzas Personales</title>
+  <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/estilos.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div id="mensajeError" class="mensaje-error" style="display:none"><p></p></div>
+  <div id="loader" class="loader" style="display:none"></div>
+
+  <div class="form-container">
+    <img src="img/logo.jpeg" alt="Logo" class="logo-login">
+    <h2>ADMIN</h2>
+
+    <form id="formAdminLogin">
+      <input type="email" id="correoAdmin" placeholder="Correo electrónico" required />
+      <div class="password-container">
+        <input type="password" id="contrasenaAdmin" placeholder="Contraseña" required />
+        <i id="togglePassword" class="fas fa-eye"></i>
+      </div>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <script>
+    // Simple JS inline para este login (puedes mover a js/adminAuth.js)
+    document.getElementById("formAdminLogin").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const correo = document.getElementById("correoAdmin").value.trim();
+      const contraseña = document.getElementById("contrasenaAdmin").value.trim();
+      const mensajeEl = document.getElementById("mensajeError");
+      mensajeEl.style.display = "none";
+
+      try {
+        const res = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ correo, contraseña })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          mensajeEl.querySelector("p").textContent = data.mensaje || "Error en login";
+          mensajeEl.style.display = "block";
+          return;
+        }
+
+        // Guardar token en localStorage y redirigir al panel admin
+        localStorage.setItem("admin_token", data.token);
+        // opcional: guardar expiración si quieres controlarlo en frontend
+        window.location.href = "/AdminPanel.html";
+      } catch (err) {
+        console.error(err);
+        mensajeEl.querySelector("p").textContent = "Error de conexión";
+        mensajeEl.style.display = "block";
+      }
+    });
+
+    // Toggle password (ojo icon)
+    const toggle = document.getElementById("togglePassword");
+    toggle?.addEventListener("click", () => {
+      const p = document.getElementById("contrasenaAdmin");
+      if (!p) return;
+      if (p.type === "password") { p.type = "text"; toggle.classList.remove("fa-eye"); toggle.classList.add("fa-eye-slash"); }
+      else { p.type = "password"; toggle.classList.remove("fa-eye-slash"); toggle.classList.add("fa-eye"); }
+    });
+  </script>
+</body>
+</html>

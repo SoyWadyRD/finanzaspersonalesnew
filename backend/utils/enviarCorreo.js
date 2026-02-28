@@ -1,46 +1,29 @@
-const mailjet = require('node-mailjet');
+const { Resend } = require('resend');
 
-const client = mailjet.apiConnect(
-  process.env.MJ_APIKEY_PUBLIC, 
-  process.env.MJ_APIKEY_PRIVATE
-);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const enviarCorreo = async (to, subject, html) => {
-  console.log("✅ Iniciando proceso para enviar correo...");
-  console.log("Public Key:", process.env.MJ_APIKEY_PUBLIC);
-  console.log("Private Key:", process.env.MJ_APIKEY_PRIVATE);
-  console.log("Mailjet User:", process.env.SMTP_USER_MAILJET);
-
-  // Configuración del contenido del correo
-  const mailOptions = {
-    Messages: [
-      {
-        From: {
-          Email: process.env.SMTP_USER_MAILJET, // Tu correo de Mailjet
-          Name: "Finanzas Personales"
-        },
-        To: [
-          {
-            Email: to
-          }
-        ],
-        Subject: subject,
-        HTMLPart: html
-      }
-    ]
-  };
-
-  console.log("📧 Intentando enviar correo...");
+  console.log("✅ Iniciando envío de correo con Resend...");
 
   try {
-    // Enviar el correo utilizando la API de Mailjet
-    const result = await client.post("send", { data: mailOptions });
+    const result = await resend.emails.send({
+      from: 'Finanzas Personales <hola@finanzaspersonales.icu>',
+      to,
+      subject,
+      html
+    });
 
-    console.log(`✅ Correo de verificación enviado a ${to} con éxito. Info: ${JSON.stringify(result.body)}`);
+    console.log(`✅ Correo enviado a ${to} con éxito.`);
+
+    // Verificación segura
+    if (result.data && result.data.id) {
+      console.log(`📬 ID del correo enviado: ${result.data.id}`);
+    } else {
+      console.log("📬 No se devolvió un ID, pero el correo se envió correctamente.");
+    }
   } catch (error) {
-    console.error("❌ Error al enviar el correo:", error.message);
-    console.log("🛑 Detalles del error:", error);
-    throw new Error("No se pudo enviar el correo de verificación.");
+    console.error("❌ Error al enviar el correo:", error);
+    throw new Error("No se pudo enviar el correo de verificación con Resend.");
   }
 };
 

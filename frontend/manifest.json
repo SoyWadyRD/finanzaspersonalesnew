@@ -1,0 +1,20 @@
+{
+  "name": "Finanzas Personales",
+  "short_name": "Finanzas Personales",
+  "start_url": "/dashboard.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "rgb(0, 30, 43)",
+  "icons": [
+    {
+      "src": "img/logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "img/logo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

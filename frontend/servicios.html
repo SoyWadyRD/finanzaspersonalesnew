@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+  <link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/servicios.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Servicios | Finanzas Personales</title>
+  <style>
+    
+  </style>
+</head>
+<body>
+
+<!-- Modal de edición -->
+<div id="formularioEdicion" style="display: none;">
+  <form id="formEditarServicio">
+    <input type="hidden" id="servicioIdEdicion" name="servicioIdEdicion">
+
+    <div id="camposServicioEdicion">
+      <input type="text" id="nombreEdicion" name="nombreEdicion" placeholder="Nombre" required />
+      <input type="number" id="montoEdicion" name="montoEdicion" placeholder="Monto" step="0.01" required />
+      <select id="categoriaEdicion" name="categoriaEdicion" required>
+
+        <option value="">Selecciona categoría</option>
+        <option value="Comida">Comida</option>
+        <option value="Bebida">Bebida</option>
+        <option value="Deporte">Deporte</option>
+        <option value="Entretenimiento">Entretenimiento</option>
+        <option value="Gasolina">Gasolina</option>
+        <option value="Servicios">Servicios</option>
+        <option value="Agua">Agua</option>
+        <option value="Luz">Luz</option>
+        <option value="Alquiler">Alquiler</option>
+        <option value="Internet">Internet</option>
+        <option value="Ropa">Ropa</option>
+        <option value="Salud">Salud</option>
+        <option value="Tecnología">Tecnología</option>
+        <option value="Transporte">Transporte</option>
+        <option value="Otro">Otro</option>
+      </select>
+      <input type="text" id="otraCategoriaEdicion" placeholder="Especifica la categoría" style="display:none; margin-top:5px;" />
+      <input type="date" id="fechaPagoEdicion" name="fechaPagoEdicion" required />
+      <select id="periodoEdicion" name="periodoEdicion" required>
+        <option value="">Selecciona periodo</option>
+        <option value="semanal">Semanal</option>
+        <option value="mensual">Mensual</option>
+        <option value="anual">Anual</option>
+      </select>
+    </div>
+
+    <label for="recordatorioSemanalEdicion">Recibir recordatorio semanal</label>
+    <input type="checkbox" id="recordatorioSemanalEdicion" name="recordatorioSemanalEdicion">
+
+    <label for="recordatorioDiaEdicion">Recibir recordatorio el mismo día</label>
+    <input type="checkbox" id="recordatorioDiaEdicion" name="recordatorioDiaEdicion">
+
+    <button type="submit">Guardar cambios</button>
+    <button type="button" class="close-btn" id="cancelarEdicionBtn">Cancelar</button>
+  </form>
+</div>
+
+<header>
+  <button id="volverBtn" class="header-btn"><i class="fas fa-arrow-left"></i> Volver</button>
+  <h1>Servicios</h1>
+</header>
+
+<div class="container">
+  <button id="agregarBtn">Agregar</button>
+  <div id="listaServicios"></div>
+
+  <div id="formulario">
+    <form id="formAgregarServicio">
+      <div id="camposServicio">
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre del servicio" required />
+        <input type="number" id="monto" name="monto" placeholder="Monto" step="0.01" required />
+        <select id="categoria" name="categoria" required>
+          <option value="">Selecciona categoría</option>
+          <option value="Comida">Comida</option>
+          <option value="Bebida">Bebida</option>
+          <option value="Deporte">Deporte</option>
+          <option value="Entretenimiento">Entretenimiento</option>
+          <option value="Gasolina">Gasolina</option>
+          <option value="Servicios">Servicios</option>
+          <option value="Agua">Agua</option>
+          <option value="Luz">Luz</option>
+          <option value="Alquiler">Alquiler</option>
+          <option value="Internet">Internet</option>
+          <option value="Ropa">Ropa</option>
+          <option value="Salud">Salud</option>
+          <option value="Tecnología">Tecnología</option>
+          <option value="Transporte">Transporte</option>
+          <option value="Otro">Otro</option>
+        </select>
+        <input type="text" id="otraCategoria" name="otraCategoria" placeholder="Especifica la categoría" style="display:none; margin-top:5px;" />
+        <input type="date" id="fechaPago" name="fechaPago" required />
+        <select id="periodo" name="periodo" required>
+          <option value="">Selecciona periodo</option>
+          <option value="semanal">Semanal</option>
+          <option value="mensual">Mensual</option>
+          <option value="anual">Anual</option>
+        </select>
+      </div>
+
+      <div id="checkboxes">
+        <label for="recordatorioSemanal">Recibir recordatorio semanal</label>
+        <input type="checkbox" id="recordatorioSemanal" name="recordatorioSemanal" />
+        <label for="recordatorioDia">Recibir recordatorio el mismo día</label>
+        <input type="checkbox" id="recordatorioDia" name="recordatorioDia" />
+      </div>
+
+      <button type="submit">Agregar</button>
+      <button type="button" id="cancelarBtn">Cancelar</button>
+    </form>
+  </div>
+</div>
+
+<!-- Confirmaciones -->
+<div id="confirmacionEliminacion" class="confirmacion-eliminacion">
+  <p>¿Seguro que deseas eliminar este movimiento?</p>
+  <button id="confirmarEliminarBtn">Aceptar</button>
+  <button id="cancelarEliminarBtn">Cancelar</button>
+</div>
+
+<div id="confirmacionPago" class="confirmacion-eliminacion">
+  <p>¿Deseas marcar este servicio como pagado?</p>
+  <button id="confirmarPagarBtn">Aceptar</button>
+  <button id="cancelarPagarBtn">Cancelar</button>
+</div>
+
+<div id="mensajeError" class="mensaje-error"><p></p></div>
+<div id="mensajeExito" class="mensaje-verificacion"></div>
+
+<script>
+const formulario = document.getElementById("formulario");
+const formAgregarServicio = document.getElementById("formAgregarServicio");
+const recordatorioSemanal = document.getElementById("recordatorioSemanal");
+const recordatorioDia = document.getElementById("recordatorioDia");
+const categoriaSelect = document.getElementById("categoria");
+const otraCategoriaInput = document.getElementById("otraCategoria");
+
+const mensajeError = document.getElementById("mensajeError");
+const mensajeExito = document.getElementById("mensajeExito");
+const confirmacionEliminacion = document.getElementById("confirmacionEliminacion");
+const confirmarEliminarBtn = document.getElementById("confirmarEliminarBtn");
+const cancelarEliminarBtn = document.getElementById("cancelarEliminarBtn");
+
+const confirmacionPago = document.getElementById("confirmacionPago");
+const confirmarPagarBtn = document.getElementById("confirmarPagarBtn");
+const cancelarPagarBtn = document.getElementById("cancelarPagarBtn");
+
+let idEliminar = null;
+let idPagar = null;
+
+// Funciones de mensajes
+function mostrarError(msg) {
+  mensajeError.querySelector("p").textContent = msg;
+  mensajeError.style.display = "block";
+  setTimeout(() => (mensajeError.style.display = "none"), 3000);
+}
+
+function mostrarExito(msg) {
+  mensajeExito.textContent = msg;
+  mensajeExito.style.display = "block";
+  setTimeout(() => (mensajeExito.style.display = "none"), 3000);
+}
+
+// Mostrar input de categoría personalizada
+categoriaSelect.addEventListener("change", () => {
+  if (categoriaSelect.value === "Otro") {
+    otraCategoriaInput.style.display = "block";
+    otraCategoriaInput.required = true;
+  } else {
+    otraCategoriaInput.style.display = "none";
+    otraCategoriaInput.required = false;
+    otraCategoriaInput.value = "";
+  }
+});
+
+// Mostrar y ocultar formulario
+document.getElementById("agregarBtn").addEventListener("click", () => formulario.style.display = "block");
+document.getElementById("cancelarBtn").addEventListener("click", () => formulario.style.display = "none");
+
+// Crear servicio
+formAgregarServicio.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const categoria = categoriaSelect.value === "Otro" ? otraCategoriaInput.value.trim() : categoriaSelect.value;
+  const periodo = document.getElementById("periodo").value;
+  if (!categoria) return mostrarError("Por favor, selecciona o escribe una categoría válida.");
+  if (!periodo) return mostrarError("Por favor, selecciona un periodo.");
+  const token = localStorage.getItem("token");
+  if (!token) return mostrarError("Debe iniciar sesión.");
+  const decodedToken = JSON.parse(atob(token.split('.')[1]));
+  const usuarioId = decodedToken.id;
+  const servicioData = {
+    usuarioId,
+    nombre: document.getElementById("nombre").value,
+    monto: parseFloat(document.getElementById("monto").value),
+    categoria,
+    fechaPago: new Date(document.getElementById("fechaPago").value).toISOString(),
+    periodo,
+    tipo: "servicio",
+    recordatorioSemanal: recordatorioSemanal.checked,
+    recordatorioDia: recordatorioDia.checked,
+    descripcion: "Servicio recurrente",
+  };
+  try {
+    const response = await fetch("/api/servicios", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + localStorage.getItem("token")
+  },
+  body: JSON.stringify(servicioData)
+});
+
+
+    if (!response.ok) throw new Error("Error al agregar el servicio");
+    mostrarExito("Servicio agregado con éxito");
+    formAgregarServicio.reset();
+    otraCategoriaInput.style.display = "none";
+    formulario.style.display = "none";
+    cargarServicios();
+  } catch (error) {
+    console.error(error);
+    mostrarError("Hubo un error al agregar el servicio");
+  }
+});
+
+const cargarServicios = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      mostrarError("Debes iniciar sesión");
+      return;
+    }
+
+    const response = await fetch("/api/servicios", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      mostrarError("Error al cargar servicios");
+      console.error("Error:", data);
+      return;
+    }
+
+    // Asegurar que data sea un array
+    const servicios = Array.isArray(data) ? data : [];
+
+    const lista = document.getElementById("listaServicios");
+    lista.innerHTML = "";
+
+    const hoy = new Date();
+
+    servicios.forEach(servicio => {
+      const fechaPago = new Date(servicio.fechaPago);
+      const fechaFormateada =
+        `${fechaPago.getDate().toString().padStart(2, '0')}/` +
+        `${(fechaPago.getMonth() + 1).toString().padStart(2, '0')}/` +
+        `${fechaPago.getFullYear()}`;
+
+      // Verificar si está pendiente
+      let estado = "";
+      if (!servicio.pagado && fechaPago <= hoy) {
+        estado = `<span style="color: #ff0000; font-weight:bold;">Pendiente</span>`;
+      }
+
+      const div = document.createElement("div");
+      div.classList.add("servicio-item");
+
+      div.innerHTML = `
+        <h3>${servicio.nombre}</h3>
+        <p>Monto: $${servicio.monto}</p>
+        <p>Fecha de pago: ${fechaFormateada} ${estado}</p>
+        <p>Categoría: ${servicio.categoria}</p>
+        <p>Periodo: ${servicio.periodo}</p>
+
+        <button class="marcar-pagado-btn" data-id="${servicio._id}">
+          Pagar
+        </button>
+
+        <div class="action-buttons">
+          <button class="edit" data-id="${servicio._id}">Editar</button>
+          <button class="delete" data-id="${servicio._id}">Eliminar</button>
+        </div>
+      `;
+
+      lista.prepend(div);
+    });
+
+  } catch (error) {
+    console.error(error);
+    mostrarError("Hubo un error inesperado al cargar los servicios");
+  }
+};
+
+
+// Confirmación eliminar
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("delete")) {
+    idEliminar = e.target.dataset.id;
+    confirmacionEliminacion.style.display = "block";
+  } else if (e.target.classList.contains("marcar-pagado-btn")) {
+    idPagar = e.target.dataset.id;
+    confirmacionPago.style.display = "block";
+  }
+});
+
+confirmarEliminarBtn.addEventListener("click", async () => {
+  if (!idEliminar) return;
+  try {
+    const res = await fetch(`/api/servicios/${idEliminar}`, { method: "DELETE" });
+    if (!res.ok) throw new Error();
+    mostrarExito("Servicio eliminado");
+    cargarServicios();
+  } catch (err) { mostrarError("No se pudo eliminar el servicio"); }
+  finally { confirmacionEliminacion.style.display = "none"; idEliminar=null; }
+});
+cancelarEliminarBtn.addEventListener("click", () => { confirmacionEliminacion.style.display="none"; idEliminar=null; });
+
+// Confirmación marcar pagado
+confirmarPagarBtn.addEventListener("click", async () => {
+  if (!idPagar) return;
+  try {
+    const res = await fetch(`/api/servicios/pagar/${idPagar}`, { method:"PUT", headers:{"Content-Type":"application/json"} });
+    if(!res.ok) throw new Error();
+    mostrarExito("Servicio marcado como pagado");
+    cargarServicios();
+  } catch(err){ mostrarError("No se pudo marcar como pagado"); }
+  finally { confirmacionPago.style.display="none"; idPagar=null; }
+});
+cancelarPagarBtn.addEventListener("click", () => { confirmacionPago.style.display="none"; idPagar=null; });
+
+// Edición de servicio
+document.addEventListener("click", async (e) => {
+  if(e.target.classList.contains("edit")){
+    const id = e.target.dataset.id;
+    try{
+      const res = await fetch(`/api/servicios/${id}`);
+      const servicio = await res.json();
+      document.getElementById("formularioEdicion").style.display="block";
+      document.getElementById("servicioIdEdicion").value=servicio._id;
+      document.getElementById("nombreEdicion").value=servicio.nombre;
+      document.getElementById("montoEdicion").value=servicio.monto;
+     const categoriaEdicion = document.getElementById("categoriaEdicion");
+const otraCategoriaEdicion = document.getElementById("otraCategoriaEdicion");
+
+const categoriasPredefinidas = [
+  "Comida","Bebida","Deporte","Entretenimiento","Gasolina","Servicios",
+  "Agua","Luz","Alquiler","Internet","Ropa","Salud","Tecnología","Transporte","Otro"
+];
+
+if (categoriasPredefinidas.includes(servicio.categoria)) {
+  categoriaEdicion.value = servicio.categoria;
+  otraCategoriaEdicion.style.display = "none";
+  otraCategoriaEdicion.value = "";
+} else {
+  categoriaEdicion.value = "Otro";
+  otraCategoriaEdicion.style.display = "block";
+  otraCategoriaEdicion.value = servicio.categoria;
+}
+
+// Mostrar/ocultar input de categoría personalizada en EDICIÓN
+const categoriaEdicionSelect = document.getElementById("categoriaEdicion");
+const otraCategoriaEdicionInput = document.getElementById("otraCategoriaEdicion");
+
+categoriaEdicionSelect.addEventListener("change", () => {
+  if (categoriaEdicionSelect.value === "Otro") {
+    otraCategoriaEdicionInput.style.display = "block";
+    otraCategoriaEdicionInput.required = true;
+  } else {
+    otraCategoriaEdicionInput.style.display = "none";
+    otraCategoriaEdicionInput.required = false;
+    otraCategoriaEdicionInput.value = "";
+  }
+});
+
+
+      document.getElementById("periodoEdicion").value=servicio.periodo;
+      document.getElementById("fechaPagoEdicion").value=servicio.fechaPago.split('T')[0];
+      recordatorioSemanalEdicion.checked=servicio.recordatorioSemanal||false;
+      recordatorioDiaEdicion.checked=servicio.recordatorioDia||false;
+    }catch(err){ mostrarError("Error al cargar el servicio"); }
+  }
+});
+
+document.getElementById("formEditarServicio").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = document.getElementById("servicioIdEdicion").value;
+  const data = {
+    nombre: document.getElementById("nombreEdicion").value,
+    monto: parseFloat(document.getElementById("montoEdicion").value),
+    categoria:
+  document.getElementById("categoriaEdicion").value === "Otro"
+    ? document.getElementById("otraCategoriaEdicion").value.trim()
+    : document.getElementById("categoriaEdicion").value,
+
+    periodo: document.getElementById("periodoEdicion").value,
+    fechaPago: document.getElementById("fechaPagoEdicion").value+"T00:00:00",
+    recordatorioSemanal: recordatorioSemanalEdicion.checked,
+    recordatorioDia: recordatorioDiaEdicion.checked,
+    tipo: "servicio"
+  };
+  try{
+    const res = await fetch(`/api/servicios/${id}`, { method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data) });
+    await fetch(`/api/servicios/recordatorio/${id}`, { method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify({recordatorioSemanal:data.recordatorioSemanal, recordatorioDia:data.recordatorioDia}) });
+    if(!res.ok) throw new Error();
+    mostrarExito("Servicio actualizado");
+    document.getElementById("formularioEdicion").style.display="none";
+    cargarServicios();
+  }catch(err){ mostrarError("Error al actualizar el servicio"); }
+});
+
+const volverBtn = document.getElementById('volverBtn');
+  volverBtn.addEventListener('click', () => {
+    window.location.href = 'dashboard.html';
+  });
+
+document.getElementById("cancelarEdicionBtn").addEventListener("click", ()=>{ document.getElementById("formularioEdicion").style.display="none"; });
+
+window.onload = cargarServicios;
+</script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="img/fav.ico" type="image/x-icon">
+  <link rel="manifest" href="/manifest.json">
+<title>Estadísticas | Finanzas Personales</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+  body { background-color: white; color: rgb(0,30,43); padding: 0; margin: 0; }
+  /* Header */
+    header {
+        position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      background: rgb(0, 30, 43);
+      border-bottom: 1px solid #333;
+      gap: 20px;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: white;
+      margin-left: 10px;
+      text-align: center;
+    }
+
+    .volver {
+      background-color: #00a35c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      position: absolute;
+      left: 20px;
+      width: 75px;
+    }
+
+    .volver:hover {
+      background-color: #00c9a7;
+      transform: translateY(-2px);
+    }
+
+    .volver:active {
+      background-color: #009b8f;
+      transform: translateY(2px);
+    }
+  
+  #contenedorMeses { padding: 20px 40px; }
+
+  .mes { background-color: rgb(0, 30, 43); border: 1px solid #00a35c; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 0 10px 0 #00a35c; color: white; position: relative; }
+  .mes h2 { margin-bottom: 10px; color: white; }
+  .resumen { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; font-size: 1.1rem; color: white; }
+  .grafico { width: 100%; max-width: 300px; height: 300px; margin: auto; }
+  .btn-movimientos { display: inline-block; margin-top: 12px; padding: 10px 14px; background: transparent; border: 2px solid #00a35c; color: #00a35c; border-radius: 8px; cursor: pointer; font-weight: 700; }
+  .btn-movimientos:hover { background: #00a35c; color: #012428; transition: .18s; }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+  }
+  .modal-backdrop.show { display: flex; animation: fadeIn .18s ease; }
+  .modal {
+    width: 100%;
+  max-width: 400px;
+  max-height: calc(100dvh - 40px);
+  height: auto;
+    background: rgb(0,30,43);
+    border: 2px solid #00a35c;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(.98);
+    animation: popIn .18s ease forwards;
+  }
+  @keyframes popIn { from { transform: scale(.98) translateY(10px); opacity: 0 } to { transform: scale(1) translateY(0); opacity: 1 } }
+  @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+  .modal-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 20px;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+  }
+  .modal-header h3 { color: #fff; font-size: 1.1rem; }
+  .modal-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  .modal-body {
+    padding: 16px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  #movimientosSection { background-color: transparent; padding: 6px; border-radius: 8px; }
+  #listaMovimientos { list-style: none; padding-bottom: 20px; }
+
+  #listaMovimientos li {
+    background-color: #444444;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  /* colorear títulos dentro del modal según tipo */
+#listaMovimientos li.ingreso .tipo-movimiento {
+  color: #00ff90;
+  font-weight: bold;
+}
+
+#listaMovimientos li.gasto .tipo-movimiento {
+  color: #ff4d6d;
+  font-weight: bold;
+}
+
+#listaMovimientos li.ingreso .monto {
+  color: #00ff90;
+  font-weight: bold;
+}
+
+#listaMovimientos li.gasto .monto {
+  color: #ff4d6d;
+  font-weight: bold;
+}
+  #listaMovimientos li.gasto { border-left: 4px solid #ff4d6d; }
+  #listaMovimientos li.ingreso { border-left: 4px solid #00ff90; }
+  #listaMovimientos .movimiento-info { display: flex; justify-content: space-between; width: 100%; font-weight: bold; font-size: 1.05rem; color: #fff; }
+  #listaMovimientos .tipo-movimiento { color: #fff; }
+  #listaMovimientos .monto { font-weight: bold; color: #fff; }
+  #listaMovimientos .detalle-movimiento { margin-top: 8px; font-size: 0.92rem; color: #dcdcdc; width:100%; display:flex; gap:12px; flex-wrap:wrap; }
+  .categoria { color: #ffb84d; }
+  .descripcion { font-style: italic; color:#cfcfcf; }
+
+  .fecha-larga {color: #555;}
+
+  .modal-footer { padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.04); display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .btn-cerrar { padding: 10px 14px; background: transparent; border: 1px solid #fff; color: #fff; border-radius: 8px; cursor: pointer; }
+  .btn-vermas { padding: 10px 14px; background: #00a35c; border: none; color: #012428; border-radius:8px; cursor: pointer; font-weight:700; }
+
+  /* Responsivity */
+  @media (max-width: 768px) { 
+
+
+      header{
+        padding-top: 30px;
+      }
+      header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .modal { max-width: 95%; max-height: calc(100dvh - 40px); } .grafico { max-width: 240px; height:240px; } }
+  @media (max-width: 480px) { header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+      .grafico { max-width: 180px; height:180px; } .resumen { flex-direction: column; gap:6px; } .btn-movimientos{width:100%} }
+
+
+
+
+       /* --- 480px --- */
+@media (max-width: 480px) {
+
+    header {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 65px;
+        font-size: 13px;
+        padding: 8px 12px;
+        left: 15px;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+        width: 100%;
+        text-align: center;
+        padding-right: 10px;
+    }
+}
+
+
+
+
+
+     /* --- 425px --- */
+@media (max-width: 425px) {
+
+    header {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 75px;
+        font-size: 15px;
+        padding: 8px 12px;
+        left: 20px;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+        width: 100%;
+        text-align: right;
+        padding-right: 10px;
+    }
+}
+
+/* --- 375px --- */
+@media (max-width: 375px) {
+
+    header {
+        gap: 6px;
+                padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 75px;
+        font-size: 15px;
+        padding: 7px 11px;
+        left: 15px;
+    }
+
+    header h1 {
+        font-size: 1.40rem;
+        padding-right: 8px;
+        text-align: right;
+    }
+}
+
+
+/* --- 364px --- */
+@media (max-width: 364px) {
+
+    header {
+        gap: 6px;
+                padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 75px;
+        font-size: 15px;
+        padding: 7px 11px;
+        left: 15px;
+    }
+
+    header h1 {
+        font-size: 1.30rem;
+        padding-right: 8px;
+        text-align: right;
+    }
+}
+
+
+
+/* --- 345px --- */
+@media (max-width: 345px) {
+
+    header {
+        gap: 6px;
+                padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 65px;
+        font-size: 15px;
+        padding: 7px 11px;
+        left: 15px;
+    }
+
+    header h1 {
+        font-size: 1.25rem;
+        padding-right: 8px;
+        text-align: right;
+    }
+}
+
+
+
+/* --- 320px (super pequeño, iPhone SE) --- */
+@media (max-width: 320px) {
+
+    header {
+        gap: 4px;
+                padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .volver {
+        width: 75px;
+        font-size: 15px;
+        padding: 6px 10px;
+        left: 10px;
+        margin-right: 15px;
+    }
+
+    header h1 {
+        font-size: 1.19rem;
+        padding-right: 6px;
+        text-align: right;
+    }
+}
+  
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Estadísticas Mensuales</h1>
+  <button class="volver" onclick="window.location.href='dashboard.html'">Volver</button>
+</header>
+
+<div id="contenedorMeses"></div>
+
+<!-- MODAL -->
+<div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <h3 id="modalTitle">Movimientos</h3>
+    </div>
+    <div class="modal-body">
+      <section id="movimientosSection">
+        <ul id="listaMovimientos"></ul>
+      </section>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cerrar" id="btnCerrarModal">Cerrar</button>
+      <button class="btn-vermas" id="btnVerMasModal" style="display:none">Ver más</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/estadisticas.js"></script>
+</body>
+</html>
